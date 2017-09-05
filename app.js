@@ -1,0 +1,47 @@
+//Dependencies
+var http = require('http');
+var fs = require('fs');
+var express = require('express');
+var bodyParser = require('body-parser');
+
+const PORT = 8000;
+
+//creates an instance of the Express class
+var app = express();
+
+//Specifies what folders have static files the server must read
+app.use(express.static('images'));
+app.use(express.static('scripts'));
+app.use(express.static('css'));
+app.use(express.static('html'));
+app.use(express.static('routes'));
+app.use(express.static('services'));
+app.use(express.static('node_modules'));
+
+
+//TELLS SERVER HOW TO READ INCOMING JSON OR URL DATA
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+app.use(bodyParser.json());
+
+
+//Tells the terminal the node has been created at a given port number
+app.listen(PORT, function () {
+  console.log('Listening: 8000');
+});
+
+
+
+
+/* Write the html file to a page WITHOUT NG-ROUTE
+ app.get('/', function (req, res) {//Creates the server node that will take REQuests and give RESponses
+ //Tells the server to read the assigned html filename and send it to the browser
+ var filename = 'html/index.html';
+ fs.readFile(filename, function (err, data){
+ res.writeHead(200,{'Content-Type': 'text/html', 'Content-Length': data.length});
+ res.write(data);
+ res.end();
+ });
+ });
+ */

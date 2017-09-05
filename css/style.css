@@ -1,0 +1,143 @@
+#h1-1 {
+	padding-left: 10px;
+	line-height: 75px;
+	color: white;
+	background-color: #007cbf;
+	font-family: Georgia;
+	
+	font-size: 50px;
+	position: relative;
+	bottom: -6px;
+	right: 4px;
+}
+#email{
+	position: relative;
+	right: 13%;
+}
+
+.header-btn {
+	margin-right: 5px;
+	padding-right: 25px;
+	position: relative;
+	bottom: -25px;
+	right: 25px;
+}
+
+#jumbotron {
+	position: relative;
+}
+
+.title-font{
+	color: black;
+	font-family: Georgia;
+	font-size: 60px;
+}
+.input-font{
+	color: black;
+	font-family: Georgia;
+}
+.itemInfo {
+	margin: 10px;
+	padding: 20px;
+	background-color: white;
+	display: inline-block;
+}
+.itemSelector:hover {
+	color: white;
+	background: black;
+	cursor: hand;
+}
+.img {
+	 width: 150px;
+	 height: 150px
+}
+
+table {
+	display: Block;
+	background-color: white;
+	padding: 50px;
+	margin: 50px 50px 10px 10px;
+	border: black 1px solid;
+}
+
+th {
+	width: 150px;
+	padding-bottom: 10px;
+}
+
+
+
+/*
+#forter{
+	margin-left: 0px;
+	height: 75px;
+	width: 200px;
+	display: inline;
+}
+
+.itemSelector {
+	margin-left: 65px;
+	border: 2px;
+	padding: 5px;
+	color: black;
+	font-family: Helvetica;
+	background: #e7e7e7;
+	border: 1px solid;
+}
+
+.itemSelector:hover {
+	color: white;
+	background: black;
+ 	cursor: crosshair;
+}
+
+
+
+.head div{
+	display:inline-block;
+	vertical-align: middle;
+}
+
+
+
+div.h2-1 {
+	margin-top: 50px;
+	color: #007cbf;
+	font-family: Georgia;
+	margin-left: 5px;
+}
+
+.itemInfo {
+	margin: 10px;
+	padding: 20px;
+	background-color: white;
+	display: inline-block;
+}
+
+
+
+table {
+	display: Block;
+	background-color: white;
+	padding: 50px;
+	margin: 50px 50px 10px 10px;
+	border: black 1px solid;
+}
+
+.summary {
+	float: right;
+	text-align: right;
+	margin-right: 50px;
+	width: 50%;
+	background-color: white;
+	padding: 20px;
+}
+
+th {
+	width: 150px;
+}
+
+
+
+
+

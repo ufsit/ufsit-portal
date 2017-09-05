@@ -1,0 +1,23 @@
+{
+  "name": "eCart_dynamic",
+  "version": "1.0.0",
+  "description": "Dynamic end2end Ecart App",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Elan Rasabi",
+  "license": "ISC",
+  "dependencies": {
+    "angular-translate": "^2.11.1",
+    "body-parser": "^1.15.2",
+    "bootstrap": "^3.3.6",
+    "express": "^4.14.0",
+    "fs": "0.0.2",
+    "http": "0.0.0",
+    "jquery": "^3.1.0",
+    "lodash": "^4.13.1",
+    "passport": "^0.3.2"
+
+  }
+}

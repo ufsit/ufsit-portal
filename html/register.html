@@ -1,0 +1,34 @@
+<style>
+    input.ng-invalid.ng-dirty {background-color: #ff574d
+    }
+    input.ng-valid.ng-dirty {background-color: #8eff79
+    }
+</style>
+
+<div class="container">
+<br/>
+<br/>
+
+    <div class="text-center">
+
+        <div>
+            <h1 class="title-font">Create an Account</h1>
+        </div>
+    <br/>
+    <form name="registerForm">
+        <fieldset>
+    <label for="username" >Username: </label><input id="username" type="text" placeholder="Your Name" required ng-model="username">
+    <!--br>
+    <span>Last Name:</span><input type="text" name="lastName" required><br>
+    <span>Email:</span><input type="email" name="email" required><br>
+    <span>Password:</span><input type="password" name="password" required><br-->
+    <input type="button" class="btn btn-sm" value="Register"  ng-click="register(registerForm)"><br/><br/><br/>
+        </fieldset></form>
+    Already Have an Account? <input type="button" class="btn btn-sm" value="Login"  ng-click="login()" style="margin-left: 20px"></div>
+        </fieldset>
+    </form>
+
+
+<br/>
+
+    </div>

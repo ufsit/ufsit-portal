@@ -1,0 +1,26 @@
+<table >
+    <thead >
+    <tr>
+        <th> Item </th>
+        <th> Qty </th>
+        <th > Rate/Price </th>
+        <th> Total per Item </th>
+    </tr>
+    </thead>
+    <tr ng-repeat="item in main.array" ng-show="item.quantity != 0">
+
+        <th>{{item.name}}</th>
+
+        <th>
+            <form ng-submit= "main.userChange(item)">
+                <input type="text" size="5" required="" ng-model="item.quantity">
+            </form>
+        </th>
+        <th> {{item.pricePer | number:2 | currency:"$"}} </th>
+        <th> {{item.price | number:2 | currency:"$"}} </th>
+        <th>
+            <input type="button" value="Remove Item" ng-click="main.itemDown(item)">
+        </th>
+    </tr>
+
+</table>
