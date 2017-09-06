@@ -9,6 +9,10 @@ const PORT = 8000;
 //creates an instance of the Express class
 var app = express();
 
+/* Use the API router for REST endpoints, separate from the webserver routing */
+var api = require('./API');
+app.use('/api', api);
+
 //Specifies what folders have static files the server must read
 app.use(express.static('images'));
 app.use(express.static('scripts'));
@@ -18,12 +22,14 @@ app.use(express.static('routes'));
 app.use(express.static('services'));
 app.use(express.static('node_modules'));
 
-
 //TELLS SERVER HOW TO READ INCOMING JSON OR URL DATA
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
+
 app.use(bodyParser.json());
+
+
 
 
 //Tells the terminal the node has been created at a given port number
