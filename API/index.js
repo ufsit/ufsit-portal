@@ -16,6 +16,7 @@ routes.get('/', (req, res) => {
   res.status(200).json({ message: 'You\'ve reached the root directory of the REST API. Try something more interesting next time :)' });
 });
 
+
 routes.post('/user/sign_in', (req, res) => {
 	// console.log(req.body);
 	var name = req.body.name;
@@ -30,8 +31,6 @@ routes.post('/user/sign_in', (req, res) => {
 			res.status(200).send();
 		}
 	});
-
-
 });
 
 

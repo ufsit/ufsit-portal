@@ -1,35 +1,56 @@
 var fs = require('fs');		//For filesystem I/O
 
+const JSON_DB_FILE = './data/GBM_Sign_Ins.json';
 
 var loginModule = (function(){
-	//Private functions and variables go here
 	var simpleSignIn = function(full_name, email, subscribe, callback){
 		if(isEmail(email)){
 			// console.log("Signing in with name " + full_name + " and email " + email);
+			var timestamp = new Date(Date.now());
+			var timestamp_options = {
+				hour: "2-digit", minute: "2-digit", second: "2-digit"
+			};
+
+			//Bundle up the data that we're going to store
 			var sign_in_data = {
 				'name': full_name,
 				'email': email,
 				'subscribe': subscribe,
-				'timestamp': Date.now()
+				'timestamp': timestamp.toLocaleTimeString("en-us", timestamp_options)
 			};
 
-			//Write the data somewhere
+			//Write the data to the JSON database file
 			var db;
-			fs.readFile('./data/gbm1_sign_in.json', 'utf8', function (err, data) {
+			fs.readFile(JSON_DB_FILE, 'utf8', function (err, data) {
+				/* If the file was unreadable, log the error and return a 500 error */
 				if (err) {
 					console.log(err);
 					callback({
 						'http_status_code': 500,
 						'text': "Something went wrong on our end. Try again in a little bit."
 					});
-				} else {
-					db = JSON.parse(data);
-					// console.log("JSON database: ");
-					// console.log(db);
-					db['sign-ins'].push(sign_in_data);
-					// console.log(JSON.stringify(db));
+				}
 
-					fs.writeFile('./data/gbm1_sign_in.json',JSON.stringify(db,undefined, 2),'utf-8',()=>{
+				else {
+					/* If the file was empty, initialize it as an empty JSON object */
+					if(data.length < 2)	data = '{}';
+
+					/* Turn the file into a JS object so we can manipulate it */
+					db = JSON.parse(data);
+
+					/* Get the date in MM/DD/YYYY format, which we'll use as the key in the DB */
+					var meeting_date = timestamp.toLocaleDateString("en-US");
+
+					/* If there is no entry for this date, initialize it as an empty array */
+					if(!db[meeting_date]){
+						db[meeting_date] = [];
+					}
+
+					/* Push the sign in data to the meeting date entry */
+					db[meeting_date].push(sign_in_data);
+
+					/* Write the object back to the file */
+					fs.writeFile(JSON_DB_FILE,JSON.stringify(db,undefined, 2),'utf-8',()=>{
 						if (err) {
 							console.log(err);
 							callback({
@@ -50,7 +71,7 @@ var loginModule = (function(){
 
 		}
 		else {
-			console.log("invalid email");
+			// console.log("invalid email");
 			callback({
 				'http_status_code': 406,
 				'text': "Invalid email address"
