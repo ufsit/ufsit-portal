@@ -1,8 +1,11 @@
+var fs = require('fs');		//For filesystem I/O
+
+
 var loginModule = (function(){
 	//Private functions and variables go here
 	var simpleSignIn = function(full_name, email, subscribe, callback){
 		if(isEmail(email)){
-			console.log("Signing in with name " + full_name + " and email " + email);
+			// console.log("Signing in with name " + full_name + " and email " + email);
 			var sign_in_data = {
 				'name': full_name,
 				'email': email,
@@ -11,12 +14,40 @@ var loginModule = (function(){
 			};
 
 			//Write the data somewhere
+			var db;
+			fs.readFile('./data/gbm1_sign_in.json', 'utf8', function (err, data) {
+				if (err) {
+					console.log(err);
+					callback({
+						'http_status_code': 500,
+						'text': "Something went wrong on our end. Try again in a little bit."
+					});
+				} else {
+					db = JSON.parse(data);
+					// console.log("JSON database: ");
+					// console.log(db);
+					db['sign-ins'].push(sign_in_data);
+					// console.log(JSON.stringify(db));
+
+					fs.writeFile('./data/gbm1_sign_in.json',JSON.stringify(db,undefined, 2),'utf-8',()=>{
+						if (err) {
+							console.log(err);
+							callback({
+								'http_status_code': 500,
+								'text': "Something went wrong on our end. Try again in a little bit."
+							});
+						} else {
+							callback({
+								'http_status_code': 200,
+								'text': "Successful sign-in. Thanks for coming!"
+							})
+						}
+					});
+				}
+
+			});
 
 
-			callback({
-				'http_status_code': 200,
-				'text': "Successful sign-in. Thanks for coming!"
-			})
 		}
 		else {
 			console.log("invalid email");

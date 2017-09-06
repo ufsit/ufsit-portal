@@ -17,7 +17,7 @@ routes.get('/', (req, res) => {
 });
 
 routes.post('/user/sign_in', (req, res) => {
-	console.log(req.body);
+	// console.log(req.body);
 	var name = req.body.name;
 	var email = req.body.email;
 	var subscribe = req.body.subscribe;

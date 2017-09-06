@@ -4,7 +4,7 @@
 		$scope.formData = {
 			'name': null,
 			'email': null,
-			'subscribe' : false
+			'subscribe' : true
 		};
 
 		/* Control the visibility of different error messages */
