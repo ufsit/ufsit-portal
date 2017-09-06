@@ -33,6 +33,7 @@ routes.post('/user/sign_in', (req, res) => {
 	});
 });
 
+module.exports = routes;
 
 
 
@@ -60,8 +61,8 @@ routes.post('/user/sign_in', (req, res) => {
 //
 //   // res.status(200).json({ message: loginModule.sayHi() });
 // });
+// module.exports = routes;
 
-module.exports = routes;
 
 /*
 /user/

@@ -27,6 +27,7 @@ var app = angular.module("myModule", ['ngRoute', 'pascalprecht.translate']);
  //  console.log(navigator.language);
  // };
 
+/* Temporary, for GBM1 only */
  function configure($routeProvider, $translateProvider){
   $routeProvider
 	  .when("/", {
