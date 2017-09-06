@@ -3,18 +3,23 @@
 	angular.module("myModule").controller("gbm1Controller", function ( $http, $log, $location, $scope, validate) {
 		$scope.formData = {
 			'name': null,
-			'email': null
+			'email': null,
+			'subscribe' : false
 		};
+
+		/* Control the visibility of different error messages */
+		$scope.errors = {
+			'invalid_email': false
+		}
 
 		$scope.submitLogin = function () {
 			$http.post('/api/user/sign_in',$scope.formData)
 			.success(function (data, status, headers, config) {
-				console.log('Success! Status: ' + status);
-				console.log('Data:\n' + data);
+				alert(data);
+				location.reload();
 			})
 			.error(function (data, status, header, config) {
-				console.log('Request failed! Status: ' + status);
-				console.log('Data:\n' + data);
+				alert(data);
 			});
 		};
 

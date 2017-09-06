@@ -9,6 +9,7 @@ input.ng-valid.ng-dirty {background-color: #8eff79
 	<div class="row">
 		<div class="col-md-5 col-md-offset-1">
 			<h1>General Body Meeting 1 <small>Sign-in</small></h1>
+			<h3>{{formData}}</h3>
 			<div class="row">
 				<div class="col-md-10 col-md-offset-1">
 					<br>
@@ -24,7 +25,7 @@ input.ng-valid.ng-dirty {background-color: #8eff79
 
 						<div class="checkbox">
 							<label>
-								<input type="checkbox"> Subscribe to SIT email updates
+								<input type="checkbox" ng-model="formData.subscribe"> Subscribe to SIT email updates
 							</label>
 						</div>
 						<button ng-click="submitLogin()" class="btn btn-default">Submit</button>
