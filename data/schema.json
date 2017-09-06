@@ -1,0 +1,23 @@
+{
+	"schemata":[
+		{
+    		"title": "User",
+    		"type": "object",
+    		"properties": {
+        		"username": {
+            		"type": "string"
+        		},
+        		"hash": {
+            		"type": "string"
+        		},
+        		"resume": {
+            		"type": "array",
+						"items": {
+							"type": "string"
+						}
+        		}
+    		},
+    		"required": ["username", "hash"]
+		}
+	]
+}
