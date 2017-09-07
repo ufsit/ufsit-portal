@@ -4,7 +4,7 @@ var fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 //creates an instance of the Express class
 var app = express();
