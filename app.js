@@ -4,7 +4,7 @@ var fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 8080;
 
 //creates an instance of the Express class
 var app = express();
@@ -30,11 +30,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
-
-
 //Tells the terminal the node has been created at a given port number
 app.listen(PORT, function () {
-  console.log('Listening: 8000');
+  console.log('Listening on port ' + PORT);
 });
 
 
