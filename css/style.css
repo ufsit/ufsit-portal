@@ -3,8 +3,8 @@
 	line-height: 75px;
 	color: white;
 	background-color: #007cbf;
-	font-family: Georgia;
-	
+	font-family: 'Share Tech Mono', monospace;;
+
 	font-size: 50px;
 	position: relative;
 	bottom: -6px;
@@ -29,7 +29,7 @@
 
 .title-font{
 	color: black;
-	font-family: Georgia;
+	font-family: 'Share Tech Mono', monospace;;
 	font-size: 60px;
 }
 .input-font{
@@ -136,8 +136,3 @@ table {
 th {
 	width: 150px;
 }
-
-
-
-
-

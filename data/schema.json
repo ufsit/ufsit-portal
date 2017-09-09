@@ -1,23 +1,37 @@
 {
 	"schemata":[
 		{
-    		"title": "User",
-    		"type": "object",
-    		"properties": {
-        		"username": {
-            		"type": "string"
-        		},
-        		"hash": {
-            		"type": "string"
-        		},
-        		"resume": {
-            		"type": "array",
-						"items": {
-							"type": "string"
-						}
-        		}
-    		},
-    		"required": ["username", "hash"]
+			"title": "User",
+			"type": "object",
+			"properties": {
+				"email":{
+					"type": "string"
+				},
+				"password":{
+					"salt": {
+						"type": "string"
+					},
+					"hash": {
+						"type": "string"
+					}
+				},
+				"full_name":{
+					"type": "string"
+				},
+				"in_mailing_list":{
+					"type": "boolean"
+				},
+				"resume": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"required": [
+				"username", "password",
+				"name","email","in_mailing_list"
+			]
 		}
 	]
 }
