@@ -15,7 +15,7 @@ const pbkdf2_algo = 'sha512';
 var account_mgmt_module = (function(){
 	var register_new_user = function(registration_data, callback){
 		console.log('Registering new user: ');
-		console.log(registration_data);
+		console.log(registration_data + "\n");
 
 		var new_record = {
 			"email": registration_data.email,
@@ -41,11 +41,31 @@ var account_mgmt_module = (function(){
 		console.log(new_record);
 
 		//Create the record in the database
-		db_mgmt.create(new_record);
-
-		//Return
-		callback();
+		db_mgmt.create(new_record,(error)=>{
+			if(error){
+				callback(error);
+			} else {
+				//Return
+				callback();
+			}
+		});
 	}
+
+	function authenticate(login_data,callback){
+
+	}
+
+	// function verify_credentials(given_pw,salt,stored_hash){
+	// 	var given_pw = given_data.password;
+	//
+	// 	var test_hash = crypto.pbkdf2Sync(
+	// 		given_pw, salt,
+	// 		pbkdf2_num_iterations,
+	// 		pbkdf2_key_len, pbkdf2_algo)
+	// 		.toString('hex');
+	//
+	// 	console.log('Derived hash:\n' + test_hash + '\nStored hash:\n' + stored_hash);
+	// }
 
 	function isEmail(email){
 		return /^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/.test( email );
@@ -54,7 +74,8 @@ var account_mgmt_module = (function(){
 	//Revealing Module: Return public interface
 	return {
 		//Public methods here
-		register_new_user: register_new_user
+		register_new_user: register_new_user,
+		authenticate: authenticate
 	}
 });
 

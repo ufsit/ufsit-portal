@@ -21,7 +21,7 @@ routes.get('/', (req, res) => {
 });
 
 routes.post('/user/register', (req, res) => {
-	console.log(req.body);
+	// console.log(req.body);
 	var registration_data = {
 		'name': req.body.name,
 		'email': req.body.email,
@@ -34,7 +34,6 @@ routes.post('/user/register', (req, res) => {
 			console.log(error);
 			res.status(500).send();
 		}
-
 		else{
 			res.status(501).send();
 		}
@@ -44,17 +43,20 @@ routes.post('/user/register', (req, res) => {
 
 
 routes.post('/user/login', (req, res) => {
-	// var isAuthenticated = loginModule.authenticate(req.username);
-
-	// if(isAuthenticated){
-	// 	var cookie = 'put a cookie here';
-	// 	res.cookie('session',cookie,{maxAge:1200000, httpOnly: true }});
-	// 	res.status(200).send('Authenticated');
-	// }
+	var login_data = {
+		'email': req.body.email,
+		'password': req.body.password
+	}
+	// account_mgmt.authenticate(login_data,(error)=>{
+	// 	if(error){
+	// 		console.log(error);
+	// 		res.status(500).send();
+	// 	}
 	//
-	// else {
-	// 	res.status(401).send('Invalid credentials');
-	// }
+	// 	else{
+	// 		res.status(501).send();
+	// 	}
+	// });
 
 	res.status(501).send();
 });
