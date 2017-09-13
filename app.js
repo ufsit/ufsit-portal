@@ -2,6 +2,7 @@
 var http = require('http');
 var fs = require('fs');
 var express = require('express');
+var morgan = require('morgan');
 var bodyParser = require('body-parser');
 
 const PORT = process.env.PORT || 8080;
@@ -12,6 +13,8 @@ var app = express();
 /* Use the API router for REST endpoints, separate from the webserver routing */
 var api = require('./API');
 app.use('/api', api);
+
+app.use(morgan('combined'));
 
 //Specifies what folders have static files the server must read
 app.use(express.static('images'));
