@@ -25,11 +25,15 @@ var db_mgmt_module = function(){
 				if(!db.acounts){
 					db.accounts = {};
 				}
-
+				console.log('New Record: ' + new_record.emai);
+				console.log('Entry:' + db.accounts[new_record.email]);
+				
 				if(db.accounts[new_record.email]){
 					console.log('duplicate');
 					callback('User already exists');
-				} else {
+				}
+
+				else {
 					/* Push the sign in data to the meeting date entry */
 					db.accounts[new_record.email] = {
 						'password': new_record.password,

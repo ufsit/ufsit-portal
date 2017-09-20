@@ -14,8 +14,6 @@ const pbkdf2_algo = 'sha512';
 
 var account_mgmt_module = (function(){
 	var register_new_user = function(registration_data, callback){
-		console.log('Registering new user: ');
-		console.log(registration_data + "\n");
 
 		var new_record = {
 			"email": registration_data.email,
@@ -38,7 +36,9 @@ var account_mgmt_module = (function(){
 
 		// var pre_hash_time = Date.now() - before;	//For hash time
 		// console.log('Duration of hash: ' + hash_time );
-		console.log(new_record);
+
+		// console.log('new_record: ');
+		// console.log(new_record);
 
 		//Create the record in the database
 		db_mgmt.create(new_record,(error)=>{

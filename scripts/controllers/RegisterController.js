@@ -8,6 +8,7 @@
 		  'name': null,
 		  'email': null,
 		  'password': null,
+		  'gradYear': null,
 		  'subscribe' : true
 	  };
 
