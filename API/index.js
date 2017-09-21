@@ -27,7 +27,7 @@ routes.post('/user/register', (req, res) => {
 	/* Grab the registration data from the request body */
 	var registration_data = {
 		'name': req.body.name,
-		'email': req.body.email,
+		'email': req.body.email.toLowerCase(),	//make emails case sensitive
 		'password': req.body.password,
 		'grad_year': req.body.grad_year,
 		'subscribe': req.body.subscribe,
@@ -134,6 +134,10 @@ routes.post('/session/logout', (req, res)=>{
 	res.clearCookie('session_id').status(200).send();
 });
 
+/* Signs the logged-in user into the current meeting */
+routes.post('/event/sign_in', (req, res)=>{
+	res.clearCookie('session_id').status(200).send();
+});
 
 module.exports = routes;
 
