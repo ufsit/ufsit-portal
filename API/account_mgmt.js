@@ -66,6 +66,7 @@ var account_mgmt_module = (function(){
 
 	}
 
+	/* Authenticate a given email and password */
 	function authenticate(login_data,callback){
 		/* Validate the email address */
 		if(!(isEmail(login_data.email))){
@@ -80,7 +81,7 @@ var account_mgmt_module = (function(){
 			if(error){
 				callback(error);	//If there was an error, send it up through the callback
 			}
-
+			/* If there was no error, verify the given credentials against those retrieved from the database */
 			else {
 				var authenticated = verify_credentials(login_data.password,result.salt,result.hash);
 				if(authenticated){
@@ -95,7 +96,7 @@ var account_mgmt_module = (function(){
 		});
 	}
 
-	/* Hashes a given password and salt and compares it against a hash. */
+	/* Hashes a given password and salt and compares it against an existing hash. */
 	function verify_credentials(given_pw,salt,stored_hash){
 		var test_hash = crypto.pbkdf2Sync(
 			given_pw, salt,

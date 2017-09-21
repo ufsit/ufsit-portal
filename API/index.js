@@ -57,6 +57,7 @@ routes.post('/user/login', (req, res) => {
 		'password': req.body.password
 	}
 	account_mgmt.authenticate(login_data,(error)=>{
+		/* Handles invalid credentials or database errors */
 		if(error){
 			console.log(error.text);	//Log the error
 			//Send the HTTP error code specified by the error object, and a simplified error message
@@ -67,8 +68,9 @@ routes.post('/user/login', (req, res) => {
 			else //500
 				res.status(500).send("Internal Server Error");
 		}
+		/* If the credentials checked out */
 		else{
-			res.status(200).send("OK for now");
+			res.status(200).send("Successfully Authenticated");
 		}
 	});
 });
