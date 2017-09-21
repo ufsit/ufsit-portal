@@ -30,9 +30,10 @@ routes.post('/user/register', (req, res) => {
 	}
 
 	account_mgmt.register_new_user(registration_data,(error)=>{
+		/* If a parameter was sent, it is an error message. */
 		if(error){
-			console.log(error);
-			res.status(500).send();
+			console.log(error);		//Log the error
+			res.status(409).send();	//Send a 409 (conflict)
 		}
 		else{
 			res.status(501).send();
