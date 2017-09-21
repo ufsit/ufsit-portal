@@ -70,7 +70,22 @@ routes.post('/user/login', (req, res) => {
 		}
 		/* If the credentials checked out */
 		else{
-			res.status(200).send("Successfully Authenticated");
+			var cookie_expiry_time = 900000;		//15min
+			account_mgmt.session_token(login_data.email, cookie_expiry_time,
+				(error, session_cookie)=>{
+					if(error){
+						/* Something went wrong while generating the session cookie */
+						res.status(500).send("Internal Server Error");
+					} else{
+						res.cookie(
+							'session_id', session_cookie,
+							{ 	expires: new Date(Date.now() + cookie_expiry_time), 	//15minutes
+								httpOnly: true 	//Prevent shenanigans
+							}
+						);
+						res.status(200).send("Successfully Authenticated");
+					}
+			});
 		}
 	});
 });

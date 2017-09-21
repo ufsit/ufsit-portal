@@ -17,7 +17,7 @@ const credentials = JSON.parse(fs.readFileSync('./credentials.json','utf8'));
 var sql_pool  = mysql.createPool({
 	connectionLimit : 15,	//This max is dictated by our Heroku JawsDB plan lol
 	host            : credentials.db.host,	//Use the credentials from the credentials.json file
-	port				: credentials.db.port,
+	port				 : credentials.db.port,
 	user            : credentials.db.username,
 	password        : credentials.db.password,
 	database        : credentials.db.database
@@ -26,7 +26,7 @@ var sql_pool  = mysql.createPool({
 /* Define the database management module and its public API */
 var db_mgmt_module = function(){
 	/* Create a new account */
-	function create(new_record, callback){
+	function create_account(new_record, callback){
 		/* Use the check_account_conflict function to check if an account with that
 		email address already exists. In the callback function, either throw an
 		error up through the callback if there was a conflict, or proceed creating
@@ -170,24 +170,60 @@ var db_mgmt_module = function(){
 		);
 	}
 
-	/* Modify the details of an account with the given email address */
-	function alter(){
-		//STUB
-		return false;
+	/* Create an entry in the sessions table */
+	function create_session(session_token,email_addr,expiry_date,callback){
+		var sql_query = jsonSql.build({
+			type: 'insert',
+			table: 'sessions',
+			values: {
+				session_id: session_token,
+				email: email_addr,
+				expiry_date: expiry_date
+			}
+		});
+
+		/* Execute the query using a connection from the connection pool */
+		sql_pool.query(
+			sql_query.query,
+			sql_query.values,
+			function (error, results, fields) {
+				if (error)
+					callback(err);	//If there was an error, send it up through the callback
+				else callback();	//Otherwise call back with no errors
+			}
+		);
 	}
 
-	/* Delete an account with the given email address */
-	function purge(){
-		//STUB
-		return false;
+	/* Remove an entry from the sessions table */
+	function remove_session(session_id, callback){
+		var sql_query = jsonSql.build({
+			type: 'remove',
+			table: 'sessions',
+			condition: {
+				'session_id': session_id,
+			}
+		});
+		console.log('Removing session:');
+		console.log(sql_query.query);
+		console.log(sql_query.values);
+		/* Execute the query using a connection from the connection pool */
+		sql_pool.query(
+			sql_query.query,
+			sql_query.values,
+			function (error, results, fields) {
+				if (error)
+					callback(err);	//If there was an error, send it up through the callback
+				else callback();	//Otherwise call back with no errors
+			}
+		);
 	}
 
 	//Revealing module
 	return ({
-		create: create,
+		create_account: create_account,
 		retrieve: retrieve,
-		alter: alter,
-		purge: purge
+		create_session: create_session,
+		remove_session: remove_session
 	});
 }
 

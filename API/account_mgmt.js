@@ -52,12 +52,12 @@ var account_mgmt_module = (function(){
 
 			// var pre_hash_time = Date.now() - before;	//For hash time
 			// console.log('Duration of hash: ' + hash_time );
-
-			console.log('new_record: ');
-			console.log(new_record);
+			//
+			// console.log('new_record: ');
+			// console.log(new_record);
 
 			//Create the record in the database
-			db_mgmt.create(new_record,(error)=>{
+			db_mgmt.create_account(new_record,(error)=>{
 				/* If a parameter was sent, it is an error message. Pass it along a callback. */
 				if(error) callback(error);
 				else callback();	//Otherwise, pass no error on the callback
@@ -85,7 +85,7 @@ var account_mgmt_module = (function(){
 			else {
 				var authenticated = verify_credentials(login_data.password,result.salt,result.hash);
 				if(authenticated){
-					callback();	//Call back without an error
+					callback(null);	//Call back without an error
 				} else {
 					callback({
 						'code':401,
@@ -109,6 +109,31 @@ var account_mgmt_module = (function(){
 		return (test_hash === stored_hash);
 	}
 
+	/* Generate a session random 32-byte hex string to use as a session token,
+	 	and store the session in the database, associated with the requesting email address*/
+	function generate_session_token(email_addr, time_to_expiration, callback){
+		var token = crypto.randomBytes(32).toString('hex');
+		var expiry_date = new Date(Date.now() + time_to_expiration);
+		db_mgmt.create_session(token,email_addr,expiry_date,(error)=>{
+			if(error){
+				callback(error, null);
+			} else {
+				/* Put in a timeout to remove the session from the database when its cookie expires */
+				setTimeout(
+					function(){invalidate_session(token);},
+					time_to_expiration);
+				callback(null,token);
+			}
+		});
+	}
+	/* Removes any entries in the DB with a matching session id */
+	function invalidate_session(session_token){
+		db_mgmt.remove_session(session_token, (error)=>{
+			if(error)
+				console.log(error);
+		});
+	}
+
 	function isEmail(email){
 		return /^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/.test( email );
 	}
@@ -117,7 +142,8 @@ var account_mgmt_module = (function(){
 	return {
 		//Public methods here
 		register_new_user: register_new_user,
-		authenticate: authenticate
+		authenticate: authenticate,
+		session_token: generate_session_token
 	}
 });
 
