@@ -37,7 +37,7 @@ var account_mgmt_module = (function(){
 			PBKDF2_NUM_ITERATIONS,
 			PBKDF2_KEY_LEN,
 			PBKDF2_ALGO)
-			.toString('hex');		//Turn it into a hex string 
+			.toString('hex');		//Turn it into a hex string
 
 		// var pre_hash_time = Date.now() - before;	//For hash time
 		// console.log('Duration of hash: ' + hash_time );
