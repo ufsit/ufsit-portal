@@ -153,7 +153,6 @@ var db_mgmt_module = function(){
 					/* If the results array has any elements in it, call back with the 0th element
 					(entries are unique) */
 					if(results.length > 0){
-						console.log(results[0]);
 						//Callback with no error, and 2nd param is the results
 						callback(null,{	//Encapsulate the results nicely for account_mgmt.js
 							'salt': results[0].password_salt,
@@ -253,6 +252,28 @@ var db_mgmt_module = function(){
 			}
 		);
 	}
+	/* Sign a user into an event */
+	function sign_in(email, timestamp, callback){
+		var sql_query = jsonSql.build({
+			type: 'insert',
+			table: 'event_sign_ins',
+			values: {
+				email: email,
+				timestamp: timestamp
+			}
+		});
+
+		/* Execute the query using a connection from the connection pool */
+		sql_pool.query(
+			sql_query.query,
+			sql_query.values,
+			function (error, results, fields) {
+				if (error)
+					callback(err);	//If there was an error, send it up through the callback
+				else callback();	//Otherwise call back with no errors
+			}
+		);
+	}
 
 	//Revealing module
 	return ({
@@ -260,7 +281,8 @@ var db_mgmt_module = function(){
 		retrieve: retrieve,
 		create_session: create_session,
 		validate_session: validate_session,
-		remove_session: remove_session
+		remove_session: remove_session,
+		sign_in: sign_in
 	});
 }
 
