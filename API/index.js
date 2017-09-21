@@ -38,8 +38,10 @@ routes.post('/user/register', (req, res) => {
 			//Send the HTTP error code specified by the error object, and a simplified error message
 			if(error.code === 409)
 				res.status(error.code).send("Duplicate Account");
-			else if(error.code === 500)
-				res.status(error.code).send("Internal Server Error");
+			else if(error.code === 400)
+				res.status(error.code).send("Malformed Request");
+			else 	//500
+				res.status(500).send("Internal Server Error");
 		}
 		else{
 			res.status(200).send("Success");
@@ -54,19 +56,21 @@ routes.post('/user/login', (req, res) => {
 		'email': req.body.email,
 		'password': req.body.password
 	}
-	console.log(login_data);
-	// account_mgmt.authenticate(login_data,(error)=>{
-	// 	if(error){
-	// 		console.log(error);
-	// 		res.status(500).send();
-	// 	}
-	//
-	// 	else{
-	// 		res.status(501).send();
-	// 	}
-	// });
-
-	res.status(401).send();
+	account_mgmt.authenticate(login_data,(error)=>{
+		if(error){
+			console.log(error.text);	//Log the error
+			//Send the HTTP error code specified by the error object, and a simplified error message
+			if(error.code === 401 || error.code === 404)	//Either Bad password or email not found
+				res.status(error.code).send("Invalid Credentials");
+			else if(error.code === 400)
+				res.status(error.code).send("Malformed Request");
+			else //500
+				res.status(500).send("Internal Server Error");
+		}
+		else{
+			res.status(200).send("OK for now");
+		}
+	});
 });
 
 /*

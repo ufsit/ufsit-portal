@@ -31,13 +31,21 @@ var db_mgmt_module = function(){
 		email address already exists. In the callback function, either throw an
 		error up through the callback if there was a conflict, or proceed creating
 		the account */
-		check_account_conflict(new_record.email, (conflict_exists)=>{
+		check_account_conflict(new_record.email, (error)=>{
 			/* If it does, make a callback with the error */
-			if(conflict_exists){
-				callback({
-					'code': 409,	//HTTP Identifier for the error: 409 => conflict
-					'text':'[db_mgmt.js->]: Error - Attempted to create duplicate account: ' + new_record.email
-				});
+			if(error){
+				if(error.code === 409){
+					callback({
+						'code': 409,	//HTTP Identifier for the error: 409 => conflict
+						'text':'[db_mgmt.js->]: Error - Attempted to create duplicate account: ' + new_record.email
+					});
+				} else {
+					callback({
+						'code': 500,	//HTTP Identifier for the error: 500 => Mysql error
+						'text': error.text
+					});
+				}
+
 			}
 			/* Otherwise proceed creating the account */
 			else {
@@ -69,13 +77,22 @@ var db_mgmt_module = function(){
 				sql_query.query,
 				sql_query.values,
 				function (error, results, fields) {
-					if (error) throw error;	//If there was an error, throw the error
-					/* If the results array has any elements in it, call back with true
-					(to indicate that there was a conflict) */
-					if(results.length > 0)
-					callback(true);
-					/* Otherwise, call back with false to indicate a lack of conflict */
-					else callback(false);
+					if (error){	//If there was an error, pass it up through the callback
+						callback({
+							'code': 500,
+							'text': error
+						});
+					} else {
+						/* If the results array has any elements in it, call back with true
+						(to indicate that there was a conflict) */
+						if(results.length > 0){
+							callback({
+								'code': 409	//Duplicate
+							});
+						}
+						/* Otherwise, call back withhout an error to indicate a lack of conflict */
+						else callback();
+					}
 				}
 			);
 		}
@@ -109,9 +126,68 @@ var db_mgmt_module = function(){
 		}
 	}
 
+	/* Retrieve an account with the given email address */
+	function retrieve(email_addr, callback){
+		/* Form a query to the 'accounts' table for entries with the given email */
+		var sql_query = jsonSql.build({
+			type: 'select',
+			table: 'accounts',
+			fields: ['password_salt','password_hash'],
+			condition: {
+				email: email_addr
+			}
+		});
+
+		/* Execute the query using a connection from the connection pool */
+		sql_pool.query(
+			sql_query.query,
+			sql_query.values,
+			function (error, results, fields) {
+				/* If there was a sql error, send it up through the callback */
+				if (error){
+					callback({
+						'code': 500,
+						'text': error
+					}, null);	//2nd parameter (which is usually the result) is null
+				} else {
+					/* If the results array has any elements in it, call back with the 0th element
+					(entries are unique) */
+					if(results.length > 0){
+						//Callback with no error, and 2nd param is the results
+						callback(null,{	//Encapsulate the results nicely for account_mgmt.js
+							'salt': results[0].password_salt,
+							'hash': results[0].password_hash
+						});
+					}
+
+					/* Otherwise, call back with a 404 (for no matching record) and null for the result*/
+					else callback({
+						'code': 404,	//No results
+						'text': 'No account with email address ' + email_addr
+					}, null);
+				}
+			}
+		);
+	}
+
+	/* Modify the details of an account with the given email address */
+	function alter(){
+		//STUB
+		return false;
+	}
+
+	/* Delete an account with the given email address */
+	function purge(){
+		//STUB
+		return false;
+	}
+
 	//Revealing module
 	return ({
-		create: create
+		create: create,
+		retrieve: retrieve,
+		alter: alter,
+		purge: purge
 	});
 }
 
