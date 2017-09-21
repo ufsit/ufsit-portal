@@ -66,7 +66,7 @@ routes.post('/user/login', (req, res) => {
 			console.log(error.text);	//Log the error
 			//Send the HTTP error code specified by the error object, and a simplified error message
 			if(error.code === 401 || error.code === 404)	//Either Bad password or email not found
-				res.status(error.code).send("Invalid Credentials");
+				res.status(401).send("Invalid Credentials");
 			else if(error.code === 400)
 				res.status(error.code).send("Malformed Request");
 			else //500
