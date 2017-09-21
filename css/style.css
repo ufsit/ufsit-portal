@@ -45,6 +45,18 @@
   background: #b8431f;
 }
 
+.tile.disabled {
+  cursor: not-allowed;
+  color: #ccc;
+  background: #888;
+}
+
+.tile.disabled:hover {
+  cursor: not-allowed;
+  color: #ccc;
+  background: #888;
+}
+
 #h1-1 {
 	padding-left: 10px;
 	line-height: 75px;
