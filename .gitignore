@@ -1,0 +1,5 @@
+*.swp
+*.swo
+.env
+credentials.json
+node_modules/
