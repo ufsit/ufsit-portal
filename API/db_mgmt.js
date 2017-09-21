@@ -132,7 +132,7 @@ var db_mgmt_module = function(){
 		var sql_query = jsonSql.build({
 			type: 'select',
 			table: 'accounts',
-			fields: ['password_salt','password_hash'],
+			fields: ['password_salt','password_hash','full_name'],
 			condition: {
 				email: email_addr
 			}
@@ -153,10 +153,12 @@ var db_mgmt_module = function(){
 					/* If the results array has any elements in it, call back with the 0th element
 					(entries are unique) */
 					if(results.length > 0){
+						console.log(results[0]);
 						//Callback with no error, and 2nd param is the results
 						callback(null,{	//Encapsulate the results nicely for account_mgmt.js
 							'salt': results[0].password_salt,
-							'hash': results[0].password_hash
+							'hash': results[0].password_hash,
+							'name': results[0].full_name
 						});
 					}
 
@@ -194,6 +196,43 @@ var db_mgmt_module = function(){
 		);
 	}
 
+	/* Confirms whether the token corresponds to an active session. If it does, calls back
+		with the email associated with it.*/
+	function validate_session(session_token,callback){
+		var sql_query = jsonSql.build({
+			type: 'select',
+			table: 'sessions',
+			fields: ['email'],
+			condition: {
+				session_id: session_token
+			}
+		});
+		/* Execute the query using a connection from the connection pool */
+		sql_pool.query(
+			sql_query.query,
+			sql_query.values,
+			function (error, results, fields) {
+				if (error){
+					//If there was an error, send it up through the callback
+					callback(err,false,null);	//is_valid= false, email = null
+				}
+				/* If there were no errors... */
+				else {
+					/* If there was a match */
+					if(results.length > 0){
+						/* Call back with no error, is_valid=true, and the match email */
+						callback(null, true, results[0].email);
+					}
+					/* If there was no match */
+					else {
+						/* Call back with no error, is_valid=false, and email=null */
+						callback(null,false,null);
+					}
+				}
+			}
+		);
+	}
+
 	/* Remove an entry from the sessions table */
 	function remove_session(session_id, callback){
 		var sql_query = jsonSql.build({
@@ -203,9 +242,6 @@ var db_mgmt_module = function(){
 				'session_id': session_id,
 			}
 		});
-		console.log('Removing session:');
-		console.log(sql_query.query);
-		console.log(sql_query.values);
 		/* Execute the query using a connection from the connection pool */
 		sql_pool.query(
 			sql_query.query,
@@ -223,6 +259,7 @@ var db_mgmt_module = function(){
 		create_account: create_account,
 		retrieve: retrieve,
 		create_session: create_session,
+		validate_session: validate_session,
 		remove_session: remove_session
 	});
 }

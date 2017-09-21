@@ -11,7 +11,6 @@
 		};
 		/* Control the visibility of different error messages */
 		$scope.notifications = {
-			'successful_registration': false,
 			'generic_error': false,
 			'email_conflict': false,
 			'bad_request': false
@@ -26,7 +25,9 @@
 				(null != $scope.formData.subscribe)){
 					$http.post('/api/user/register',$scope.formData)
 					.success(function (data, status, headers, config) {
-						$scope.notifications.successful_registration = true;
+						// $scope.notifications.successful_registration = true;
+						alert('Success! Your account has been created. You may now log in')
+						$location.path('/login');
 					})
 					.error(function (data, status, header, config) {
 

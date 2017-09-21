@@ -126,11 +126,47 @@ var account_mgmt_module = (function(){
 			}
 		});
 	}
+	/* Confirms whether the token corresponds to an active session. If it does, calls back
+		with the email associated with it.*/
+	function validate_session(session_token,callback){
+		db_mgmt.validate_session(session_token,(error, is_valid, email)=>{
+			//IF there was an error
+			if(error){
+				//Call back with the error, specify invalid token, and null email
+				callback(error,false,null);
+			}
+			/* If there was no error... */
+			else {
+				/* If the session is valid, call back with no error, true for is_valid, and the email
+					associated with the ession.*/
+				if(is_valid){
+					callback(null, true, email);
+				}
+				/* If the session wasn't valid, call back with no error, false for is_valid, and null
+				 	for the email. */
+				else {
+					callback(null, false, null);
+				}
+			}
+		});
+	}
+
 	/* Removes any entries in the DB with a matching session id */
 	function invalidate_session(session_token){
 		db_mgmt.remove_session(session_token, (error)=>{
 			if(error)
 				console.log(error);
+		});
+	}
+	/* Given an account's email addres, gets the associated name. */
+	function get_name_from_email(email_addr, callback){
+		db_mgmt.retrieve(email_addr,(error,data)=>{
+			console.log(data);
+			if(error){
+				callback(error,null);
+			} else {
+				callback(null,data.name);
+			}
 		});
 	}
 
@@ -143,7 +179,9 @@ var account_mgmt_module = (function(){
 		//Public methods here
 		register_new_user: register_new_user,
 		authenticate: authenticate,
-		session_token: generate_session_token
+		session_token: generate_session_token,
+		validate_session: validate_session,
+		get_name_from_email: get_name_from_email
 	}
 });
 

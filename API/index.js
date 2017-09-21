@@ -1,5 +1,6 @@
 const routes = require('express').Router();
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 var sanitizer = require('express-sanitize-escape');	//Automagically sanitize req.body
@@ -11,6 +12,8 @@ var account_mgmt = require('./account_mgmt.js');
 routes.use(bodyParser.json());
 /* For parsing application/x-www-form-urlencoded */
 routes.use(bodyParser.urlencoded({ extended: true }));
+/* For parsing cookies */
+routes.use(cookieParser("This secret is used for signing cookies. Here's some extra entropy: 4c5ee6dc5ee1f723c3ce1efcf78c8dd0c0a55badbae4f4da5172d17a8cae07ef7e21b60a009c45b7567874c98bf79040d54475261"));
 /* Automagically sanitize req.body. this line follows app.use(bodyParser.json) or the last body parser middleware */
 routes.use(sanitizer.middleware());
 
@@ -80,7 +83,8 @@ routes.post('/user/login', (req, res) => {
 						res.cookie(
 							'session_id', session_cookie,
 							{ 	expires: new Date(Date.now() + cookie_expiry_time), 	//15minutes
-								httpOnly: true 	//Prevent shenanigans
+								httpOnly: true, 	//Prevent shenanigans
+								signed: true
 							}
 						);
 						res.status(200).send("Successfully Authenticated");
@@ -90,18 +94,46 @@ routes.post('/user/login', (req, res) => {
 	});
 });
 
-/*
-Planning:
-/user/
-/register
-/login
+routes.get('/session/validate', (req, res)=>{
+	/* The following variable certifies that the cookie is at least signed by us */
+	var signed_cookie = req.signedCookies.session_id;
+	/* If the cookie is signed, proceed to get some more info from the database */
+	if(signed_cookie){
+		account_mgmt.validate_session(signed_cookie,(error,is_valid,email)=>{
+			if(error){
+				console.log(error);
+				res.status(500).send('Something went wrong on our end');
+			}
+			else {
+				if(is_valid){
+					account_mgmt.get_name_from_email(email,(error,name)=>{
+						if(error){
+							res.status(500).send('Something went wrong on our end');
+						} else {
+							console.log('The session belongs to ' + name + ' with email ' + email);
+							res.status(200).send({'name':name,'email':email});
+						}
+					});
+				}
+				else {
+					res.status(403).send('Invalid session');
+				}
 
+			}
+		});
 
-/event/
-/get_current_event
-/sign_in/{email}
+	}
+	/* If the cookie wasn't even signed, return a 403 forbidden error */
+	else {
+		res.status(403).send('Not signed in');
+	}
+});
 
-*/
+/* Clears the session_id cookie for the requester */
+routes.post('/session/logout', (req, res)=>{
+	res.clearCookie('session_id').status(200).send();
+});
+
 
 module.exports = routes;
 
