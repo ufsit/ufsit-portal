@@ -1,3 +1,5 @@
+/*Fonts import*/
+@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono|VT323');
 .tile {
   width: 100%;
   display: inline-block;
@@ -48,8 +50,9 @@
 	line-height: 75px;
 	color: white;
 	background-color: #007cbf;
-	font-family: Georgia;
-	
+	/*font-family: Georgia;*/
+	font-family: 'VT323', monospace;
+
 	font-size: 50px;
 	position: relative;
 	bottom: -6px;
@@ -181,8 +184,3 @@ table {
 th {
 	width: 150px;
 }
-
-
-
-
-

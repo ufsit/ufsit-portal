@@ -13,21 +13,27 @@ var app = angular.module("myModule", ['ngRoute', 'pascalprecht.translate']);
  		templateUrl: "login.html",
  		controller: "LoginController"
  	})
+	.when("/login", {
+ 		templateUrl: "login.html",
+ 		controller: "LoginController",
+ 		controllerAs: "main"
+ 	})
  	.when("/register", {
  		templateUrl: "register.html",
  		controller: "RegisterController",
  		controllerAs: "main"
  	})
- 	.when("/meeting_signin", {
- 		templateUrl: "views/meeting_signin.html",
- 		controller: "meetingController",
- 		controllerAs: "meeting"
- 	})
- 	.when("/home", {
- 		templateUrl: "views/home.html",
- 		controller: "homeController",
- 		controllerAs: "home"
- 		}).otherwise({redirectTo: "/"});
+ // 	.when("/meeting_signin", {
+ // 		templateUrl: "views/meeting_signin.html",
+ // 		controller: "meetingController",
+ // 		controllerAs: "meeting"
+ // 	})
+ // 	.when("/home", {
+ // 		templateUrl: "views/home.html",
+ // 		controller: "homeController",
+ // 		controllerAs: "home"
+ // 	})
+	.otherwise({redirectTo: "/"});
 
   console.log(navigator.language);
  };

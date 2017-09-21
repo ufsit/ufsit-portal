@@ -3,63 +3,99 @@
 	<div class="row">
 		<div class="col-md-5 col-md-offset-1">
 			<div class="main_header">Register<small></div>
-			<div class="row">
-				<div class="col-md-10 col-md-offset-1">
-					<br>
-					<form>
-						<div class="form-group">
-							<label class="input-label">Name</label>
-							<input type="text" class="form-control" placeholder="Full Name" ng-model="formData.name">
+				<br>
+				<!-- Notification panels -->
+				<div class="row">
+					<div class="col-xs-12">
+						<div ng-show="notifications.successful_registration"
+								class="alert alert-success alert-dismissible" role="alert">
+							<button type="button" class="close" ng-click="notifications.successful_registration = false">
+								<span aria-hidden="true">&times;</span></button>
+							<span class="notification_panel"><strong>Success!</strong> Your account has been created. You may now <a href="#" ng-click="$location.path('/login')">log in</a></span>
 						</div>
 
-						<div class="row">
-							<div class="form-group col-md-6">
-								<label class="input-label">E-mail address</label>
-								<input type="email" class="form-control" placeholder="Email" ng-model="formData.email">
-							</div>
-							<div class="form-group col-md-6">
-								<label class="input-label">Password</label>
-								<input type="password" class="form-control" placeholder="Password" ng-model="formData.password">
-							</div>
+						<div ng-show="notifications.email_conflict"
+								class="alert alert-danger alert-dismissible" role="alert">
+							<button type="button" class="close" ng-click="notifications.email_conflict = false">
+								<span aria-hidden="true">&times;</span></button>
+							<span class="notification_panel"><strong>Error</strong> An account already exists for that email address. Please contact the developers.</span>
 						</div>
+
+						<div ng-show="notifications.generic_error"
+								class="alert alert-danger alert-dismissible" role="alert">
+							<button type="button" class="close" ng-click="notifications.generic_error = false">
+								<span aria-hidden="true">&times;</span></button>
+							<span class="notification_panel"><strong>Error</strong> Something went wrong on our end. Please contact the developers.</span>
+						</div>
+
+						<div ng-show="notifications.bad_request"
+								class="alert alert-danger alert-dismissible" role="alert">
+							<button type="button" class="close" ng-click="notifications.bad_request = false">
+								<span aria-hidden="true">&times;</span></button>
+							<span class="notification_panel"><strong>Error</strong> It looks like you're trying to do something sketchy. Remember that "unauthorized penetration tests" are illegal :P. If you believe this is a mistake, please contact the developers.</span>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1">
 						<br>
-
-						<div class="row">
-							<div class="form-group col-md-6">
-								<label class="input-label">Graduation Semester</label>
-							  <select class="form-control">
-							    <option>2017 (Fall)</option>
-							    <option>2018 (Spring)</option>
-							    <option>2018 (Summer)</option>
-								 <option>2018 (Fall)</option>
-								 <option>2019 (Spring)</option>
-								 <option>2019 (Summer)</option>
-								 <option>2019 (Fall)</option>
-								 <option>2020 (Spring)</option>
-								 <option>2020 (Summer)</option>
-								 <option>2020 (Fall)</option>
-								 <option>2021 (Spring)</option>
-								 <option>2021 (Summer)</option>
-								 <option>2021 (Fall)</option>
-								 <option>2022 (Spring)</option>
-							  </select>
+						<form>
+							<div class="form-group">
+								<label class="input-label">Name</label>
+								<input required type="text" class="form-control" placeholder="Full Name" ng-model="formData.name">
 							</div>
 
+							<div class="row">
+								<div class="form-group col-md-6">
+									<label class="input-label">E-mail address</label>
+									<input required type="email" class="form-control" placeholder="Email" ng-model="formData.email">
+								</div>
+								<div class="form-group col-md-6">
+									<label class="input-label">Password</label>
+									<input required type="password" class="form-control" placeholder="Password" ng-model="formData.password">
+								</div>
+							</div>
+							<br>
 
-						</div>
+							<div class="row">
+								<div class="form-group col-md-6">
+									<label class="input-label">Graduation Semester</label>
+									<select required aria-required="true" class="form-control" ng-model="formData.grad_year">
+										<option value="">Select a semester</option>
+										<option>2017 (Fall)</option>
+										<option>2018 (Spring)</option>
+										<option>2018 (Summer)</option>
+										<option>2018 (Fall)</option>
+										<option>2019 (Spring)</option>
+										<option>2019 (Summer)</option>
+										<option>2019 (Fall)</option>
+										<option>2020 (Spring)</option>
+										<option>2020 (Summer)</option>
+										<option>2020 (Fall)</option>
+										<option>2021 (Spring)</option>
+										<option>2021 (Summer)</option>
+										<option>2021 (Fall)</option>
+										<option>2022 (Spring)</option>
+									</select>
+								</div>
 
-						<div class="checkbox">
-							<label class="input-label">
-								<input type="checkbox" ng-model="formData.subscribe" checked> Subscribe to SIT email updates
-							</label>
-						</div>
-						<button ng-click="submitLogin()" class="btn btn-success">Submit</button>
-					</form>
+
+							</div>
+
+							<div class="checkbox">
+								<label class="input-label">
+									<input type="checkbox" ng-model="formData.subscribe" checked> Subscribe to SIT email updates
+								</label>
+							</div>
+							<button ng-click="submit_registration()" class="btn btn-success">Submit</button>
+						</form>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-5">
-			<img src="sit.png" alt="" style="width:100%">
+			<div class="col-md-5">
+				<img src="sit.png" alt="" style="width:100%">
+			</div>
 		</div>
 	</div>
-</div>

@@ -1,31 +1,61 @@
-<style>
-    input.ng-invalid.ng-dirty {background-color: #ff574d
-    }
-    input.ng-valid.ng-dirty {background-color: #8eff79
-    }
-</style>
-<div id="jumbotron" class="col-md-12 jumbotron">
-<div class="container col-md-5">
-    <br/>
-    <br/>
-    <div >
-        <div class="title-font col-md-offset-2">Sign In</div><br/>
-    </div>
-    <form name="loginForm">
-    <fieldset class="text-center">
-        <div id="email">
-            <label for="firstname"  class="input-font">Email: </label>
-            <input id="firstname" type="text" required ng-model="firstname" >
-        </div>  
-            <label for="firstname" class="input-font">Password: </label>
-            <input id="firstname" type="text" required ng-model="firstname" >
-         <!--br>
-            <span>Last Name:</span><input type="text" name="lastName" required><br>
-            <span>Email:</span><input type="email" name="email" required><br>
-            <span>Password:</span><input type="password" name="password" required><br-->
-            <input type="button" value="Login"  ng-click="login(loginForm)">
-            <input type="button" value="Need to Register?" ng-click="register()">
-    </fieldset>
-    </form>
-</div>
-</div>
+<link rel="stylesheet" type="text/css" href="login.css">
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-5 col-md-offset-1">
+			<div class="main_header">Sign In<small></div>
+				<br>
+				<!-- Notification panels -->
+				<div class="row">
+					<div class="col-xs-12">
+						<div ng-show="notifications.invalid_credentials"
+								class="alert alert-danger alert-dismissible" role="alert">
+							<button type="button" class="close" ng-click="notifications.invalid_credentials = false">
+								<span aria-hidden="true">&times;</span></button>
+							<span class="notification_panel"><strong>Error:</strong> Could not authenticate your credentials. Please try again, or make sure that you're registered.</span>
+						</div>
+
+						<div ng-show="notifications.generic_error"
+								class="alert alert-danger alert-dismissible" role="alert">
+							<button type="button" class="close" ng-click="notifications.generic_error = false">
+								<span aria-hidden="true">&times;</span></button>
+							<span class="notification_panel"><strong>Error</strong> Something went wrong on our end. Please contact the developers.</span>
+						</div>
+
+						<div ng-show="notifications.bad_request"
+								class="alert alert-danger alert-dismissible" role="alert">
+							<button type="button" class="close" ng-click="notifications.bad_request = false">
+								<span aria-hidden="true">&times;</span></button>
+							<span class="notification_panel"><strong>Error</strong> It looks like you're trying to do something sketchy. Remember that "unauthorized penetration tests" are illegal :P. If you believe this is a mistake, please contact the developers.</span>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1">
+						<br>
+						<form name="loginForm">
+							<div class="form-group">
+								<label class="input-label">Email</label>
+								<input type="email" class="form-control" placeholder="Email" required ng-model="formData.email">
+							</div>
+							<div class="form-group">
+								<label class="input-label">Password</label>
+								<input type="password" class="form-control" placeholder="Password" required ng-model="formData.password">
+							</div>
+
+							<div class="row">
+								<div class="col-xs-12">
+									<button ng-click="submitLogin()" class="btn btn-success input-label">Login</button>
+									<input type="button" class="btn btn-primary input-label" value="Need to Register?" ng-click="register()">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<img src="sit.png" alt="" style="width:100%">
+			</div>
+		</div>
+	</div>

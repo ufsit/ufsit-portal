@@ -26,6 +26,7 @@ routes.post('/user/register', (req, res) => {
 		'name': req.body.name,
 		'email': req.body.email,
 		'password': req.body.password,
+		'grad_year': req.body.grad_year,
 		'subscribe': req.body.subscribe,
 	}
 	/* Use the account management module to attempt to register the new user.
@@ -53,6 +54,7 @@ routes.post('/user/login', (req, res) => {
 		'email': req.body.email,
 		'password': req.body.password
 	}
+	console.log(login_data);
 	// account_mgmt.authenticate(login_data,(error)=>{
 	// 	if(error){
 	// 		console.log(error);
@@ -64,7 +66,7 @@ routes.post('/user/login', (req, res) => {
 	// 	}
 	// });
 
-	res.status(501).send();
+	res.status(401).send();
 });
 
 /*

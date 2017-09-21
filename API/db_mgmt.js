@@ -91,6 +91,7 @@ var db_mgmt_module = function(){
 					password_salt: new_account.password.salt,
 					password_hash: new_account.password.hash,
 					full_name: new_account.full_name,
+					grad_year: new_account.grad_year,
 					in_mailing_list: new_account.in_mailing_list
 				}
 			});

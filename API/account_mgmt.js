@@ -22,6 +22,7 @@ var account_mgmt_module = (function(){
 				"hash": null
 			},
 			"full_name": registration_data.name,	//verbatim
+			"grad_year": registration_data.grad_year,	//verbatim
 			"in_mailing_list": registration_data.subscribe	//verbatim
 		};
 
