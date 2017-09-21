@@ -23,6 +23,11 @@ var app = angular.module("myModule", ['ngRoute', 'pascalprecht.translate']);
  		controller: "RegisterController",
  		controllerAs: "main"
  	})
+	.when("/admin", {
+ 		templateUrl: "admin.html",
+ 		controller: "AdminController",
+ 		controllerAs: "main"
+ 	})
 	.when("/home", {
  		templateUrl: "views/home.html",
  		controller: "homeController",

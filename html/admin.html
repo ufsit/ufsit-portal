@@ -1,0 +1,52 @@
+<!--////////////////            Top of Page   //////////////////////-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+table {
+  margin: 10px;
+  padding: 0px;
+  display: table;
+}
+
+table td {
+  padding: 5px;
+}
+
+table thead tr {
+  border-bottom: 1px solid black;
+}
+
+table thead td {
+  font-style: italic;
+}
+
+table tbody tr.even {
+  background: #ccc;
+}
+
+</style>
+</head>
+<body>
+
+<table>
+  <thead>
+	 <tr>
+		<td>Full Name</td>
+		<td>Email</td>
+		<td>Graduation Year</td>
+		<td>Mailing List?</td>
+	 </tr>
+  </thead>
+  <tbody>
+	 <tr ng-repeat="u in users" ng-class-even="'even'">
+		<td>{{u.full_name}}</td>
+		<td>{{u.email}}</td>
+		<td>{{u.grad_year}}</td>
+		<td>{{u.in_mailing_list}}</td>
+	 </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

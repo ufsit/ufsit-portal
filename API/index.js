@@ -8,6 +8,7 @@ var sanitizer = require('express-sanitize-escape');	//Automagically sanitize req
 /* App-specific module imports */
 var account_mgmt = require('./account_mgmt.js');
 var event_mgmt = require('./event_mgmt.js');
+var admin = require('./admin.js');
 
 /* For parsing application/json */
 routes.use(bodyParser.json());
@@ -22,6 +23,13 @@ routes.use(sanitizer.middleware());
 
 routes.get('/', (req, res) => {
 	res.status(200).json({ message: 'You\'ve reached the root directory of the REST API. Try something more interesting next time :)' });
+});
+
+routes.get('/admin/list_users', (req, res) => {
+	admin.list_users(function(err, data) {
+		// TODO error
+		res.status(200).json(data);
+	});
 });
 
 routes.post('/user/register', (req, res) => {

@@ -140,6 +140,30 @@ var db_mgmt_module = function(){
 		}
 	}
 
+   function list_users(callback){
+		var sql_query = jsonSql.build({
+			type: 'select',
+			table: 'accounts',
+			fields: ['email','full_name','in_mailing_list','grad_year']
+		});
+
+		sql_pool.query(
+			sql_query.query,
+			sql_query.values,
+			function (error, results, fields) {
+				/* If there was a sql error, send it up through the callback */
+				if (error){
+					callback({
+						'code': 500,
+						'text': error
+					}, null);	//2nd parameter (which is usually the result) is null
+				} else {
+                  callback(null, results);
+				}
+			}
+		);
+   }
+
 	/* Retrieve an account with the given email address */
 	function retrieve(email_addr, callback){
 		/* Form a query to the 'accounts' table for entries with the given email */
@@ -296,7 +320,8 @@ var db_mgmt_module = function(){
 		create_session: create_session,
 		validate_session: validate_session,
 		remove_session: remove_session,
-		sign_in: sign_in
+		sign_in: sign_in,
+		list_users: list_users
 	});
 }
 
