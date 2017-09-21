@@ -18,20 +18,20 @@ var app = angular.module("myModule", ['ngRoute', 'pascalprecht.translate']);
  		controller: "LoginController",
  		controllerAs: "main"
  	})
- 	.when("/register", {
+	.when("/register", {
  		templateUrl: "register.html",
  		controller: "RegisterController",
  		controllerAs: "main"
+ 	})
+	.when("/home", {
+ 		templateUrl: "views/home.html",
+ 		controller: "homeController",
+ 		controllerAs: "home"
  	})
  // 	.when("/meeting_signin", {
  // 		templateUrl: "views/meeting_signin.html",
  // 		controller: "meetingController",
  // 		controllerAs: "meeting"
- // 	})
- // 	.when("/home", {
- // 		templateUrl: "views/home.html",
- // 		controller: "homeController",
- // 		controllerAs: "home"
  // 	})
 	.otherwise({redirectTo: "/"});
 

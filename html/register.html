@@ -7,12 +7,6 @@
 				<!-- Notification panels -->
 				<div class="row">
 					<div class="col-xs-12">
-						<div ng-show="notifications.successful_registration"
-								class="alert alert-success alert-dismissible" role="alert">
-							<button type="button" class="close" ng-click="notifications.successful_registration = false">
-								<span aria-hidden="true">&times;</span></button>
-							<span class="notification_panel"><strong>Success!</strong> Your account has been created. You may now <a href="#" ng-click="$location.path('/login')">log in</a></span>
-						</div>
 
 						<div ng-show="notifications.email_conflict"
 								class="alert alert-danger alert-dismissible" role="alert">
@@ -39,7 +33,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-md-10 col-md-offset-1">
+					<div class="col-md-10 col-md-offset-1" >
 						<br>
 						<form>
 							<div class="form-group">

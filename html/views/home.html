@@ -34,10 +34,12 @@
 </style>
 </head>
 <body>
-  
-<div class="container-fluid text-center">    
-	   <div class="col-md-12">  
+
+<div class="container-fluid text-center">
+	   <div class="col-md-12">
 		  	<div class="container">
+				<h2 ng-show="show_name">Hello, {{full_name}}</h2>
+				<hr>
 			  <div class="row">
 			  </div>
 			  <div class="row">
@@ -72,18 +74,13 @@
 			        <h3 class="title">CTF Practice Challenges</h3>
 			        <p>Practice CTF challenges and view solutions</p>
 			      </div>
-			    </div>    
+			    </div>
 			  </div>
 			</div>
 		</div>
 	</div>
-	<!--footer class="container-fluid text-center">
-	  <p>Leaving blank for now</p>
-	</footer-->
+	<footer class="container-fluid text-center">
+	  <button type="button" name="button" class="btn btn-danger" ng-click="log_out()">Log Out</button>
+  </footer>
 </body>
 </html>
-
-
-
-
-

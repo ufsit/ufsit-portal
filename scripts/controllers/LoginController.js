@@ -3,6 +3,13 @@
 	var app = angular.module("myModule");
 
 	app.controller("LoginController", function ( $http, $log, $location, $scope, validate) {
+		/* If the user is signed in, redirect them to /home */
+		validate_session((is_logged_in)=>{
+			/* If the user is logged in, redirect to  home  */
+			if(is_logged_in){
+			   $location.path('/home');
+			}
+		});
 
 		$scope.formData = {
 			'email': null,
@@ -24,9 +31,7 @@
 					/* Make a request to the services to log in */
 					$http.post('/api/user/login',$scope.formData)
 					.success(function (data, status, headers, config) {
-						console.log(status);
-						console.log(headers);
-						console.log(data);
+						$location.path('/home');
 					})
 					.error(function (data, status, header, config) {
 						if(status === 401){
@@ -45,6 +50,20 @@
 		$scope.register = function () {
 			$location.path('/register');
 		};
+
+		function validate_session(callback){
+			$http.get('/api/session/validate',$scope.formData)
+			.success(function (data, status, headers, config) {
+			   console.log(status);
+			   console.log(data);
+			   callback(true);
+			})
+			.error(function (data, status, headers, config) {
+			   console.log(status);
+			   console.log(data);
+			   callback(false);
+			});
+		}
 
 	});
 
