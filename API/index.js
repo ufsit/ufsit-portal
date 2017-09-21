@@ -21,22 +21,27 @@ routes.get('/', (req, res) => {
 });
 
 routes.post('/user/register', (req, res) => {
-	// console.log(req.body);
+	/* Grab the registration data from the request body */
 	var registration_data = {
 		'name': req.body.name,
 		'email': req.body.email,
 		'password': req.body.password,
 		'subscribe': req.body.subscribe,
 	}
-
+	/* Use the account management module to attempt to register the new user.
+	 	If the callback comes back with an error, */
 	account_mgmt.register_new_user(registration_data,(error)=>{
 		/* If a parameter was sent, it is an error message. */
 		if(error){
-			console.log(error);		//Log the error
-			res.status(409).send();	//Send a 409 (conflict)
+			console.log(error.text);	//Log the error
+			//Send the HTTP error code specified by the error object, and a simplified error message
+			if(error.code === 409)
+				res.status(error.code).send("Duplicate Account");
+			else if(error.code === 500)
+				res.status(error.code).send("Internal Server Error");
 		}
 		else{
-			res.status(501).send();
+			res.status(200).send("Success");
 		}
 	});
 
