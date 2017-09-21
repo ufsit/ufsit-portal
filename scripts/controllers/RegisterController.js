@@ -4,28 +4,17 @@
 
     app.controller("RegisterController", function ($location, validate, $scope, $http, $log) {
 
-		 $scope.formData = {
-		  'name': null,
-		  'email': null,
-		  'password': null,
-		  'gradYear': null,
-		  'subscribe' : true
-	  };
+        $scope.login = function () {
 
-	  /* Control the visibility of different error messages */
-	  $scope.errors = {
-		  'invalid_email': false
-	  }
+            $location.path('/');
+        };
 
-	  $scope.submitLogin = function () {
-		  $http.post('/api/user/register',$scope.formData)
-		  .success(function (data, status, headers, config) {
-			  console.log(data);
-		  })
-		  .error(function (data, status, header, config) {
-			  console.log(data);
-		  });
-	  };
+        $scope.register = function (registerForm) {
+            if(registerForm.$valid) {
+                validate.username($scope.username);
+            }
+            else {alert("Fill in registration info!")};
+        };
 
     });
 
