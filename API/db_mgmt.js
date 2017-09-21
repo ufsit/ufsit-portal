@@ -10,18 +10,32 @@ jsonSql.configure({
 	indexedValues: false			//Don't use auto-generated id for values placeholders after the value prefix
 });
 
-/* Grab the database credentials from the JSON file */
-const credentials = JSON.parse(fs.readFileSync('./credentials.json','utf8'));
+var sql_pool = null;
 
-/* Create a connection pool for mysql queries */
-var sql_pool  = mysql.createPool({
-	connectionLimit : 15,	//This max is dictated by our Heroku JawsDB plan lol
-	host            : credentials.db.host,	//Use the credentials from the credentials.json file
-	port				 : credentials.db.port,
-	user            : credentials.db.username,
-	password        : credentials.db.password,
-	database        : credentials.db.database
-});
+try {
+	/* Grab the database credentials from the JSON file */
+	const credentials = JSON.parse(fs.readFileSync('./credentials.json','utf8'));
+
+	/* Create a connection pool for mysql queries */
+	sql_pool  = mysql.createPool({
+		connectionLimit : 15,	//This max is dictated by our Heroku JawsDB plan lol
+		host            : credentials.db.host,	//Use the credentials from the credentials.json file
+		port				 : credentials.db.port,
+		user            : credentials.db.username,
+		password        : credentials.db.password,
+		database        : credentials.db.database
+	});
+
+} catch(err) {
+	console.log("Failed to read credentials. Checking for available environment variable...");
+	var url = process.env.JAWSDB_MARIA_URL;
+
+	if(url == undefined || url == null) {
+		throw "Unable to load database credentials";
+	}
+
+	sql_pool  = mysql.createPool(url);
+}
 
 /* Define the database management module and its public API */
 var db_mgmt_module = function(){
