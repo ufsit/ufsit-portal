@@ -31,6 +31,10 @@
 	strong {
 	  font-weight: 400;
 	}
+
+	.tile{
+		cursor: pointer
+	}
 </style>
 </head>
 <body>
@@ -44,7 +48,7 @@
 			  </div>
 			  <div class="row">
 			    <div class="col-sm-4">
-			      <div class="tile purple">
+			      <div class="tile purple" ng-click="sign_in()">
 			        <h3 class="title">Meeting Sign-in</h3>
 			        <p>Sign into meetings to get member benefits</p>
 			      </div>

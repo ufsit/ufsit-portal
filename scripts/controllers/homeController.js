@@ -30,6 +30,17 @@
 			 });
 		 }
 
+		 $scope.sign_in = function(){
+			 console.log('clicked sign in');
+			$http.post('/api/event/sign_in')
+			.success(function (data, status, headers, config) {
+			   alert('Thanks for signing in, ' + $scope.full_name + '.');
+			})
+			.error(function (data, status, headers, config) {
+			   alert('Something went wrong');
+			});
+		 }
+
 		 $scope.log_out = function(){
 			 $http.post('/api/session/logout');
 			 $location.path('/login');
