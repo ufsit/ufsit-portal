@@ -18,10 +18,15 @@ var app = angular.module("myModule", ['ngRoute', 'pascalprecht.translate']);
  		controller: "RegisterController",
  		controllerAs: "main"
  	})
- 	.when("/home/:username", {
+ 	.when("/meeting_signin", {
+ 		templateUrl: "views/meeting_signin.html",
+ 		controller: "meetingController",
+ 		controllerAs: "meeting"
+ 	})
+ 	.when("/home", {
  		templateUrl: "views/home.html",
- 		controller: "mainController",
- 		controllerAs: "main"
+ 		controller: "homeController",
+ 		controllerAs: "home"
  		}).otherwise({redirectTo: "/"});
 
   console.log(navigator.language);

@@ -1,21 +1,88 @@
 
 <!--////////////////            Top of Page   //////////////////////-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+	body {
+	  font-family: "Open Sans", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+	  font-size: 14px;
+	  line-height: 1.5em;
+	  font-weight: 400;
+	}
 
- <div class="h2 col-md-offset-1"> Please choose the items for you cart: </div>
+	p, span, a, ul, li, button {
+	  font-family: inherit;
+	  font-size: inherit;
+	  font-weight: inherit;
+	  line-height: inherit;
+	}
 
-  <!--////////////////            Items For Sale   //////////////////////-->
+	strong {
+	  font-weight: 600;
+	}
 
-  <!-- ng-include looks from the file folder it is currently in-->
-  <div class="col-md-offset-3" ng-include= "'/views/availableItems.html'"></div>
+	h1, h2, h3, h4, h5, h6 {
+	  font-family: "Open Sans", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+	  line-height: 1.5em;
+	  font-weight: 300;
+	}
 
-  <!--////////////////            Table Graph   //////////////////////-->
+	strong {
+	  font-weight: 400;
+	}
+</style>
+</head>
+<body>
+  
+<div class="container-fluid text-center">    
+	   <div class="col-md-12">  
+		  	<div class="container">
+			  <div class="row">
+			  </div>
+			  <div class="row">
+			    <div class="col-sm-4">
+			      <div class="tile purple">
+			        <h3 class="title">Meeting Sign-in</h3>
+			        <p>Sign into meetings to get member benefits</p>
+			      </div>
+			    </div>
+			    <div class="col-sm-4">
+			      <div class="tile red">
+			        <h3 class="title">Events and News</h3>
+			        <p>Learn about Meetings, Competitions, and Conferences</p>
+			      </div>
+			    </div>
+			    <div class="col-sm-4">
+			      <div class="tile orange">
+			        <h3 class="title">Submit Writeups</h3>
+			        <p>Submit writeups to up your rank</p>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="row">
+			    <div class="col-sm-4">
+			      <div class="tile green">
+			        <h3 class="title">Update Resume</h3>
+			        <p>Update/Upload you resume for companies</p>
+			      </div>
+			    </div>
+			    <div class="col-sm-4">
+			      <div class="tile blue">
+			        <h3 class="title">CTF Practice Challenges</h3>
+			        <p>Practice CTF challenges and view solutions</p>
+			      </div>
+			    </div>    
+			  </div>
+			</div>
+		</div>
+	</div>
+	<!--footer class="container-fluid text-center">
+	  <p>Leaving blank for now</p>
+	</footer-->
+</body>
+</html>
 
-<div ng-include="'/views/table.html'"></div>
-
- <br/>
- <div class="col-md-offset-1">
- <input type="button" value="Go to Cart" ng-click="main.ecartData()">
-</div>
 
 
 
