@@ -1,0 +1,20 @@
+<style>
+/* The rest of the CSS breaks if you take this out and I don't care enough to
+find out why this happens */
+.container-fluid{}
+
+
+	input.ng-invalid.ng-dirty {background-color: #FF554F}
+	input.ng-valid.ng-dirty {background-color: #68FF9D}
+
+	.main_header{
+		font-size: 32px;
+		font-family: 'Share Tech Mono', monospace;
+		/*text-shadow: h-shadow v-shadow blur-radius color|none|initial|inherit;*/
+		text-shadow: 1px 1px 1px #0CE88B;
+	}
+
+	.input-label{
+		font-size: 14px;
+		font-family: 'Share Tech Mono', monospace;	}
+		</style>

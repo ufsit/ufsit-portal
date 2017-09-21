@@ -1,3 +1,5 @@
+/* Simple, non-account sign-in. Scrap for parts :) */
+
 var fs = require('fs');		//For filesystem I/O
 
 const JSON_DB_FILE = './data/GBM_Sign_Ins.json';

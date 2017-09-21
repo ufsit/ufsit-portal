@@ -4,73 +4,93 @@ var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 var sanitizer = require('express-sanitize-escape');	//Automagically sanitize req.body
 
-var sign_in = require('./sign_in.js');
+/* App-specific module imports */
+var account_mgmt = require('./account_mgmt.js');
 
-routes.use(bodyParser.json()); // for parsing application/json
-routes.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-routes.use(sanitizer.middleware()); //Automagically sanitize req.body. this line follows app.use(bodyParser.json) or the last body parser middleware
+/* For parsing application/json */
+routes.use(bodyParser.json());
+/* For parsing application/x-www-form-urlencoded */
+routes.use(bodyParser.urlencoded({ extended: true }));
+/* Automagically sanitize req.body. this line follows app.use(bodyParser.json) or the last body parser middleware */
+routes.use(sanitizer.middleware());
 
 // var loginModule = require('./Login.js');
 
 routes.get('/', (req, res) => {
-  res.status(200).json({ message: 'You\'ve reached the root directory of the REST API. Try something more interesting next time :)' });
+	res.status(200).json({ message: 'You\'ve reached the root directory of the REST API. Try something more interesting next time :)' });
 });
 
-
-routes.post('/user/sign_in', (req, res) => {
+routes.post('/user/register', (req, res) => {
 	// console.log(req.body);
-	var name = req.body.name;
-	var email = req.body.email;
-	var subscribe = req.body.subscribe;
+	var registration_data = {
+		'name': req.body.name,
+		'email': req.body.email,
+		'password': req.body.password,
+		'subscribe': req.body.subscribe,
+	}
 
-	sign_in.simple(name, email,subscribe,(error)=>{
+	account_mgmt.register_new_user(registration_data,(error)=>{
 		if(error){
-			res.status(error.http_status_code).send(error.text);
+			console.log(error);
+			res.status(500).send();
 		}
-		else {
-			res.status(200).send();
+		else{
+			res.status(501).send();
 		}
 	});
+
 });
+
+
+routes.post('/user/login', (req, res) => {
+	var login_data = {
+		'email': req.body.email,
+		'password': req.body.password
+	}
+	// account_mgmt.authenticate(login_data,(error)=>{
+	// 	if(error){
+	// 		console.log(error);
+	// 		res.status(500).send();
+	// 	}
+	//
+	// 	else{
+	// 		res.status(501).send();
+	// 	}
+	// });
+
+	res.status(501).send();
+});
+
+/*
+Planning:
+/user/
+/register
+/login
+
+
+/event/
+/get_current_event
+/sign_in/{email}
+
+*/
 
 module.exports = routes;
 
 
-
-// routes.get('/', (req, res) => {
-//   res.status(200).json({ message: 'You\'ve reached the root directory of the REST API. Try something more interesting next time :p' });
+// routes.post('/user/sign_in', (req, res) => {
+// 	// console.log(req.body);
+// 	var name = req.body.name;
+// 	var email = req.body.email;
+// 	var subscribe = req.body.subscribe;
+//
+// 	sign_in.simple(name, email,subscribe,(error)=>{
+// 		if(error){
+// 			res.status(error.http_status_code).send(error.text);
+// 		}
+// 		else {
+// 			res.status(200).send();
+// 		}
+// 	});
 // });
 //
-// routes.post('/user/register', (req, res) => {
-//
-//   res.status(200).send("Work in progress!");
-// });
-//
-// routes.post('/user/login', (req, res) => {
-// 	var isAuthenticated = loginModule.authenticate(req.username);
-//
-// 	if(isAuthenticated){
-// 		var cookie = 'put a cookie here';
-// 		res.cookie('session',cookie,{maxAge:1200000, httpOnly: true }});
-// 		res.status(200).send('Authenticated');
-// 	}
-//
-// 	else {
-// 		res.status(401).send('Invalid credentials');
-// 	}
-//
-//   // res.status(200).json({ message: loginModule.sayHi() });
-// });
 // module.exports = routes;
-
-
-/*
-/user/
-	/login
-	/register
-
-/event/
-	/get_current_event
-	/sign_in/{email}
-
-*/
