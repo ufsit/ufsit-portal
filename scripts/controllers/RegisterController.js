@@ -1,49 +1,45 @@
 (function() {
-	//This is now just a reference to "myModule" in app.js
-	var app = angular.module("myModule");
-	app.controller("RegisterController", function ($location, validate, $scope, $http, $log) {
+	// This is now just a reference to "myModule" in app.js
+	let app = angular.module('myModule');
+	app.controller('RegisterController', function($location, validate, $scope, $http, $log) {
 		$scope.formData = {
 			'name': null,
 			'email': null,
 			'password': null,
 			'grad_year': null,
-			'subscribe' : true
+			'subscribe': true,
 		};
 		/* Control the visibility of different error messages */
 		$scope.notifications = {
 			'generic_error': false,
 			'email_conflict': false,
-			'bad_request': false
-		}
+			'bad_request': false,
+		};
 
-		$scope.submit_registration = function () {
-			if($scope.formData &&
+		$scope.submit_registration = function() {
+			if ($scope.formData &&
 				(null != $scope.formData.name) &&
 				(null != $scope.formData.email) &&
 				(null != $scope.formData.password) &&
 				(null != $scope.formData.grad_year) &&
-				(null != $scope.formData.subscribe)){
-					$http.post('/api/user/register',$scope.formData)
-					.success(function (data, status, headers, config) {
+				(null != $scope.formData.subscribe)) {
+					$http.post('/api/user/register', $scope.formData)
+					.success(function(data, status, headers, config) {
 						// $scope.notifications.successful_registration = true;
-						alert('Success! Your account has been created. You may now log in')
+						alert('Success! Your account has been created. You may now log in');
 						$location.path('/login');
 					})
-					.error(function (data, status, header, config) {
-
-						if(status === 409){
+					.error(function(data, status, header, config) {
+						if (status === 409) {
 							$scope.notifications.email_conflict = true;
-						}
-						else if(status === 400){
+						} else if (status === 400) {
 							$scope.notifications.bad_request = true;
-						}
-						else {
+						} else {
 							$scope.notifications.generic_error = true;
 						}
 					});
-				}
-				else {
-					console.log("Incomplete form");
+				} else {
+					console.log('Incomplete form');
 				}
 		};
 	});

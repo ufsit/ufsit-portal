@@ -1,12 +1,12 @@
-const db_mgmt = require('./db_mgmt.js');	//Abstracts away DB interactions
+const db_mgmt = require('./db_mgmt.js');	// Abstracts away DB interactions
 
-var admin_module = function() {
+let admin_module = function() {
 	function list_users(callback) {
 		db_mgmt.list_users(callback);
 	}
 
 	return ({
-		list_users : list_users
+		list_users: list_users,
 	});
 };
 
