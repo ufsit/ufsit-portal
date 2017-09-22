@@ -74,25 +74,26 @@ let account_mgmt_module = (function() {
 				'text': '[account_mgmt.js->]: Error - Attempted to log into an account with an invalid email: '
 					+ login_data.email,
 			});
-		}
-		/* Otherwise, attempt to retrieve the account record from the database */
-		db_mgmt.retrieve(login_data.email, (error, result)=>{
-			if (error) {
-				callback(error);	// If there was an error, send it up through the callback
-			/* If there was no error, verify the given credentials against those retrieved from the database */
-			} else {
-				let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
-				if (authenticated) {
-					callback(null);	// Call back without an error
+		} else {
+			/* Otherwise, attempt to retrieve the account record from the database */
+			db_mgmt.retrieve(login_data.email, (error, result)=>{
+				if (error) {
+					callback(error);	// If there was an error, send it up through the callback
+				/* If there was no error, verify the given credentials against those retrieved from the database */
 				} else {
-					callback({
-						'code': 401,
-						'text': '[account_mgmt.js->]: Error - Attempted to log into an ' +
-							'account with the wrong credentials: ' + login_data.email,
-					});
+					let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
+					if (authenticated) {
+						callback(null);	// Call back without an error
+					} else {
+						callback({
+							'code': 401,
+							'text': '[account_mgmt.js->]: Error - Attempted to log into an ' +
+								'account with the wrong credentials: ' + login_data.email,
+						});
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	/* Hashes a given password and salt and compares it against an existing hash. */
