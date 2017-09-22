@@ -1,3 +1,4 @@
+'use strict';
 (function() {
 	// Module "myModule" is created here
 	let app = angular.module('myModule', ['ngRoute', 'pascalprecht.translate']);

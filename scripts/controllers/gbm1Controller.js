@@ -1,3 +1,4 @@
+'use strict';
 (function() {
 	// This is now just a reference to "myModule" in app.js
 	angular.module('myModule').controller('gbm1Controller', function( $http, $log, $location, $scope, validate) {

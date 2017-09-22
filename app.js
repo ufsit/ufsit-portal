@@ -1,6 +1,7 @@
+'use strict';
 // Dependencies
 let express = require('express');
-var morgan = require('morgan');
+let morgan = require('morgan');
 let bodyParser = require('body-parser');
 
 const PORT = process.env.PORT || 8080;

@@ -1,3 +1,4 @@
+'use strict';
 
 
 const db_mgmt = require('./db_mgmt.js');	// Abstracts away DB interactions

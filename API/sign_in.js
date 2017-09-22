@@ -1,3 +1,4 @@
+'use strict';
 /* Simple, non-account sign-in. Scrap for parts :) */
 
 let fs = require('fs');		// For filesystem I/O

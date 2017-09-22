@@ -1,3 +1,4 @@
+'use strict';
 /* Simple, non-account sign-in. Scrap for parts :) */
 
 const crypto = require('crypto');	// For crypto

@@ -1,3 +1,4 @@
+'use strict';
 const routes = require('express').Router(); // eslint-disable-line new-cap
 let bodyParser = require('body-parser');
 let cookieParser = require('cookie-parser');

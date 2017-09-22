@@ -1,3 +1,4 @@
+'use strict';
 let fs = require('fs');						// For filesystem I/O
 let mysql = require('mysql');		// For mySQL interaction
 let jsonSql = require('json-sql')();	// To make it easier to create queries based on JSON data

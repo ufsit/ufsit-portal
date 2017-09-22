@@ -1,3 +1,4 @@
+'use strict';
 let app = angular.module('myModule');
 
 app.factory('validate', function($http, $log, $location) {
