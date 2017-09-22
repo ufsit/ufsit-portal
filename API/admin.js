@@ -6,7 +6,7 @@ let admin_module = function() {
 	}
 
 	return ({
-		list_users: list_users,
+		// list_users: list_users,
 	});
 };
 
