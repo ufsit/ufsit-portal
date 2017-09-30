@@ -1,7 +1,10 @@
 'use strict';
+
 let fs = require('fs');						// For filesystem I/O
 let mysql = require('mysql');		// For mySQL interaction
 let jsonSql = require('json-sql')();	// To make it easier to create queries based on JSON data
+const util = require('../util');
+
 jsonSql.configure({
 	separatedValues: true,		// Use placeholders for each string value
 	namedValues: false,			// Don't use named values (just the symbol)
@@ -79,19 +82,19 @@ let db_mgmt_module = function() {
 		If it does, call back  with true. If it doesn't, call back with false. */
 		function check_account_conflict(new_email, callback) {
 			/* Form a query to the 'accounts' table for entries with the given email */
-			let sql_query = jsonSql.build({
+			/* let sql_query = jsonSql.build({
 				type: 'select',
 				table: 'accounts',
 				fields: ['email'],
 				condition: {
 					email: new_email,
 				},
-			});
+			});*/
 
 			/* Execute the query using a connection from the connection pool */
 			sql_pool.query(
-				sql_query.query,
-				sql_query.values,
+				'SELECT `id` FROM `account` WHERE email = ?',
+				[new_email],
 				function(error, results, fields) {
 					if (error) {	// If there was an error, pass it up through the callback
 						callback({
@@ -117,23 +120,21 @@ let db_mgmt_module = function() {
 		/* Helper function: Inserts a new account element into the database with the
 		parameters passed in the new_account object */
 		function insert_new_account(new_account, callback) {
-			let sql_query = jsonSql.build({
-				type: 'insert',
-				table: 'accounts',
-				values: {
-					email: new_account.email,
-					password_salt: new_account.password.salt,
-					password_hash: new_account.password.hash,
-					full_name: new_account.full_name,
-					grad_year: new_account.grad_year,
-					in_mailing_list: new_account.in_mailing_list,
-				},
-			});
+			let values = {
+				full_name: new_account.full_name,
+				email: new_account.email,
+				permissions: '',
+				password: new_account.password.salt + '$' + new_account.password.hash,
+				registration_ip: new_account.registration_ip,
+				registration_date: util.mysql_iso_time(new Date(Date.now())),
+				grad_date: new_account.grad_year,
+				mass_mail_optin: new_account.in_mailing_list,
+			};
 
 			/* Execute the query using a connection from the connection pool */
 			sql_pool.query(
-				sql_query.query,
-				sql_query.values,
+				'INSERT INTO `account` SET ?',
+				values,
 				function(error, results, fields) {
 					if (error) {
 						// If there was an error, send it up through the callback
@@ -147,15 +148,15 @@ let db_mgmt_module = function() {
 	}
 
    function list_users(callback) {
-		let sql_query = jsonSql.build({
+		/* let sql_query = jsonSql.build({
 			type: 'select',
 			table: 'accounts',
 			fields: ['email', 'full_name', 'in_mailing_list', 'grad_year'],
-		});
+		});*/
 
 		sql_pool.query(
-			sql_query.query,
-			sql_query.values,
+			'SELECT ?? FROM `account`',
+			[['email', 'full_name', 'mass_mail_optin', 'grad_date']],
 			function(error, results, fields) {
 				/* If there was a sql error, send it up through the callback */
 				if (error) {
@@ -173,19 +174,19 @@ let db_mgmt_module = function() {
 	/* Retrieve an account with the given email address */
 	function retrieve(email_addr, callback) {
 		/* Form a query to the 'accounts' table for entries with the given email */
-		let sql_query = jsonSql.build({
+		/* let sql_query = jsonSql.build({
 			type: 'select',
 			table: 'accounts',
 			fields: ['password_salt', 'password_hash', 'full_name'],
 			condition: {
 				email: email_addr,
 			},
-		});
+		});*/
 
 		/* Execute the query using a connection from the connection pool */
 		sql_pool.query(
-			sql_query.query,
-			sql_query.values,
+			'SELECT ?? FROM `account` WHERE email = ?',
+			[['id', 'password', 'full_name'], email_addr],
 			function(error, results, fields) {
 				/* If there was a sql error, send it up through the callback */
 				if (error) {
@@ -197,10 +198,12 @@ let db_mgmt_module = function() {
 					/* If the results array has any elements in it, call back with the 0th element
 					(entries are unique) */
 					if (results.length > 0) {
+						let pwparts = results[0].password.split('$');
 						// Callback with no error, and 2nd param is the results
 						callback(null, {	// Encapsulate the results nicely for account_mgmt.js
-							'salt': results[0].password_salt,
-							'hash': results[0].password_hash,
+							'id': results[0].id,
+							'salt': pwparts[0],
+							'hash': pwparts[1],
 							'name': results[0].full_name,
 						});
 					} else {
@@ -216,21 +219,21 @@ let db_mgmt_module = function() {
 	}
 
 	/* Create an entry in the sessions table */
-	function create_session(session_token, email_addr, expiry_date, callback) {
-		let sql_query = jsonSql.build({
-			type: 'insert',
-			table: 'sessions',
-			values: {
-				session_id: session_token,
-				email: email_addr,
-				expiry_date: expiry_date,
-			},
-		});
+	function create_session(session_token, account_id,
+			start_date, expire_date, ip_address, browser, callback) {
+		let values = {
+			id: session_token,
+			account_id: account_id,
+			start_date: util.mysql_iso_time(start_date),
+			expire_date: util.mysql_iso_time(expire_date),
+			ip_address: ip_address,
+			browser: browser,
+		};
 
 		/* Execute the query using a connection from the connection pool */
 		sql_pool.query(
-			sql_query.query,
-			sql_query.values,
+			'INSERT INTO `session` SET ?',
+			values,
 			function(error, results, fields) {
 				if (error) {
 					callback(error);
@@ -243,33 +246,25 @@ let db_mgmt_module = function() {
 
 	/* Confirms whether the token corresponds to an active session. If it does, calls back
 		with the email associated with it.*/
-	function validate_session(session_token, callback) {
-		let sql_query = jsonSql.build({
-			type: 'select',
-			table: 'sessions',
-			fields: ['email'],
-			condition: {
-				session_id: session_token,
-			},
-		});
+	function get_session(session_token, callback) {
 		/* Execute the query using a connection from the connection pool */
 		sql_pool.query(
-			sql_query.query,
-			sql_query.values,
+			'SELECT * FROM `session` WHERE ?',
+			{id: session_token},
 			function(error, results, fields) {
 				/* If there were no errors... */
 				if (error) {
 					// If there was an error, send it up through the callback
-					callback(error, false, null);	// is_valid= false, email = null
+					callback(error, null);
 				} else {
 					/* If there was a match */
 					if (results.length > 0) {
-						/* Call back with no error, is_valid=true, and the match email */
-						callback(null, true, results[0].email);
+						/* Call back with no error and the session */
+						callback(null, results[0]);
 					} else {
 						/* If there was no match */
-						/* Call back with no error, is_valid=false, and email=null */
-						callback(null, false, null);
+						/* Call back with no error, but also no session */
+						callback(null, null);
 					}
 				}
 			}
@@ -328,7 +323,7 @@ let db_mgmt_module = function() {
 		create_account: create_account,
 		retrieve: retrieve,
 		create_session: create_session,
-		validate_session: validate_session,
+		get_session: get_session,
 		remove_session: remove_session,
 		sign_in: sign_in,
 		list_users: list_users,

@@ -4,14 +4,13 @@ CREATE TABLE `account` (
 	`email` varchar(254) NOT NULL,
 	`verification_level` INT NOT NULL DEFAULT '0',
 	`permissions` TEXT NOT NULL,
-	`password_salt` BINARY(32) NOT NULL,
-	`password` BINARY(100) NOT NULL,
+	`password` varchar(200) NOT NULL,
 	`registration_ip` varchar(40) NOT NULL,
 	`registration_date` DATETIME NOT NULL,
 	`last_visit` DATETIME,
 	`mass_mail_optin` INT(1) NOT NULL,
 	`grad_date` varchar(50) NOT NULL,
-	`rank` INT NOT NULL,
+	`rank` INT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -38,7 +37,7 @@ CREATE TABLE `event` (
 
 CREATE TABLE `session` (
 	`id` varchar(32) NOT NULL,
-	`account_id` INT NOT NULL AUTO_INCREMENT,
+	`account_id` INT NOT NULL,
 	`start_date` DATETIME NOT NULL,
 	`expire_date` DATETIME NOT NULL,
 	`ip_address` varchar(40) NOT NULL,
@@ -78,8 +77,6 @@ ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`rank`) REFERENC
 ALTER TABLE `event_signin` ADD CONSTRAINT `event_signin_fk0` FOREIGN KEY (`event_id`) REFERENCES `event`(`id`);
 
 ALTER TABLE `event_signin` ADD CONSTRAINT `event_signin_fk1` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`);
-
-ALTER TABLE `event` ADD CONSTRAINT `event_fk0` FOREIGN KEY (`location`) REFERENCES `account`(`id`);
 
 ALTER TABLE `event` ADD CONSTRAINT `event_fk1` FOREIGN KEY (`created_by`) REFERENCES `account`(`id`);
 
