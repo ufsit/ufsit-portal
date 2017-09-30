@@ -15,7 +15,8 @@ let sql_pool = null;
 
 try {
 	/* Grab the database credentials from the JSON file */
-	const credentials = JSON.parse(fs.readFileSync('./credentials.json', 'utf8'));
+	const CREDENTIALS = process.env.CREDENTIALS || 'credentials.json';
+	const credentials = JSON.parse(fs.readFileSync(CREDENTIALS, 'utf8'));
 
 	/* Create a connection pool for mysql queries */
 	sql_pool = mysql.createPool({
