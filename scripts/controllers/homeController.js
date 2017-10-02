@@ -3,7 +3,7 @@
 	// This is now just a reference to "myModule" in app.js
 	let app = angular.module('myModule');
 
-	app.controller('homeController', function( $http, $log, $location, $scope, validate) {
+	app.controller('homeController', function( $http, $log, $location, $scope, validate, $window) {
 		$scope.show_name = false;	// Don't show the person's name until it loads
 
 		// Validate the user's session
@@ -44,5 +44,13 @@
 			$http.post('/api/session/logout');
 			$location.path('/login');
 		};
+    //redirect to sharepoint that stores lecture content
+    $scope.redirect_lectureContent = function(){
+      $window.open('https://uflorida-my.sharepoint.com/personal/elan22_ufl_edu/_layouts/15/guestaccess.aspx?folderid=1d67d1c9bc1be4aa68ea7bd61d21b612a&authkey=AeUSm-60JBHJWPqkG-KaxAU', '_blank');
+    };
+    //redirect to googleForms that allows resume' uploads
+    $scope.update_resume = function(){
+      $window.open('https://docs.google.com/forms/d/e/1FAIpQLScP-7T3VGFAcgVOcr12ErLfM0qIh4P9YjaxvCE8dqxIQ2sxVQ/viewform', '_blank');
+    };
 	});
 }());
