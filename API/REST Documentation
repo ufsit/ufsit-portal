@@ -1,3 +1,4 @@
+'use strict';
 Register
 	Description:		Creates a new user given some registration parameters
 	URL:					/user/register
@@ -8,7 +9,7 @@ Register
 				"name":[string],
 				"email":[string],
 				"password":[string],
-				"gradYear":[string],		// e.g. "Spring 2018"
+				"grad_year":[string],		// e.g. "Spring 2018"
 				"subscribe":[boolean]
 			}
 
@@ -31,7 +32,7 @@ Register
 			'name': "Human McPerson",
 			'email': "real_person@ufl.edu",
 			'password': "123456seven",
-			'gradYear': "Spring 2049",
+			'grad_year': "Spring 2049",
 			'subscribe' : true
 		};
 		$http.post('/api/user/register',$scope.formData)

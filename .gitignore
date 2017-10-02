@@ -1,3 +1,10 @@
+# Sensitive
+credentials.json
+.env
+
+# Vim shit
 *.swp
 *.swo
+
+# Bulky. Prefer dynamic resolution
 node_modules/

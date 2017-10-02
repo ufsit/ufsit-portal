@@ -1,0 +1,17 @@
+{
+  "parserOptions": { "ecmaVersion": 6 },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "google"],
+  "rules": {
+    "require-jsdoc" : 0,
+    "camelcase" : 0,
+    "no-console" : 0,
+    "no-tabs" : 0,
+    "max-len" : ["warn", 120],
+    "strict": ["error", "global"]
+  }
+}
