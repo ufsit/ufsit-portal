@@ -1,24 +1,14 @@
 'use strict';
 
-let fs = require('fs');						// For filesystem I/O
-let mysql = require('mysql');		// For mySQL interaction
-let jsonSql = require('json-sql')();	// To make it easier to create queries based on JSON data
+const fs = require('fs');						// For filesystem I/O
+const mysql = require('mysql');		// For mySQL interaction
 const util = require('../util');
-
-jsonSql.configure({
-	separatedValues: true,		// Use placeholders for each string value
-	namedValues: false,			// Don't use named values (just the symbol)
-	valuesPrefix: '?',			// Use '?' instead of the default '$', which allows for simple query execution
-	dialect: 'mysql',				// We're using MariaDB
-	wrappedIdentifiers: true,	// Wrap all identifiers with dialect wrapper (name -> "name").
-	indexedValues: false,			// Don't use auto-generated id for values placeholders after the value prefix
-});
+const CREDENTIALS = process.env.CREDENTIALS || 'credentials.json';
 
 let sql_pool = null;
 
 try {
 	/* Grab the database credentials from the JSON file */
-	const CREDENTIALS = process.env.CREDENTIALS || 'credentials.json';
 	const credentials = JSON.parse(fs.readFileSync(CREDENTIALS, 'utf8'));
 
 	/* Create a connection pool for mysql queries */
@@ -35,7 +25,8 @@ try {
 	let url = process.env.JAWSDB_MARIA_URL;
 
 	if (url == undefined || url == null) {
-		throw new Error('Unable to load database credentials');
+		throw new Error('Unable to load database credentials from ' + CREDENTIALS +
+				'.\nEnsure that you have this file available in your current directory.');
 	}
 
 	sql_pool = mysql.createPool(url);
@@ -82,15 +73,6 @@ let db_mgmt_module = function() {
 		If it does, call back  with true. If it doesn't, call back with false. */
 		function check_account_conflict(new_email, callback) {
 			/* Form a query to the 'accounts' table for entries with the given email */
-			/* let sql_query = jsonSql.build({
-				type: 'select',
-				table: 'accounts',
-				fields: ['email'],
-				condition: {
-					email: new_email,
-				},
-			});*/
-
 			/* Execute the query using a connection from the connection pool */
 			sql_pool.query(
 				'SELECT `id` FROM `account` WHERE email = ?',
@@ -148,12 +130,6 @@ let db_mgmt_module = function() {
 	}
 
    function list_users(callback) {
-		/* let sql_query = jsonSql.build({
-			type: 'select',
-			table: 'accounts',
-			fields: ['email', 'full_name', 'in_mailing_list', 'grad_year'],
-		});*/
-
 		sql_pool.query(
 			'SELECT ?? FROM `account`',
 			[['email', 'full_name', 'mass_mail_optin', 'grad_date']],
@@ -174,15 +150,6 @@ let db_mgmt_module = function() {
 	/* Retrieve an account with the given email address */
 	function retrieve(email_addr, callback) {
 		/* Form a query to the 'accounts' table for entries with the given email */
-		/* let sql_query = jsonSql.build({
-			type: 'select',
-			table: 'accounts',
-			fields: ['password_salt', 'password_hash', 'full_name'],
-			condition: {
-				email: email_addr,
-			},
-		});*/
-
 		/* Execute the query using a connection from the connection pool */
 		sql_pool.query(
 			'SELECT ?? FROM `account` WHERE email = ?',
@@ -273,17 +240,10 @@ let db_mgmt_module = function() {
 
 	/* Remove an entry from the sessions table */
 	function remove_session(session_id, callback) {
-		let sql_query = jsonSql.build({
-			type: 'remove',
-			table: 'sessions',
-			condition: {
-				'session_id': session_id,
-			},
-		});
 		/* Execute the query using a connection from the connection pool */
 		sql_pool.query(
-			sql_query.query,
-			sql_query.values,
+			'REMOVE FROM `session` WHERE id = ?',
+			[session_id],
 			function(error, results, fields) {
 				if (error) {
 					callback(error);
@@ -295,17 +255,17 @@ let db_mgmt_module = function() {
 	}
 	/* Sign a user into an event */
 	function sign_in(email, timestamp, callback) {
-		let sql_query = jsonSql.build({
+		/* let sql_query = jsonSql.build({
 			type: 'insert',
 			table: 'event_sign_ins',
 			values: {
 				email: email,
 				timestamp: timestamp,
 			},
-		});
+		});*/
 
 		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
+		/* sql_pool.query(
 			sql_query.query,
 			sql_query.values,
 			function(error, results, fields) {
@@ -315,7 +275,7 @@ let db_mgmt_module = function() {
 					callback();	// Otherwise call back with no errors
 				}
 			}
-		);
+		);*/
 	}
 
 	// Revealing module
