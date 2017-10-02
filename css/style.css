@@ -9,12 +9,16 @@
 .tile .title {
   margin-top: 0px;
 }
-.tile.purple, .tile.blue, .tile.red, .tile.orange, .tile.green {
+.tile.purple, .tile.blue, .tile.red, .tile.orange, .tile.green, .tile.yellow {
   color: #fff;
 }
 .tile.purple {
   background: #5133ab;
 }
+.tile.yellow {
+  background: #eede00;
+}
+
 .tile.purple:hover {
   background: #3e2784;
 }
@@ -41,6 +45,9 @@
 }
 .tile.orange:hover {
   background: #b8431f;
+}
+.tile.yellow:hover {
+  background: #decf00;
 }
 
 #h1-1 {
