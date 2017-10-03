@@ -5,8 +5,9 @@
 <head>
 <style>
 	body {
-	  font-family: "Open Sans", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
-	  font-size: 14px;
+	  font-family: 'VT323', monospace;
+
+	  font-size: 16px;
 	  line-height: 1.5em;
 	  font-weight: 400;
 	}
@@ -22,7 +23,13 @@
 	  font-weight: 600;
 	}
 
-	h1, h2, h3, h4, h5, h6 {
+	h1, h3, h4, h5, h6 {
+	  font-family: 'VT323', monospace;
+	  line-height: 1.0em;
+	  font-weight: 300;
+	}
+
+	h2 {
 	  font-family: "Open Sans", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
 	  line-height: 1.5em;
 	  font-weight: 300;
@@ -47,42 +54,42 @@
 			  <div class="row">
 			  </div>
 			  <div class="row">
-			    <div class="col-sm-4">
-			      <div class="tile purple" ng-click="sign_in()">
-			        <h3 class="title">Meeting Sign-in</h3>
+			  	<div class="col-sm-4">
+			      <div class="tile salmon" ng-click="sign_in()">
+			        <h1 class="title">Meeting Sign-in</h1>
 			        <p>Sign into meetings to get member benefits</p>
 			      </div>
 			    </div>
 			   	<div class="col-sm-4">
-			      <div class="tile yellow" ng-click="redirect_lectureContent()">
-			        <h3 class="title">Lecture and Exercises</h3>
+			      <div class="tile blueGray" ng-click="redirect_lecture_content()">
+			        <h1 class="title">Lecture and Exercises</h1>
 			        <p>Checkout old lectures and hands-on exercises</p>
 			      </div>
-			    </div>   
-			    <div class="col-sm-4">
-			      <div class="tile orange disabled">
-			        <h3 class="title">Submit Writeups</h3>
-			        <p>Submit writeups to up your rank</p>
+			    </div> 
+				<div class="col-sm-4">
+			      <div class="tile red" ng-click="redirect_events_news()">
+			        <h1 class="title">Events and News</h1>
+			        <p>Learn about Meetings, Competitions, and Conferences</p>
 			      </div>
 			    </div>
 			  </div>
 			  <div class="row">
 			    <div class="col-sm-4">
-			      <div class="tile green" ng-click="update_resume()">
-			        <h3 class="title">Update Resume</h3>
+			      <div class="tile green" ng-click="redirect_update_resume()">
+			        <h1 class="title">Update Resume</h1>
 			        <p>Update/Upload you resume for companies</p>
 			      </div>
 			    </div>
 			    <div class="col-sm-4">
-			      <div class="tile blue disabled">
-			        <h3 class="title">CTF Practice Challenges</h3>
+			      <div class="tile blue disabled"><!--disabled-->
+			        <h1 class="title">CTF Practice Challenges</h1>
 			        <p>Practice CTF challenges and view solutions</p>
 			      </div>
 			    </div>
-   				<div class="col-sm-4">
-			      <div class="tile red">
-			        <h3 class="title">Events and News</h3>
-			        <p>Learn about Meetings, Competitions, and Conferences</p>
+				<div class="col-sm-4">
+			      <div class="tile orange disabled"><!--disabled-->
+			        <h1 class="title">Submit Writeups</h1>
+			        <p>Submit writeups to up your rank</p>
 			      </div>
 			    </div>
 			  </div>

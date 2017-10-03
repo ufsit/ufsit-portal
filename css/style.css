@@ -11,18 +11,18 @@
 .tile .title {
   margin-top: 0px;
 }
-.tile.purple, .tile.blue, .tile.red, .tile.orange, .tile.green, .tile.yellow {
+.tile.salmon, .tile.blue, .tile.red, .tile.orange, .tile.green, .tile.blueGray {
   color: #fff;
 }
-.tile.purple {
-  background: #5133ab;
+.tile.salmon {
+  background: #ff6666;
 }
-.tile.yellow {
-  background: #eede00;
+.tile.blueGray {
+  background: #363663;
 }
 
-.tile.purple:hover {
-  background: #3e2784;
+.tile.salmon:hover {
+  background: #940000;
 }
 .tile.red {
   background: #ac193d;
@@ -48,8 +48,8 @@
 .tile.orange:hover {
   background: #b8431f;
 }
-.tile.yellow:hover {
-  background: #decf00;
+.tile.blueGray:hover {
+  background: #2b2b3b;
 }
 
 .tile.disabled {
