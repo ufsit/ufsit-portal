@@ -31,7 +31,7 @@ let account_mgmt_module = (function() {
 					'salt': null,
 					'hash': null,
 				},
-                'registration_ip': registration_data.registration_ip,
+				'registration_ip': registration_data.registration_ip,
 				'full_name': registration_data.name,	// verbatim
 				'grad_year': registration_data.grad_year,	// verbatim
 				'in_mailing_list': registration_data.subscribe,	// verbatim
@@ -96,10 +96,6 @@ let account_mgmt_module = (function() {
 				}
 			});
 		}
-	}
-
-	function get_account_by_id(account_id, callback) {
-		db_mgmt.retrieve_by_id(account_id, callback);
 	}
 
 	/* Hashes a given password and salt and compares it against an existing hash. */
@@ -172,7 +168,7 @@ let account_mgmt_module = (function() {
 		generate_session_token: generate_session_token,
 		validate_session: db_mgmt.get_session,
 		get_name_from_email: get_name_from_email,
-		get_account_by_id: get_account_by_id,
+		get_account_by_id: db_mgmt.retrieve_by_id,
 	};
 });
 
