@@ -1,26 +1,8 @@
-/*
-Field		Type		Null	Key	Default	Extra
-id		int(11)		NO	PRI	NULL	auto_increment
-full_name	varchar(100)	NO		NULL
-email		varchar(254)	NO		NULL
-verification_level	int(11)	NO		0
-permissions	text		NO		NULL
-password	varchar(200)	NO		NULL
-registration_ip	varchar(40)	NO		NULL
-registration_date	datetime	NO		NULL
-last_visit	datetime	YES		NULL
-mass_mail_optin	int(1)		NO		NULL
-grad_date	varchar(50)	NO		NULL
-rank		int(11)		YES	MUL	NULL
+-- Migrations from JsonSQL to new schema
 
-Field		Type		Null	Key	Default	Extra
-email		varchar(100)	NO		NULL
-password_salt	varchar(100)	YES		NULL
-password_hash	varchar(100)	YES		NULL
-full_name	varchar(100)	YES		NULL
-in_mailing_list	varchar(100)	YES		NULL
-grad_year	varchar(100)	YES		NULL
-*/
+DROP TABLE sessions;
+ALTER TABLE accounts RENAME TO accounts_old;
+ALTER TABLE event_sign_ins RENAME TO event_sign_ins_old;
 
 -- `registration_date` Default to the day we launched the web app
 -- Note that we are changing the password format

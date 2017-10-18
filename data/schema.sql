@@ -11,6 +11,12 @@ CREATE TABLE `account` (
 	`mass_mail_optin` INT(1) NOT NULL,
 	`grad_date` varchar(50) NOT NULL,
 	`rank` INT NULL,
+	`resume` varchar(255) NULL,
+	`resume_date` DATETIME NULL,
+	`social_slack` varchar(128) NULL,
+	`social_facebook` varchar(128) NULL,
+	`social_twitter` varchar(128) NULL,
+	`social_github` varchar(128) NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -44,16 +50,6 @@ CREATE TABLE `session` (
 	`browser` varchar(255)
 );
 
-CREATE TABLE `account_profile` (
-	`id` INT NOT NULL UNIQUE,
-	`resume` varchar(255),
-	`resume_date` DATETIME,
-	`social_slack` varchar(128),
-	`social_facebook` varchar(128),
-	`social_twitter` varchar(128),
-	`social_github` varchar(128)
-);
-
 CREATE TABLE `account_rank` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`title` varchar(150) NOT NULL,
@@ -82,7 +78,4 @@ ALTER TABLE `event` ADD CONSTRAINT `event_fk1` FOREIGN KEY (`created_by`) REFERE
 
 ALTER TABLE `session` ADD CONSTRAINT `session_fk0` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`);
 
-ALTER TABLE `account_profile` ADD CONSTRAINT `account_profile_fk0` FOREIGN KEY (`id`) REFERENCES `account`(`id`);
-
 ALTER TABLE `site_log` ADD CONSTRAINT `site_log_fk0` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`);
-
