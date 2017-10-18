@@ -20,6 +20,10 @@ try {
 		password: credentials.db.password,
 		database: credentials.db.database,
 	});
+
+	console.log('[INFO] Booted MySQL pool @ \''
+			+ credentials.db.host + '\' with credentials from file \''
+			+ CREDENTIALS + '\'');
 } catch (err) {
 	console.log('Failed to read credentials. Checking for available environment variable...');
 	let url = process.env.JAWSDB_MARIA_URL;
@@ -185,6 +189,36 @@ let db_mgmt_module = function() {
 		);
 	}
 
+	/* Retrieve an account by account ID */
+	function retrieve_by_id(account_id, callback) {
+		/* Execute the query using a connection from the connection pool */
+		sql_pool.query(
+			'SELECT ?? FROM `account` WHERE id = ?',
+			[['id', 'email', 'full_name'], account_id],
+			function(error, results, fields) {
+				/* If there was a sql error, send it up through the callback */
+				if (error) {
+					callback({
+						'code': 500,
+						'text': error,
+					}, null);	// 2nd parameter (which is usually the result) is null
+				} else {
+					/* If the results array has any elements in it, call back with the 0th element
+					(entries are unique) */
+					if (results.length > 0) {
+						callback(null, results[0]);
+					} else {
+						/* Otherwise, call back with a 404 (for no matching record) and null for the result*/
+						callback({
+							'code': 404,	// No results
+							'text': 'No account with id ' + account_id,
+						}, null);
+					}
+				}
+			}
+		);
+	}
+
 	/* Create an entry in the sessions table */
 	function create_session(session_token, account_id,
 			start_date, expire_date, ip_address, browser, callback) {
@@ -242,7 +276,7 @@ let db_mgmt_module = function() {
 	function remove_session(session_id, callback) {
 		/* Execute the query using a connection from the connection pool */
 		sql_pool.query(
-			'REMOVE FROM `session` WHERE id = ?',
+			'DELETE FROM `session` WHERE id = ?',
 			[session_id],
 			function(error, results, fields) {
 				if (error) {
@@ -255,19 +289,14 @@ let db_mgmt_module = function() {
 	}
 	/* Sign a user into an event */
 	function sign_in(email, timestamp, callback) {
-		/* let sql_query = jsonSql.build({
-			type: 'insert',
-			table: 'event_sign_ins',
-			values: {
-				email: email,
-				timestamp: timestamp,
-			},
-		});*/
+		let values = {
+			email: email,
+			timestamp: timestamp,
+		};
 
-		/* Execute the query using a connection from the connection pool */
-		/* sql_pool.query(
-			sql_query.query,
-			sql_query.values,
+		sql_pool.query(
+			'INSERT INTO `event_sign_ins_old` SET ?',
+			values,
 			function(error, results, fields) {
 				if (error) {
 					callback(error);
@@ -275,13 +304,14 @@ let db_mgmt_module = function() {
 					callback();	// Otherwise call back with no errors
 				}
 			}
-		);*/
+		);
 	}
 
 	// Revealing module
 	return ({
 		create_account: create_account,
 		retrieve: retrieve,
+		retrieve_by_id: retrieve_by_id,
 		create_session: create_session,
 		get_session: get_session,
 		remove_session: remove_session,

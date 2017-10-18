@@ -98,6 +98,10 @@ let account_mgmt_module = (function() {
 		}
 	}
 
+	function get_account_by_id(account_id, callback) {
+		db_mgmt.retrieve_by_id(account_id, callback);
+	}
+
 	/* Hashes a given password and salt and compares it against an existing hash. */
 	function verify_credentials(given_pw, salt, stored_hash) {
 		let test_hash = crypto.pbkdf2Sync(
@@ -167,6 +171,7 @@ console.log(error);
 		generate_session_token: generate_session_token,
 		validate_session: db_mgmt.get_session,
 		get_name_from_email: get_name_from_email,
+		get_account_by_id: get_account_by_id,
 	};
 });
 

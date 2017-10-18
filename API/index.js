@@ -119,7 +119,14 @@ routes.get('/session/validate', (req, res)=>{
 				res.status(500).send('Something went wrong on our end');
 			} else {
 				if (session) {
-					res.status(200).send();
+					account_mgmt.get_account_by_id(session.account_id, (err, account)=> {
+						if (err) {
+							console.log(err.text);
+							res.status(500).send();
+						} else {
+							res.status(200).json({email: account.email, name: account.full_name});
+						}
+					});
 				} else {
 					res.status(403).send('Invalid session');
 				}
@@ -149,13 +156,19 @@ routes.post('/event/sign_in', (req, res)=>{
 				/* If the session is valid */
 				if (session) {
 					/* Sign the user in */
-					// TODO: this is broken
-					event_mgmt.sign_in(session.account_id, new Date(Date.now()), (error)=>{
-						if (error) {
-							console.log(error);
+					account_mgmt.get_account_by_id(session.account_id, (err, account)=> {
+						if (err) {
+							console.log(err);
 							res.status(500).send('Something went wrong on our end');
 						} else {
-							res.status(200).send('Signed in');
+							event_mgmt.sign_in(account.email, new Date(Date.now()), (error)=>{
+								if (error) {
+									console.log(error);
+									res.status(500).send('Something went wrong on our end');
+								} else {
+									res.status(200).send('Signed in');
+								}
+							});
 						}
 					});
 				} else {
@@ -167,22 +180,3 @@ routes.post('/event/sign_in', (req, res)=>{
 });
 
 module.exports = routes;
-
-
-// routes.post('/user/sign_in', (req, res) => {
-// 	// console.log(req.body);
-// 	var name = req.body.name;
-// 	var email = req.body.email;
-// 	var subscribe = req.body.subscribe;
-//
-// 	sign_in.simple(name, email,subscribe,(error)=>{
-// 		if(error){
-// 			res.status(error.http_status_code).send(error.text);
-// 		}
-// 		else {
-// 			res.status(200).send();
-// 		}
-// 	});
-// });
-//
-// module.exports = routes;
