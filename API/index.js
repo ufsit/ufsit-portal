@@ -9,7 +9,8 @@ let account_mgmt = require('./account_mgmt.js');
 let event_mgmt = require('./event_mgmt.js');
 let admin = require('./admin.js');
 
-const COOKIE_EXPIRY_TIME = 900000; // 15min
+// time in seconds
+const COOKIE_EXPIRY_TIME = 900; // 15min
 
 /* For parsing application/json */
 routes.use(bodyParser.json());
@@ -96,7 +97,7 @@ routes.post('/user/login', (req, res) => {
 						res.cookie(
 							'session_id', session_cookie,
 							{
-								expires: new Date(Date.now() + COOKIE_EXPIRY_TIME),
+								expires: new Date(Date.now() + COOKIE_EXPIRY_TIME*1000),
 								httpOnly: true, 	// Prevent shenanigans
 								signed: true,
 							}

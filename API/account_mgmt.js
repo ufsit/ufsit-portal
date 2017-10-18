@@ -130,9 +130,10 @@ let account_mgmt_module = (function() {
 				/* Put in a timeout to remove the session from the database when its cookie expires */
 				setTimeout(
 					function() {
+						console.log('Expiring old session ' + token);
 						invalidate_session(token);
 					},
-					time_to_expiration
+					time_to_expiration*1000 // in milliseconds
 				);
 				callback(null, token);
 			}
@@ -143,8 +144,8 @@ let account_mgmt_module = (function() {
 	function invalidate_session(session_token) {
 		db_mgmt.remove_session(session_token, (error)=>{
 			if (error) {
-console.log(error);
-}
+				console.log(error);
+			}
 		});
 	}
 	/* Given an account's email addres, gets the associated name. */
