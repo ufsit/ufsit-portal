@@ -1,16 +1,12 @@
 'use strict';
+
 const routes = require('express').Router(); // eslint-disable-line new-cap
 let bodyParser = require('body-parser');
 let cookieParser = require('cookie-parser');
 let sanitizer = require('express-sanitize-escape');	// Automagically sanitize req.body
 
 /* App-specific module imports */
-let account_mgmt = require('./db/account_mgmt.js');
-let event_mgmt = require('./db/event_mgmt.js');
-// let admin = require('./admin.js');
-
-// time in seconds
-const COOKIE_EXPIRY_TIME = 900; // 15min
+const account_mgmt = require('./db/account_mgmt.js');
 
 /* For parsing application/json */
 routes.use(bodyParser.json());
@@ -61,113 +57,15 @@ routes.get('/', (req, res) => {
 		'Try something more interesting next time :)'});
 });
 
-routes.post('/user/register', (req, res) => {
-	/* Grab the registration data from the request body */
-	let registration_data = {
-		'registration_ip': req.ip,
-		'name': req.body.name,
-		'email': req.body.email.toLowerCase(),	// make emails case sensitive
-		'password': req.body.password,
-		'grad_year': req.body.grad_year,
-		'subscribe': req.body.subscribe,
-	};
-	/* Use the account management module to attempt to register the new user.
-	 	If the callback comes back with an error, */
-	account_mgmt.register_new_user(registration_data, (error)=>{
-		/* If a parameter was sent, it is an error message. */
-		if (error) {
-			console.log(error.text);	// Log the error
-			// Send the HTTP error code specified by the error object, and a simplified error message
-			if (error.code === 409) {
-				res.status(error.code).send('Duplicate Account');
-			} else if (error.code === 400) {
-				res.status(error.code).send('Malformed Request');
-			} else {
-				res.status(500).send('Internal Server Error');
-			}
-		} else {
-			res.status(200).send('Success');
-		}
-	});
-});
+// All routes in anonymous do not require an existing session or account
+routes.use(require('./anonymous.js'));
 
-
-routes.post('/user/login', (req, res) => {
-	let login_data = {
-		'email': req.body.email,
-		'password': req.body.password,
-	};
-	account_mgmt.authenticate(login_data, (account_id, error)=>{
-		/* Handles invalid credentials or database errors */
-		if (error) {
-			console.log(error.text);	// Log the error
-
-			// Send the HTTP error code specified by the error object, and a simplified error message
-			if (error.code === 401 || error.code === 404) {	// Either Bad password or email not found
-				res.status(401).send('Invalid Credentials');
-			} else if (error.code === 400) {
-				res.status(error.code).send('Malformed Request');
-			} else {
-				res.status(500).send('Internal Server Error');
-			}
-		} else { // If the credentials checked out
-			account_mgmt.generate_session_token(account_id, req.ip,
-					req.headers['user-agent'], COOKIE_EXPIRY_TIME,
-				(error, session_cookie)=>{
-					if (error) {
-						/* Something went wrong while generating the session cookie */
-						console.log(error);
-						res.status(500).send('Unable to generate session cookie');
-					} else {
-						// TODO: add other fields such as ephemeral to boost security
-						res.cookie(
-							'session_id', session_cookie,
-							{
-								expires: new Date(Date.now() + COOKIE_EXPIRY_TIME*1000),
-								httpOnly: true, 	// Prevent shenanigans
-								signed: true,
-							}
-						);
-						res.status(200).send('Successfully Authenticated');
-					}
-			});
-		}
-	});
-});
-
+// All routes included below require a login and an account object
 routes.all('*', requireLogin, loadAccount);
 
-routes.get('/session/validate', (req, res)=>{
-	res.status(200).json({email: req.account.email, name: req.account.full_name});
-});
-
-/* Clears the session_id cookie for the requester */
-routes.post('/session/logout', (req, res)=>{
-	res.clearCookie('session_id').status(200).send();
-});
-
-/* Signs the logged-in user into the current meeting */
-routes.post('/event/sign_in', (req, res)=>{
-	/* Sign the user in */
-	event_mgmt.sign_in(req.account.email, new Date(Date.now()), (error)=>{
-		if (error) {
-			console.log(error);
-			res.status(500).send('Something went wrong on our end');
-		} else {
-			res.status(200).send('Signed in');
-		}
-	});
-});
-
-/*
-routes.get('/admin/list_users', (req, res) => {
-	admin.list_users(function(err, data) {
-		if (err) {
-			console.log(err.text);
-		} else {
-			res.status(200).json(data);
-		}
-	});
-});*/
+routes.use(require('./user.js'));
+routes.use(require('./session.js'));
+routes.use(require('./event.js'));
+routes.use(require('./admin.js'));
 
 module.exports = routes;

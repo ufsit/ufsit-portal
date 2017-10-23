@@ -2,7 +2,7 @@
 
 const fs = require('fs');						// For filesystem I/O
 const mysql = require('mysql');		// For mySQL interaction
-const util = require.main.require('util');
+const util = require.main.require('./util');
 const CREDENTIALS = process.env.CREDENTIALS || 'credentials.json';
 
 let sql_pool = null;
