@@ -5,8 +5,8 @@ let cookieParser = require('cookie-parser');
 let sanitizer = require('express-sanitize-escape');	// Automagically sanitize req.body
 
 /* App-specific module imports */
-let account_mgmt = require('./account_mgmt.js');
-let event_mgmt = require('./event_mgmt.js');
+let account_mgmt = require('./db/account_mgmt.js');
+let event_mgmt = require('./db/event_mgmt.js');
 // let admin = require('./admin.js');
 
 // time in seconds
