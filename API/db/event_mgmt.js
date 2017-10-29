@@ -14,8 +14,19 @@ let event_mgmt_module = function() {
 		});
 	}
 
+	function get_sign_ins_after(email, afterTime, callback) {
+		db_mgmt.get_sign_ins(email, afterTime, (error, results)=>{
+			if (error) {
+				callback(error, null);
+			} else {
+				callback(null, results);
+			}
+		});
+	}
+
 	// Revealing Module: Return public interface
 	return ({
+		get_sign_ins_after: get_sign_ins_after,
 		sign_in: sign_in,
 	});
 };

@@ -307,6 +307,21 @@ let db_mgmt_module = function() {
 		);
 	}
 
+	/* Get all signins for a user with a constraint of time */
+	function get_sign_ins(email, after, callback) {
+		sql_pool.query(
+			'SELECT * FROM `event_sign_ins_old` WHERE `email` = ? AND `timestamp` >= ?',
+			[email, after],
+			function(error, results, fields) {
+				if (error) {
+					callback(error, null);
+				} else {
+					callback(null, results);
+				}
+			}
+		);
+	}
+
 	// Revealing module
 	return ({
 		create_account: create_account,
@@ -316,6 +331,7 @@ let db_mgmt_module = function() {
 		get_session: get_session,
 		remove_session: remove_session,
 		sign_in: sign_in,
+		get_sign_ins: get_sign_ins,
 		list_users: list_users,
 	});
 };
