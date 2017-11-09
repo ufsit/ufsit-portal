@@ -4,11 +4,16 @@
 	let app = angular.module('myModule');
 
 	app.controller('LoginController', function( $http, $log, $location, $scope, validate) {
+		// Prevent popping in before redirection
+		$scope.pageReady = false;
+
 		/* If the user is signed in, redirect them to /home */
 		validate_session((is_logged_in)=>{
 			/* If the user is logged in, redirect to  home  */
 			if (is_logged_in) {
 				$location.path('/home');
+			} else {
+				$scope.pageReady = true;
 			}
 		});
 

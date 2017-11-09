@@ -36,7 +36,11 @@
 					alert('Thanks for signing in, ' + $scope.full_name + '.');
 				})
 			.error(function(data, status, headers, config) {
-				alert('Something went wrong');
+				if (status == 401) {
+					alert('You\'ve already signed-in today!');
+				} else {
+					alert('Something went wrong');
+				}
 			});
 		};
 
@@ -44,23 +48,21 @@
 			$http.post('/api/session/logout');
 			$location.path('/login');
 		};
-	    //redirect to sharepoint that stores lecture content
-	    $scope.redirect_lecture_content = function(){
-	      $window.open('https://uflorida-my.sharepoint.com/personal/elan22_ufl_edu/_layouts/15/guestaccess.aspx?folderid=0d67d1c9bc1be4aa68ea7bd61d21b612a&authkey=AbD-gTKCDdCIpE8vtELGWzw', '_blank');
-	    };
-	    //redirect to googleForms that allows resume' uploads
-	    $scope.redirect_update_resume = function(){
-	      $window.open('https://docs.google.com/forms/d/e/1FAIpQLScP-7T3VGFAcgVOcr12ErLfM0qIh4P9YjaxvCE8dqxIQ2sxVQ/viewform', '_blank');
-	    };
-	    //redirect to ufsit.org/blog that allows member to see latest events
-	    $scope.redirect_events_news = function(){
-	      $window.open('http://ufsit.org/blog/', '_blank');
-	    };
-	    //redirect to googleForms that allows writeup submissions
-	    $scope.redirect_upload_writeup = function(){
-	      $window.open('https://goo.gl/forms/nYJ3nI4Eg56pIjyo1', '_blank');
-	    };
-
-
+		// redirect to sharepoint that stores lecture content
+		$scope.redirect_lecture_content = function() {
+			$window.open('https://uflorida-my.sharepoint.com/personal/elan22_ufl_edu/_layouts/15/guestaccess.aspx?folderid=0d67d1c9bc1be4aa68ea7bd61d21b612a&authkey=AbD-gTKCDdCIpE8vtELGWzw', '_blank'); // eslint-disable-line max-len
+		};
+		// redirect to googleForms that allows resume' uploads
+		$scope.redirect_update_resume = function() {
+			$window.open('https://docs.google.com/forms/d/e/1FAIpQLScP-7T3VGFAcgVOcr12ErLfM0qIh4P9YjaxvCE8dqxIQ2sxVQ/viewform', '_blank'); // eslint-disable-line max-len
+		};
+		// redirect to ufsit.org/blog that allows member to see latest events
+		$scope.redirect_events_news = function() {
+			$window.open('http://ufsit.org/blog/', '_blank');
+		};
+		//redirect to googleForms that allows writeup submissions
+		$scope.redirect_upload_writeup = function(){
+			$window.open('https://goo.gl/forms/nYJ3nI4Eg56pIjyo1', '_blank');
+		};
 	});
 }());
