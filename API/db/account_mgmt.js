@@ -31,6 +31,7 @@ let account_mgmt_module = (function() {
 					'salt': null,
 					'hash': null,
 				},
+				'registration_ip': registration_data.registration_ip,
 				'full_name': registration_data.name,	// verbatim
 				'grad_year': registration_data.grad_year,	// verbatim
 				'in_mailing_list': registration_data.subscribe,	// verbatim
@@ -79,14 +80,14 @@ let account_mgmt_module = (function() {
 			/* Otherwise, attempt to retrieve the account record from the database */
 			db_mgmt.retrieve(login_data.email, (error, result)=>{
 				if (error) {
-					callback(error);	// If there was an error, send it up through the callback
+					callback(null, error);	// If there was an error, send it up through the callback
 				/* If there was no error, verify the given credentials against those retrieved from the database */
 				} else {
 					let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
 					if (authenticated) {
-						callback(null);	// Call back without an error
+						callback(result.id, null);	// Call back without an error
 					} else {
-						callback({
+						callback(null, {
 							'code': 401,
 							'text': '[account_mgmt.js->]: Error - Attempted to log into an ' +
 								'account with the wrong credentials: ' + login_data.email,
@@ -112,42 +113,25 @@ let account_mgmt_module = (function() {
 
 	/* Generate a session random 32-byte hex string to use as a session token,
 	 	and store the session in the database, associated with the requesting email address*/
-	function generate_session_token(email_addr, time_to_expiration, callback) {
-		let token = crypto.randomBytes(32).toString('hex');
-		let expiry_date = new Date(Date.now() + time_to_expiration);
-		db_mgmt.create_session(token, email_addr, expiry_date, (error)=>{
+	function generate_session_token(account_id, ip_address, browser, time_to_expiration, callback) {
+		let token = crypto.randomBytes(16).toString('hex');
+		let start_date = new Date(Date.now());
+		let expire_date = new Date(Date.now() + time_to_expiration);
+
+		db_mgmt.create_session(token, account_id,
+				start_date, expire_date, ip_address, browser, (error)=>{
 			if (error) {
 				callback(error, null);
 			} else {
 				/* Put in a timeout to remove the session from the database when its cookie expires */
 				setTimeout(
 					function() {
-invalidate_session(token);
-},
-					time_to_expiration);
+						console.log('Expiring old session ' + token);
+						invalidate_session(token);
+					},
+					time_to_expiration*1000 // in milliseconds
+				);
 				callback(null, token);
-			}
-		});
-	}
-	/* Confirms whether the token corresponds to an active session. If it does, calls back
-		with the email associated with it.*/
-	function validate_session(session_token, callback) {
-		db_mgmt.validate_session(session_token, (error, is_valid, email)=>{
-			// IF there was an error
-			if (error) {
-				// Call back with the error, specify invalid token, and null email
-				callback(error, false, null);
-			/* If there was no error... */
-			} else {
-				/* If the session is valid, call back with no error, true for is_valid, and the email
-					associated with the ession.*/
-				if (is_valid) {
-					callback(null, true, email);
-				} else {
-					/* If the session wasn't valid, call back with no error, false for is_valid, and null
-						for the email. */
-					callback(null, false, null);
-				}
 			}
 		});
 	}
@@ -156,8 +140,8 @@ invalidate_session(token);
 	function invalidate_session(session_token) {
 		db_mgmt.remove_session(session_token, (error)=>{
 			if (error) {
-console.log(error);
-}
+				console.log(error);
+			}
 		});
 	}
 	/* Given an account's email addres, gets the associated name. */
@@ -181,9 +165,10 @@ console.log(error);
 		// Public methods here
 		register_new_user: register_new_user,
 		authenticate: authenticate,
-		session_token: generate_session_token,
-		validate_session: validate_session,
+		generate_session_token: generate_session_token,
+		validate_session: db_mgmt.get_session,
 		get_name_from_email: get_name_from_email,
+		get_account_by_id: db_mgmt.retrieve_by_id,
 	};
 });
 

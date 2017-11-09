@@ -46,7 +46,7 @@
 		};
 	    //redirect to sharepoint that stores lecture content
 	    $scope.redirect_lecture_content = function(){
-	      $window.open('https://uflorida-my.sharepoint.com/personal/elan22_ufl_edu/_layouts/15/guestaccess.aspx?folderid=1d67d1c9bc1be4aa68ea7bd61d21b612a&authkey=AeUSm-60JBHJWPqkG-KaxAU', '_blank');
+	      $window.open('https://uflorida-my.sharepoint.com/personal/elan22_ufl_edu/_layouts/15/guestaccess.aspx?folderid=0d67d1c9bc1be4aa68ea7bd61d21b612a&authkey=AbD-gTKCDdCIpE8vtELGWzw', '_blank');
 	    };
 	    //redirect to googleForms that allows resume' uploads
 	    $scope.redirect_update_resume = function(){

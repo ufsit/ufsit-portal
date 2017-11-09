@@ -1,15 +1,16 @@
 'use strict';
-const db_mgmt = require('./db_mgmt.js');	// Abstracts away DB interactions
 
-let admin_module = function() {
-	// eslint-disable-next-line no-unused-vars
-	function list_users(callback) {
-		db_mgmt.list_users(callback);
-	}
+const routes = require('express').Router(); // eslint-disable-line new-cap
 
-	return ({
-		// list_users: list_users,
+/*
+routes.get('/admin/list_users', (req, res) => {
+	admin.list_users(function(err, data) {
+		if (err) {
+			console.log(err.text);
+		} else {
+			res.status(200).json(data);
+		}
 	});
-};
+});*/
 
-module.exports = admin_module();
+module.exports = routes;
