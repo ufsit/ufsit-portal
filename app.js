@@ -17,6 +17,10 @@ const app = express();
 // Enable Apache-like logging for all web requests
 app.use(morgan('combined'));
 
+// We are in a Heroku environment -- trust the proxy header
+// http://expressjs.com/en/guide/behind-proxies.html
+app.enable('trust proxy');
+
 // Redirect methods
 if (REALM === 'production') {
 	// Redirect all HTTP to HTTPS
