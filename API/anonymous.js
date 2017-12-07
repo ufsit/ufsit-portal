@@ -1,7 +1,7 @@
 'use strict';
 
 // time in seconds
-const COOKIE_EXPIRY_TIME = 900; // 15min
+const COOKIE_EXPIRY_TIME = 60*60*1000; // 60min in milliseconds
 const routes = require('express').Router(); // eslint-disable-line new-cap
 
 /* App-specific module imports */
@@ -69,7 +69,7 @@ routes.post('/user/login', (req, res) => {
 						res.cookie(
 							'session_id', session_cookie,
 							{
-								expires: new Date(Date.now() + COOKIE_EXPIRY_TIME*1000),
+								expires: new Date(Date.now() + COOKIE_EXPIRY_TIME),
 								httpOnly: true, 	// Prevent shenanigans
 								signed: true,
 							}

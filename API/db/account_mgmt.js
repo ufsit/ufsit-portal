@@ -129,7 +129,7 @@ let account_mgmt_module = (function() {
 						console.log('Expiring old session ' + token);
 						invalidate_session(token);
 					},
-					time_to_expiration*1000 // in milliseconds
+					time_to_expiration
 				);
 				callback(null, token);
 			}
