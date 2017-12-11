@@ -157,41 +157,26 @@ let db_mgmt_module = function() {
 	}
 
 	/* Retrieve an account with the given email address */
-	function retrieve(email_addr, callback) {
+	async function retrieve(email_addr, callback) {
 		/* Form a query to the 'accounts' table for entries with the given email */
 		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'SELECT ?? FROM `account` WHERE email = ?',
-			[['id', 'password', 'full_name'], email_addr],
-			function(error, results, fields) {
-				/* If there was a sql error, send it up through the callback */
-				if (error) {
-					callback({
-						'code': 500,
-						'text': error,
-					}, null);	// 2nd parameter (which is usually the result) is null
-				} else {
-					/* If the results array has any elements in it, call back with the 0th element
-					(entries are unique) */
-					if (results.length > 0) {
-						let pwparts = results[0].password.split('$');
-						// Callback with no error, and 2nd param is the results
-						callback(null, {	// Encapsulate the results nicely for account_mgmt.js
-							'id': results[0].id,
-							'salt': pwparts[0],
-							'hash': pwparts[1],
-							'name': results[0].full_name,
-						});
-					} else {
-						/* Otherwise, call back with a 404 (for no matching record) and null for the result*/
-						callback({
-							'code': 404,	// No results
-							'text': 'No account with email address ' + email_addr,
-						}, null);
-					}
-				}
-			}
-		);
+		const results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
+			[['id', 'password', 'full_name'], email_addr]);
+
+		/* If the results array has any elements in it, call back with the 0th element
+		(entries are unique) */
+		if (results.length <= 0) {
+			throw new createError.NotFound('No account with email address ' + email_addr);
+		}
+
+		let pwparts = results[0].password.split('$');
+
+		return {	// Encapsulate the results nicely for account_mgmt.js
+			'id': results[0].id,
+			'salt': pwparts[0],
+			'hash': pwparts[1],
+			'name': results[0].full_name,
+		};
 	}
 
 	/* Retrieve an account by account ID */
@@ -229,7 +214,7 @@ let db_mgmt_module = function() {
 	}
 
 	/* Create an entry in the sessions table */
-	function create_session(session_token, account_id,
+	async function create_session(session_token, account_id,
 			start_date, expire_date, ip_address, browser, callback) {
 		let values = {
 			id: session_token,
@@ -241,17 +226,7 @@ let db_mgmt_module = function() {
 		};
 
 		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'INSERT INTO `session` SET ?',
-			values,
-			function(error, results, fields) {
-				if (error) {
-					callback(error);
-				} else {
-					callback();
-				}
-			}
-		);
+		return await queryAsync('INSERT INTO `session` SET ?', values);
 	}
 
 	/* Confirms whether the token corresponds to an active session. If it does, calls back

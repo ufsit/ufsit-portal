@@ -60,34 +60,25 @@ let account_mgmt_module = (function() {
 	};
 
 	/* Authenticate a given email and password */
-	function authenticate(login_data, callback) {
+	async function authenticate(login_data, callback) {
 		/* Validate the email address */
 		if (!(isEmail(login_data.email))) {
 			/* IF it's not valid, send an error up through the callback */
-			callback({
-				'code': 400,
-				'text': '[account_mgmt.js->]: Error - Attempted to authenticate an account with an invalid email: '
-					+ login_data.email,
-			});
+			throw new createError.BadRequest('Attempted to authenticate an account with an invalid email: '
+					+ login_data.email);
 		} else {
 			/* Otherwise, attempt to retrieve the account record from the database */
-			db_mgmt.retrieve(login_data.email, (error, result)=>{
-				if (error) {
-					callback(null, error);	// If there was an error, send it up through the callback
-				/* If there was no error, verify the given credentials against those retrieved from the database */
-				} else {
-					let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
-					if (authenticated) {
-						callback(result.id, null);	// Call back without an error
-					} else {
-						callback(null, {
-							'code': 401,
-							'text': '[account_mgmt.js->]: Error - Attempted to authenticate an ' +
-								'account with the wrong credentials: ' + login_data.email,
-						});
-					}
-				}
-			});
+			const result = await db_mgmt.retrieve(login_data.email);
+
+			/* If there was no error, verify the given credentials against those retrieved from the database */
+			let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
+
+			if (!authenticated) {
+				throw new createError.BadRequest('Attempted to authenticate an ' +
+						'account with the wrong credentials: ' + login_data.email);
+			}
+
+			return result.id;
 		}
 	}
 
@@ -130,27 +121,24 @@ let account_mgmt_module = (function() {
 
 	/* Generate a session random 32-byte hex string to use as a session token,
 	 	and store the session in the database, associated with the requesting email address*/
-	function generate_session_token(account_id, ip_address, browser, time_to_expiration, callback) {
+	async function generate_session_token(account_id, ip_address, browser, time_to_expiration, callback) {
 		let token = crypto.randomBytes(16).toString('hex');
 		let start_date = new Date(Date.now());
 		let expire_date = new Date(Date.now() + time_to_expiration);
 
-		db_mgmt.create_session(token, account_id,
-				start_date, expire_date, ip_address, browser, (error)=>{
-			if (error) {
-				callback(error, null);
-			} else {
-				/* Put in a timeout to remove the session from the database when its cookie expires */
-				setTimeout(
-					function() {
-						console.log('Expiring old session ' + token);
-						invalidate_session(token);
-					},
-					time_to_expiration
-				);
-				callback(null, token);
-			}
-		});
+		await db_mgmt.create_session(token, account_id,
+				start_date, expire_date, ip_address, browser);
+
+		/* Put in a timeout to remove the session from the database when its cookie expires */
+		setTimeout(
+			function() {
+				console.log('Expiring old session ' + token);
+				invalidate_session(token);
+			},
+			time_to_expiration
+		);
+
+		return token;
 	}
 
 	/* Removes any entries in the DB with a matching session id */

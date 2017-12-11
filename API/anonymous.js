@@ -28,48 +28,37 @@ routes.post('/user/register', async (req, res, next) => {
 	}
 });
 
-
-routes.post('/user/login', (req, res) => {
+routes.post('/user/login', async (req, res, next) => {
 	let login_data = {
 		'email': req.body.email,
 		'password': req.body.password,
 	};
-	account_mgmt.authenticate(login_data, (account_id, error)=>{
-		/* Handles invalid credentials or database errors */
-		if (error) {
-			console.log(error.text);	// Log the error
 
-			// Send the HTTP error code specified by the error object, and a simplified error message
-			if (error.code === 401 || error.code === 404) {	// Either Bad password or email not found
-				res.status(401).send('Invalid Credentials');
-			} else if (error.code === 400) {
-				res.status(error.code).send('Malformed Request');
-			} else {
-				res.status(500).send('Internal Server Error');
+	try {
+		const account_id = await account_mgmt.authenticate(login_data);
+		const cookie = await account_mgmt.generate_session_token(account_id, req.ip,
+			req.headers['user-agent'], COOKIE_EXPIRY_TIME);
+
+		// TODO: add other fields such as ephemeral to boost security
+		res.cookie(
+			'session_id', cookie,
+			{
+				expires: new Date(Date.now() + COOKIE_EXPIRY_TIME),
+				httpOnly: true, 	// Prevent shenanigans
+				signed: true,
 			}
-		} else { // If the credentials checked out
-			account_mgmt.generate_session_token(account_id, req.ip,
-					req.headers['user-agent'], COOKIE_EXPIRY_TIME,
-				(error, session_cookie)=>{
-					if (error) {
-						/* Something went wrong while generating the session cookie */
-						console.log(error);
-						res.status(500).send('Unable to generate session cookie');
-					} else {
-						// TODO: add other fields such as ephemeral to boost security
-						res.cookie(
-							'session_id', session_cookie,
-							{
-								expires: new Date(Date.now() + COOKIE_EXPIRY_TIME),
-								httpOnly: true, 	// Prevent shenanigans
-								signed: true,
-							}
-						);
-						res.status(200).send('Successfully Authenticated');
-					}
-			});
+		);
+
+		res.status(200).send('Successfully Authenticated');
+	} catch (error) {
+		if (error.status < 500) {
+			// Blind any non-500 status messages
+			console.log(error.message);
+			return res.status(401).send('Invalid credentials');
+		} else {
+			return next(error);
 		}
-	});
+	}
 });
 
 module.exports = routes;
