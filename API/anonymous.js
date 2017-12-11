@@ -7,7 +7,7 @@ const routes = require('express').Router(); // eslint-disable-line new-cap
 /* App-specific module imports */
 const account_mgmt = require('./db/account_mgmt.js');
 
-routes.post('/user/register', (req, res) => {
+routes.post('/user/register', async (req, res, next) => {
 	/* Grab the registration data from the request body */
 	let registration_data = {
 		'registration_ip': req.ip,
@@ -17,24 +17,15 @@ routes.post('/user/register', (req, res) => {
 		'grad_year': req.body.grad_year,
 		'subscribe': req.body.subscribe,
 	};
+
 	/* Use the account management module to attempt to register the new user.
 	 	If the callback comes back with an error, */
-	account_mgmt.register_new_user(registration_data, (error)=>{
-		/* If a parameter was sent, it is an error message. */
-		if (error) {
-			console.log(error.text);	// Log the error
-			// Send the HTTP error code specified by the error object, and a simplified error message
-			if (error.code === 409) {
-				res.status(error.code).send('Duplicate Account');
-			} else if (error.code === 400) {
-				res.status(error.code).send('Malformed Request');
-			} else {
-				res.status(500).send('Internal Server Error');
-			}
-		} else {
-			res.status(200).send('Success');
-		}
-	});
+	try {
+		await account_mgmt.register_new_user(registration_data);
+		res.status(200).send('Success');
+	} catch (error) {
+		return next(error);
+	}
 });
 
 

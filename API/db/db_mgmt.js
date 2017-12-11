@@ -3,6 +3,7 @@
 const fs = require('fs');						// For filesystem I/O
 const mysql = require('mysql');		// For mySQL interaction
 const util = require.main.require('./util');
+const createError = require('http-errors');
 const CREDENTIALS = process.env.CREDENTIALS || 'credentials.json';
 
 let sql_pool = null;
@@ -38,74 +39,56 @@ try {
 
 /* Define the database management module and its public API */
 let db_mgmt_module = function() {
+	function queryAsync(query, values) {
+		return new Promise((resolve, reject) => {
+			sql_pool.query(
+				query,
+				values,
+				function(error, results, fields) {
+					if (error) {
+						// Create a generic HTTP error for display
+						const httperror = createError();
+
+						// copy the MySQL stack trace as the one we just generated is useless
+						httperror.stack = error.stack;
+
+						reject(httperror);
+					} else {
+						resolve(results);
+					}
+				}
+			);
+		});
+	}
+
 	/* Create a new account */
-	function create_account(new_record, callback) {
+	async function create_account(new_record) {
 		/* Use the check_account_conflict function to check if an account with that
 		email address already exists. In the callback function, either throw an
 		error up through the callback if there was a conflict, or proceed creating
 		the account */
-		check_account_conflict(new_record.email, (error)=>{
-			/* If it does, make a callback with the error */
-			if (error) {
-				if (error.code === 409) {
-					callback({
-						'code': 409,	// HTTP Identifier for the error: 409 => conflict
-						'text': '[db_mgmt.js->]: Error - Attempted to create duplicate account: ' + new_record.email,
-					});
-				} else {
-					callback({
-						'code': 500,	// HTTP Identifier for the error: 500 => Mysql error
-						'text': error.text,
-					});
-				}
-			} else {
-				/* Otherwise proceed creating the account */
-				insert_new_account(new_record, (err)=>{
-					/* If there was an error inserting the record, send it up through the callback */
-					if (err) {
-						callback({
-							'code': 500,	// HTTP Identifier for the error: 409 => conflict
-							'text': err,		// Just send back the raw error text
-						});
-					} else {
-						callback(); // Otherwise call back with no error
-					}
-				});
-			}
-		});
-		/* Helper function: Check if an account with the given email already exists.
-		If it does, call back  with true. If it doesn't, call back with false. */
-		function check_account_conflict(new_email, callback) {
-			/* Form a query to the 'accounts' table for entries with the given email */
-			/* Execute the query using a connection from the connection pool */
-			sql_pool.query(
-				'SELECT `id` FROM `account` WHERE email = ?',
-				[new_email],
-				function(error, results, fields) {
-					if (error) {	// If there was an error, pass it up through the callback
-						callback({
-							'code': 500,
-							'text': error,
-						});
-					} else {
-						/* If the results array has any elements in it, call back with true
-						(to indicate that there was a conflict) */
-						if (results.length > 0) {
-							callback({
-								'code': 409,	// Duplicate
-							});
-						} else {
-							/* Otherwise, call back withhout an error to indicate a lack of conflict */
-							callback();
-						}
-					}
-				}
+
+		if (await account_exists(new_record.email)) {
+			throw new createError.Conflict('Attempted to create duplicate account: '
+				+ new_record.email
 			);
+		} else {
+			await insert_new_account(new_record);
+
+			return;
+		}
+
+		/* Helper function: Check if an account with the given email already exists.*/
+		async function account_exists(email) {
+			/* Form a query to the 'accounts' table for entries with the given email */
+			let results = await queryAsync('SELECT `id` FROM `account` WHERE email = ?', email);
+
+			return results.length > 0;
 		}
 
 		/* Helper function: Inserts a new account element into the database with the
 		parameters passed in the new_account object */
-		function insert_new_account(new_account, callback) {
+		async function insert_new_account(new_account) {
 			let values = {
 				full_name: new_account.full_name,
 				email: new_account.email,
@@ -117,19 +100,7 @@ let db_mgmt_module = function() {
 				mass_mail_optin: new_account.in_mailing_list,
 			};
 
-			/* Execute the query using a connection from the connection pool */
-			sql_pool.query(
-				'INSERT INTO `account` SET ?',
-				values,
-				function(error, results, fields) {
-					if (error) {
-						// If there was an error, send it up through the callback
-						callback(error);
-					} else {
-						callback();	// Otherwise call back with no errors
-					}
-				}
-			);
+			return await queryAsync('INSERT INTO `account` SET ?', values);
 		}
 	}
 

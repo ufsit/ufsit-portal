@@ -2,6 +2,7 @@
 /* Simple, non-account sign-in. Scrap for parts :) */
 
 const crypto = require('crypto');	// For crypto
+const createError = require('http-errors');
 
 const db_mgmt = require('./db_mgmt.js');	// Abstracts away DB interactions
 
@@ -29,15 +30,12 @@ let account_mgmt_module = (function() {
 			.toString('hex');		// Turn it into a hex string
 	};
 
-	let register_new_user = function(registration_data, callback) {
+	let register_new_user = async function(registration_data, callback) {
 		/* Validate the email address */
 		if (!(isEmail(registration_data.email))) {
-			/* IF it's not valid, send an error up through the callback */
-			callback({
-				'code': 400,
-				'text': '[account_mgmt.js->]: Error - Attempted to create an account with an invalid email: ' +
-					registration_data.email,
-			});
+			throw new createError.BadRequest('Attempted to create an account with an invalid email: ' +
+				registration_data.email
+			);
 		/* If the email checked out */
 		} else {
 			// Create a slightly modified new_record out of the registration data
@@ -57,11 +55,7 @@ let account_mgmt_module = (function() {
 			new_record.password.hash = hash_password(registration_data.password, new_record.password.salt);
 
 			// Create the record in the database
-			db_mgmt.create_account(new_record, (error)=>{
-				/* If a parameter was sent, it is an error message. Pass it along a callback. */
-				if (error) callback(error);
-				else callback();	// Otherwise, pass no error on the callback
-			});
+			await db_mgmt.create_account(new_record);
 		}
 	};
 
