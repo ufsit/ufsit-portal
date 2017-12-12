@@ -4,24 +4,12 @@
 const db_mgmt = require('./db_mgmt.js');	// Abstracts away DB interactions
 
 let event_mgmt_module = function() {
-	function sign_in(email, timestamp, callback) {
-		db_mgmt.sign_in(email, timestamp, (error)=>{
-			if (error) {
-				callback(error);
-			} else {
-				callback();
-			}
-		});
+	async function sign_in(email, timestamp) {
+		await db_mgmt.sign_in(email, timestamp);
 	}
 
-	function get_sign_ins_after(email, afterTime, callback) {
-		db_mgmt.get_sign_ins(email, afterTime, (error, results)=>{
-			if (error) {
-				callback(error, null);
-			} else {
-				callback(null, results);
-			}
-		});
+	async function get_sign_ins_after(email, afterTime) {
+		return await db_mgmt.get_sign_ins(email, afterTime);
 	}
 
 	// Revealing Module: Return public interface

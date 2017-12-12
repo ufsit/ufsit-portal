@@ -64,8 +64,8 @@ let db_mgmt_module = function() {
 	/* Create a new account */
 	async function create_account(new_record) {
 		/* Use the check_account_conflict function to check if an account with that
-		email address already exists. In the callback function, either throw an
-		error up through the callback if there was a conflict, or proceed creating
+		email address already exists. In the function, we either throw an
+		error if there was a conflict, or proceed creating
 		the account */
 
 		if (await account_exists(new_record.email)) {
@@ -128,26 +128,13 @@ let db_mgmt_module = function() {
 		return await sql_pool.query('UPDATE `account` SET ? WHERE id = ?', [account_data, account_id]);
 	}
 
-	function list_users(callback) {
-		sql_pool.query(
-			'SELECT ?? FROM `account`',
-			[['email', 'full_name', 'mass_mail_optin', 'grad_date']],
-			function(error, results, fields) {
-				/* If there was a sql error, send it up through the callback */
-				if (error) {
-					callback({
-						'code': 500,
-						'text': error,
-					}, null);	// 2nd parameter (which is usually the result) is null
-				} else {
-					callback(null, results);
-				}
-			}
-		);
+	async function list_users() {
+		return await queryAsync('SELECT ?? FROM `account`',
+			[['email', 'full_name', 'mass_mail_optin', 'grad_date']]);
 	}
 
 	/* Retrieve an account with the given email address */
-	async function retrieve(email_addr, callback) {
+	async function retrieve(email_addr) {
 		/* Form a query to the 'accounts' table for entries with the given email */
 		/* Execute the query using a connection from the connection pool */
 		const results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
@@ -188,7 +175,7 @@ let db_mgmt_module = function() {
 
 	/* Create an entry in the sessions table */
 	async function create_session(session_token, account_id,
-			start_date, expire_date, ip_address, browser, callback) {
+			start_date, expire_date, ip_address, browser) {
 		const values = {
 			id: session_token,
 			account_id: account_id,
@@ -216,53 +203,24 @@ let db_mgmt_module = function() {
 	}
 
 	/* Remove an entry from the sessions table */
-	function remove_session(session_id, callback) {
-		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'DELETE FROM `session` WHERE id = ?',
-			[session_id],
-			function(error, results, fields) {
-				if (error) {
-					callback(error);
-				} else {
-					callback();	// Otherwise call back with no errors
-				}
-			}
-		);
+	async function remove_session(session_id) {
+		return await queryAsync('DELETE FROM `session` WHERE id = ?', [session_id]);
 	}
+
 	/* Sign a user into an event */
-	function sign_in(email, timestamp, callback) {
+	async function sign_in(email, timestamp) {
 		let values = {
 			email: email,
 			timestamp: timestamp,
 		};
 
-		sql_pool.query(
-			'INSERT INTO `event_sign_ins_old` SET ?',
-			values,
-			function(error, results, fields) {
-				if (error) {
-					callback(error);
-				} else {
-					callback();	// Otherwise call back with no errors
-				}
-			}
-		);
+		return await queryAsync('INSERT INTO `event_sign_ins_old` SET ?', values);
 	}
 
 	/* Get all signins for a user with a constraint of time */
-	function get_sign_ins(email, after, callback) {
-		sql_pool.query(
-			'SELECT * FROM `event_sign_ins_old` WHERE `email` = ? AND `timestamp` >= ?',
-			[email, after],
-			function(error, results, fields) {
-				if (error) {
-					callback(error, null);
-				} else {
-					callback(null, results);
-				}
-			}
-		);
+	async function get_sign_ins(email, after) {
+		return await queryAsync('SELECT * FROM `event_sign_ins_old` WHERE `email` = ? AND `timestamp` >= ?',
+			[email, after]);
 	}
 
 	// Revealing module

@@ -9,30 +9,23 @@ const event_mgmt = require('./db/event_mgmt.js');
 const SIGN_INS_COOLDOWN = 12*60*60;
 
 /* Signs the logged-in user into the current meeting */
-routes.post('/event/sign_in', (req, res)=>{
+routes.post('/event/sign_in', async (req, res, next)=>{
 	// XXX: TOCTOU vulnerability. Use DB transaction
-	event_mgmt.get_sign_ins_after(req.account.email,
-			new Date(Date.now() - SIGN_INS_COOLDOWN*1000), (error, results)=>{
-		if (error) {
-			console.log(error);
-			res.status(500).send('Something went wrong on our end');
-		} else {
-			if (results.length > 0) {
-				res.status(401).send('Multiple sign-ins');
-				return;
-			}
+	try {
+		const results = await event_mgmt.get_sign_ins_after(req.account.email,
+				new Date(Date.now() - SIGN_INS_COOLDOWN*1000));
 
-			/* Sign the user in */
-			event_mgmt.sign_in(req.account.email, new Date(Date.now()), (error)=>{
-				if (error) {
-					console.log(error);
-					res.status(500).send('Something went wrong on our end');
-				} else {
-					res.status(200).send('Signed in');
-				}
-			});
+		if (results.length > 0) {
+			return res.status(401).send('Multiple sign-ins');
 		}
-	});
+
+		/* Sign the user in */
+		await event_mgmt.sign_in(req.account.email, new Date(Date.now()));
+
+		return res.status(200).send('Signed in');
+	} catch (error) {
+		return next(error);
+	}
 });
 
 module.exports = routes;

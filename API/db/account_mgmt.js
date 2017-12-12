@@ -30,7 +30,7 @@ let account_mgmt_module = (function() {
 			.toString('hex');		// Turn it into a hex string
 	};
 
-	let register_new_user = async function(registration_data, callback) {
+	async function register_new_user(registration_data) {
 		/* Validate the email address */
 		if (!(isEmail(registration_data.email))) {
 			throw new createError.BadRequest('Attempted to create an account with an invalid email: ' +
@@ -57,13 +57,13 @@ let account_mgmt_module = (function() {
 			// Create the record in the database
 			await db_mgmt.create_account(new_record);
 		}
-	};
+	}
 
 	/* Authenticate a given email and password */
-	async function authenticate(login_data, callback) {
+	async function authenticate(login_data) {
 		/* Validate the email address */
 		if (!(isEmail(login_data.email))) {
-			/* IF it's not valid, send an error up through the callback */
+			/* IF it's not valid, send throw an error */
 			throw new createError.BadRequest('Attempted to authenticate an account with an invalid email: '
 					+ login_data.email);
 		} else {
@@ -82,7 +82,7 @@ let account_mgmt_module = (function() {
 		}
 	}
 
-	async function update_account(account_id, account_data, callback) {
+	async function update_account(account_id, account_data) {
 		if (account_data.password) {
 			let newSalt = generate_salt();
 			let newHash = hash_password(account_data.password, newSalt);
@@ -110,7 +110,7 @@ let account_mgmt_module = (function() {
 
 	/* Generate a session random 32-byte hex string to use as a session token,
 	 	and store the session in the database, associated with the requesting email address*/
-	async function generate_session_token(account_id, ip_address, browser, time_to_expiration, callback) {
+	async function generate_session_token(account_id, ip_address, browser, time_to_expiration) {
 		let token = crypto.randomBytes(16).toString('hex');
 		let start_date = new Date(Date.now());
 		let expire_date = new Date(Date.now() + time_to_expiration);
@@ -131,23 +131,8 @@ let account_mgmt_module = (function() {
 	}
 
 	/* Removes any entries in the DB with a matching session id */
-	function invalidate_session(session_token) {
-		db_mgmt.remove_session(session_token, (error)=>{
-			if (error) {
-				console.log(error);
-			}
-		});
-	}
-	/* Given an account's email addres, gets the associated name. */
-	function get_name_from_email(email_addr, callback) {
-		db_mgmt.retrieve(email_addr, (error, data)=>{
-			console.log(data);
-			if (error) {
-				callback(error, null);
-			} else {
-				callback(null, data.name);
-			}
-		});
+	async function invalidate_session(session_token) {
+		await db_mgmt.remove_session(session_token);
 	}
 
 	function isEmail(email) {
@@ -162,7 +147,6 @@ let account_mgmt_module = (function() {
 		update_account: update_account,
 		generate_session_token: generate_session_token,
 		validate_session: db_mgmt.get_session,
-		get_name_from_email: get_name_from_email,
 		get_account_by_id: db_mgmt.retrieve_by_id,
 	};
 });

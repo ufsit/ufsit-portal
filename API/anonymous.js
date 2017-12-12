@@ -18,8 +18,7 @@ routes.post('/user/register', async (req, res, next) => {
 		'subscribe': req.body.subscribe,
 	};
 
-	/* Use the account management module to attempt to register the new user.
-	 	If the callback comes back with an error, */
+	/* Use the account management module to attempt to register the new user. */
 	try {
 		await account_mgmt.register_new_user(registration_data);
 		res.status(200).send('Success');
