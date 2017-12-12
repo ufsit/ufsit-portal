@@ -104,7 +104,7 @@ let db_mgmt_module = function() {
 		}
 	}
 
-	function update_account(account_id, account_data, callback) {
+	async function update_account(account_id, account_data) {
 		// explicitly prevent primary keys from being clobbered
 		if (account_data.id) {
 			delete account_data.id;
@@ -120,22 +120,12 @@ let db_mgmt_module = function() {
 		}
 
 		if (account_data.length < 1) {
-			return callback('Cannot update profile with zero fields');
+			throw new createError.BadRequest('Cannot update profile with zero fields');
 		}
 
 		// console.log("Updating account", account_id, "with", account_data);
 
-		sql_pool.query(
-			'UPDATE `account` SET ? WHERE id = ?',
-			[account_data, account_id],
-			function(error, results, fields) {
-				if (error) {
-					callback(error);
-				} else {
-					callback();
-				}
-			}
-		);
+		return await sql_pool.query('UPDATE `account` SET ? WHERE id = ?', [account_data, account_id]);
 	}
 
 	function list_users(callback) {
@@ -180,43 +170,26 @@ let db_mgmt_module = function() {
 	}
 
 	/* Retrieve an account by account ID */
-	function retrieve_by_id(account_id, callback) {
+	async function retrieve_by_id(account_id) {
 		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'SELECT * FROM `account` WHERE id = ?',
-			[account_id],
-			function(error, results, fields) {
-				/* If there was a sql error, send it up through the callback */
-				if (error) {
-					callback({
-						'code': 500,
-						'text': error,
-					}, null);	// 2nd parameter (which is usually the result) is null
-				} else {
-					/* If the results array has any elements in it, call back with the 0th element
-					(entries are unique) */
-					if (results.length > 0) {
-						// Hide certain fields
-						delete results[0].id;
-						delete results[0].password;
+		const results = await queryAsync('SELECT * FROM `account` WHERE id = ?', [account_id]);
 
-						callback(null, results[0]);
-					} else {
-						/* Otherwise, call back with a 404 (for no matching record) and null for the result*/
-						callback({
-							'code': 404,	// No results
-							'text': 'No account with id ' + account_id,
-						}, null);
-					}
-				}
-			}
-		);
+		if (results.length > 0) {
+			// Hide certain fields
+			delete results[0].id;
+			delete results[0].password;
+
+			return results[0];
+		} else {
+			/* Otherwise, return a 404 (for no matching record) and null for the result*/
+			throw new createError.NotFound('No account with id ' + account_id);
+		}
 	}
 
 	/* Create an entry in the sessions table */
 	async function create_session(session_token, account_id,
 			start_date, expire_date, ip_address, browser, callback) {
-		let values = {
+		const values = {
 			id: session_token,
 			account_id: account_id,
 			start_date: util.mysql_iso_time(start_date),
@@ -231,29 +204,15 @@ let db_mgmt_module = function() {
 
 	/* Confirms whether the token corresponds to an active session. If it does, calls back
 		with the email associated with it.*/
-	function get_session(session_token, callback) {
-		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'SELECT * FROM `session` WHERE ?',
-			{id: session_token},
-			function(error, results, fields) {
-				/* If there were no errors... */
-				if (error) {
-					// If there was an error, send it up through the callback
-					callback(error, null);
-				} else {
-					/* If there was a match */
-					if (results.length > 0) {
-						/* Call back with no error and the session */
-						callback(null, results[0]);
-					} else {
-						/* If there was no match */
-						/* Call back with no error, but also no session */
-						callback(null, null);
-					}
-				}
-			}
-		);
+	async function get_session(session_token) {
+		const results = await queryAsync('SELECT * FROM `session` WHERE ?', {id: session_token});
+
+		if (results.length > 0) {
+			return results[0];
+		} else {
+			/* Otherwise, return a 404 (for no matching record) and null for the result*/
+			throw new createError.NotFound('No session with token ' + session_token);
+		}
 	}
 
 	/* Remove an entry from the sessions table */

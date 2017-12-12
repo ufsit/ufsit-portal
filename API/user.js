@@ -11,7 +11,7 @@ routes.get('/user/profile', function(req, res) {
 	res.status(200).json(Object.assign(data, {profile_name: 'Your Profile'}));
 });
 
-routes.post('/user/profile', function(req, res) {
+routes.post('/user/profile', async function(req, res, next) {
 	let updated_items = [];
 
 	req.body.subscribe = req.body.subscribe ? 1 : 0;
@@ -50,28 +50,6 @@ routes.post('/user/profile', function(req, res) {
 		updated_items.push(['Password', 'password', 'new_password']);
 	}
 
-	function do_update() {
-		account_mgmt.update_account(req.session.account_id, data, (error)=>{
-			/* If a parameter was sent, it is an error message. */
-			if (error) {
-				console.log(error.text);	// Log the error
-
-				// Send the HTTP error code specified by the error object, and a simplified error message
-				if (error.code === 400) {
-					res.status(error.code).send('Malformed Request');
-				} else {
-					res.status(500).send('Internal Server Error');
-				}
-			} else {
-				// Return the list of updated items (only the human readable note)
-				updated_items = updated_items.map(function(i) {
-					return i[0];
-				});
-				res.status(200).json(updated_items);
-			}
-		});
-	}
-
 	let data = {};
 
 	updated_items.forEach(function(i) {
@@ -84,21 +62,24 @@ routes.post('/user/profile', function(req, res) {
 
 	if (password_change) {
 		// check to see if the old password is correct
-		account_mgmt.authenticate({email: req.account.email, password: req.body.old_password}, (result, error)=> {
-			if (error) {
-				console.log(error.text);
+		try {
+			await account_mgmt.authenticate({email: req.account.email, password: req.body.old_password});
+		} catch (error) {
+			return next(error);
+		}
+	}
 
-				if (error.code === 401) {
-					res.status(error.code).send('Old password is not correct');
-				} else {
-					res.status(500).send('Internal server error');
-				}
-			} else {
-				do_update();
-			}
+	try {
+		await account_mgmt.update_account(req.session.account_id, data);
+
+		// Return the list of updated items (only the human readable note)
+		updated_items = updated_items.map(function(i) {
+			return i[0];
 		});
-	} else {
-		do_update();
+
+		return res.status(200).json(updated_items);
+	} catch (error) {
+		return next(error);
 	}
 });
 

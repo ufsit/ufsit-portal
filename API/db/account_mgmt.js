@@ -82,7 +82,7 @@ let account_mgmt_module = (function() {
 		}
 	}
 
-	function update_account(account_id, account_data, callback) {
+	async function update_account(account_id, account_data, callback) {
 		if (account_data.password) {
 			let newSalt = generate_salt();
 			let newHash = hash_password(account_data.password, newSalt);
@@ -92,18 +92,7 @@ let account_mgmt_module = (function() {
 			account_data.password.hash = newHash;
 		}
 
-		db_mgmt.update_account(account_id, account_data, (error)=> {
-			if (error) {
-				console.log(error);
-
-				callback({
-					code: 500,
-					text: 'Error while updating account',
-				});
-			} else {
-				callback();
-			}
-		});
+		return await db_mgmt.update_account(account_id, account_data);
 	}
 
 	/* Hashes a given password and salt and compares it against an existing hash. */
