@@ -111,7 +111,7 @@ let db_mgmt_module = function() {
 		}
 
 		// Format the password correctly, if present
-		if (account_data.password.salt && account_data.password.hash) {
+		if (account_data.password && account_data.password.salt && account_data.password.hash) {
 			account_data.password = account_data.password.salt + '$' + account_data.password.hash;
 			delete account_data.salt;
 		} else {
