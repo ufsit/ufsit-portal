@@ -65,7 +65,11 @@ routes.post('/user/profile', async function(req, res, next) {
 		try {
 			await account_mgmt.authenticate({email: req.account.email, password: req.body.old_password});
 		} catch (error) {
-			return next(error);
+			if (error.status < 500) {
+				return res.status(error.status).send('Invalid existing password');
+			} else {
+				return next(error);
+			}
 		}
 	}
 
@@ -79,7 +83,11 @@ routes.post('/user/profile', async function(req, res, next) {
 
 		return res.status(200).json(updated_items);
 	} catch (error) {
-		return next(error);
+		if (error.status < 500) {
+			return res.status(error.status).send(error.message);
+		} else {
+			return next(error);
+		}
 	}
 });
 
