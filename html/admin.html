@@ -1,7 +1,3 @@
-<!--////////////////            Top of Page   //////////////////////-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
 <style>
 table {
   margin: 10px;
@@ -26,9 +22,6 @@ table tbody tr.even {
 }
 
 </style>
-</head>
-<body>
-
 <table>
   <thead>
 	 <tr>
@@ -36,17 +29,16 @@ table tbody tr.even {
 		<td>Email</td>
 		<td>Graduation Year</td>
 		<td>Mailing List?</td>
+		<td>Registration Date</td>
 	 </tr>
   </thead>
   <tbody>
 	 <tr ng-repeat="u in users" ng-class-even="'even'">
-		<td>{{u.full_name}}</td>
+		<td><a ng-href="/user/profile/{{u.id}}">{{u.full_name}}</a></td>
 		<td>{{u.email}}</td>
-		<td>{{u.grad_year}}</td>
-		<td>{{u.in_mailing_list}}</td>
+		<td>{{u.grad_date}}</td>
+		<td>{{u.mass_mail_optin}}</td>
+		<td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
 	 </tr>
   </tbody>
 </table>
-
-</body>
-</html>

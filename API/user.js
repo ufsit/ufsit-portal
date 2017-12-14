@@ -1,6 +1,7 @@
 'use strict';
 
 const routes = require('express').Router(); // eslint-disable-line new-cap
+const util = require.main.require('./util');
 
 /* App-specific module imports */
 const account_mgmt = require('./db/account_mgmt.js');
@@ -9,6 +10,20 @@ routes.get('/user/profile', function(req, res) {
 	let data = req.account;
 
 	res.status(200).json(Object.assign(data, {profile_name: 'Your Profile'}));
+});
+
+routes.get('/user/profile/:user_id', async function(req, res, next) {
+	// Viewing profiles is currently a privileged operation
+	if (!util.account_has_admin(req.account)) {
+		return res.status(403).send('Access denied');
+	}
+
+	try {
+		const account = await account_mgmt.get_account_by_id(req.params.user_id);
+		res.status(200).json(Object.assign(account, {profile_name: 'Other Profile'}));
+	} catch (error) {
+		return next(error);
+	}
 });
 
 routes.post('/user/profile', async function(req, res, next) {

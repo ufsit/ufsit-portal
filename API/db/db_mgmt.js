@@ -146,7 +146,7 @@ let db_mgmt_module = function() {
 
 	async function list_users() {
 		return await queryAsync('SELECT ?? FROM `account`',
-			[['email', 'full_name', 'mass_mail_optin', 'grad_date']]);
+			[['id', 'email', 'full_name', 'mass_mail_optin', 'grad_date', 'registration_date']]);
 	}
 
 	/* Retrieve an account with the given email address */

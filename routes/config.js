@@ -3,7 +3,7 @@
 
 (function() {
 	// Module "myModule" is created here
-	let app = angular.module('myModule', ['ngRoute']);
+	let app = angular.module('myModule', ['ngRoute', 'yaru22.angular-timeago']);
 
 	app.config(configure);
 
@@ -49,6 +49,7 @@
 			controllerAs: 'register',
 		})
 		.when('/admin', {
+			title: 'Admin List',
 			templateUrl: 'admin.html',
 			controller: 'AdminController',
 			controllerAs: 'admin',
@@ -67,6 +68,21 @@
 			resolve: {
 				profile_data: function($http) {
 					return $http.get('/api/user/profile').then(function(response) {
+						return response.data;
+					});
+				},
+			},
+		})
+		.when('/user/profile/:user_id', {
+			templateUrl: 'views/profile.html',
+			controller: 'ProfileController',
+			controllerAs: 'profile',
+			resolve: {
+				profile_data: function($http, $route) {
+					// see https://docs.angularjs.org/api/ngRoute/service/$routeParams
+					const user_id = $route.current.params.user_id;
+
+					return $http.get('/api/user/profile/' + user_id).then(function(response) {
 						return response.data;
 					});
 				},

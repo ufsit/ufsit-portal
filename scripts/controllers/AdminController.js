@@ -4,20 +4,17 @@
 	let app = angular.module('myModule');
 
 	app.controller('AdminController', function( $http, $log, $location, $scope, validate) {
-		console.log('ADMIN');
-
 		$http.get('/api/admin/list_users')
 			.success(function(data, status, headers, config) {
 				$scope.users = angular.forEach(data, function(v, k) {
-					if (v['in_mailing_list'] == 1) {
-						v['in_mailing_list'] = 'Yes';
+					if (v['mass_mail_optin'] == 1) {
+						v['mass_mail_optin'] = 'Yes';
 					} else {
-						v['in_mailing_list'] = 'No';
+						v['mass_mail_optin'] = 'No';
 					}
 
 					return {k: v};
 				});
-				console.log(data);
 			})
 		.error(function(data, status, header, config) {
 			$scope.users = [];

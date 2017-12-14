@@ -21,6 +21,8 @@
 
 		$scope.profile_name = profile_data.profile_name;
 
+		console.log(profile_data);
+
 		$scope.formData = {
 			name: profile_data.full_name,
 			email: profile_data.email,
