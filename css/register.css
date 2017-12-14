@@ -22,3 +22,9 @@ form .form-hint {
 	margin-top: 5px;
 	padding-left: 5px;
 }
+
+form .form-hint-error {
+	color: red;
+	margin-top: 5px;
+	padding-left: 5px;
+}

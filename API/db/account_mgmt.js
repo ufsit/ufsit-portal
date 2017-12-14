@@ -13,6 +13,22 @@ const PBKDF2_KEY_LEN = 48;					// 48bit hashes (64 wouldn't fit in the sql db lo
 const PBKDF2_ALGO = 'sha512';				// Use sha512
 
 let account_mgmt_module = (function() {
+	/* Create a randomly generated 32-byte salt and convert it into a hex string */
+	let generate_salt = function() {
+		return crypto.randomBytes(32).toString('hex');
+	};
+
+	/* Hash the given password using the salt and the constant PBKDF2 parameters */
+	let hash_password = function(password, salt) {
+		return crypto.pbkdf2Sync(
+			password,
+			salt,
+			PBKDF2_NUM_ITERATIONS,
+			PBKDF2_KEY_LEN,
+			PBKDF2_ALGO)
+			.toString('hex');		// Turn it into a hex string
+	};
+
 	let register_new_user = function(registration_data, callback) {
 		/* Validate the email address */
 		if (!(isEmail(registration_data.email))) {
@@ -37,25 +53,8 @@ let account_mgmt_module = (function() {
 				'in_mailing_list': registration_data.subscribe,	// verbatim
 			};
 
-			// var pre_hash_time = Date.now();	//For testing hash time
-
-			/* Create a randomly generated 32-byte salt and convert it into a hex string */
-			new_record.password.salt = crypto.randomBytes(32).toString('hex');
-
-			/* Hash the given password using the salt and the constant PBKDF2 parameters */
-			new_record.password.hash = crypto.pbkdf2Sync(
-				registration_data.password,
-				new_record.password.salt,
-				PBKDF2_NUM_ITERATIONS,
-				PBKDF2_KEY_LEN,
-				PBKDF2_ALGO)
-				.toString('hex');		// Turn it into a hex string
-
-			// var pre_hash_time = Date.now() - before;	//For hash time
-			// console.log('Duration of hash: ' + hash_time );
-			//
-			// console.log('new_record: ');
-			// console.log(new_record);
+			new_record.password.salt = generate_salt();
+			new_record.password.hash = hash_password(registration_data.password, new_record.password.salt);
 
 			// Create the record in the database
 			db_mgmt.create_account(new_record, (error)=>{
@@ -73,7 +72,7 @@ let account_mgmt_module = (function() {
 			/* IF it's not valid, send an error up through the callback */
 			callback({
 				'code': 400,
-				'text': '[account_mgmt.js->]: Error - Attempted to log into an account with an invalid email: '
+				'text': '[account_mgmt.js->]: Error - Attempted to authenticate an account with an invalid email: '
 					+ login_data.email,
 			});
 		} else {
@@ -89,13 +88,37 @@ let account_mgmt_module = (function() {
 					} else {
 						callback(null, {
 							'code': 401,
-							'text': '[account_mgmt.js->]: Error - Attempted to log into an ' +
+							'text': '[account_mgmt.js->]: Error - Attempted to authenticate an ' +
 								'account with the wrong credentials: ' + login_data.email,
 						});
 					}
 				}
 			});
 		}
+	}
+
+	function update_account(account_id, account_data, callback) {
+		if (account_data.password) {
+			let newSalt = generate_salt();
+			let newHash = hash_password(account_data.password, newSalt);
+
+			account_data.password = {};
+			account_data.password.salt = newSalt;
+			account_data.password.hash = newHash;
+		}
+
+		db_mgmt.update_account(account_id, account_data, (error)=> {
+			if (error) {
+				console.log(error);
+
+				callback({
+					code: 500,
+					text: 'Error while updating account',
+				});
+			} else {
+				callback();
+			}
+		});
 	}
 
 	/* Hashes a given password and salt and compares it against an existing hash. */
@@ -165,6 +188,7 @@ let account_mgmt_module = (function() {
 		// Public methods here
 		register_new_user: register_new_user,
 		authenticate: authenticate,
+		update_account: update_account,
 		generate_session_token: generate_session_token,
 		validate_session: db_mgmt.get_session,
 		get_name_from_email: get_name_from_email,

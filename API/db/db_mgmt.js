@@ -133,7 +133,41 @@ let db_mgmt_module = function() {
 		}
 	}
 
-   function list_users(callback) {
+	function update_account(account_id, account_data, callback) {
+		// explicitly prevent primary keys from being clobbered
+		if (account_data.id) {
+			delete account_data.id;
+		}
+
+		// Format the password correctly, if present
+		if (account_data.password.salt && account_data.password.hash) {
+			account_data.password = account_data.password.salt + '$' + account_data.password.hash;
+			delete account_data.salt;
+		} else {
+			delete account_data.password;
+			delete account_data.salt;
+		}
+
+		if (account_data.length < 1) {
+			return callback('Cannot update profile with zero fields');
+		}
+
+		// console.log("Updating account", account_id, "with", account_data);
+
+		sql_pool.query(
+			'UPDATE `account` SET ? WHERE id = ?',
+			[account_data, account_id],
+			function(error, results, fields) {
+				if (error) {
+					callback(error);
+				} else {
+					callback();
+				}
+			}
+		);
+	}
+
+	function list_users(callback) {
 		sql_pool.query(
 			'SELECT ?? FROM `account`',
 			[['email', 'full_name', 'mass_mail_optin', 'grad_date']],
@@ -145,11 +179,11 @@ let db_mgmt_module = function() {
 						'text': error,
 					}, null);	// 2nd parameter (which is usually the result) is null
 				} else {
-                  callback(null, results);
+					callback(null, results);
 				}
 			}
 		);
-   }
+	}
 
 	/* Retrieve an account with the given email address */
 	function retrieve(email_addr, callback) {
@@ -193,8 +227,8 @@ let db_mgmt_module = function() {
 	function retrieve_by_id(account_id, callback) {
 		/* Execute the query using a connection from the connection pool */
 		sql_pool.query(
-			'SELECT ?? FROM `account` WHERE id = ?',
-			[['id', 'email', 'full_name'], account_id],
+			'SELECT * FROM `account` WHERE id = ?',
+			[account_id],
 			function(error, results, fields) {
 				/* If there was a sql error, send it up through the callback */
 				if (error) {
@@ -206,6 +240,10 @@ let db_mgmt_module = function() {
 					/* If the results array has any elements in it, call back with the 0th element
 					(entries are unique) */
 					if (results.length > 0) {
+						// Hide certain fields
+						delete results[0].id;
+						delete results[0].password;
+
 						callback(null, results[0]);
 					} else {
 						/* Otherwise, call back with a 404 (for no matching record) and null for the result*/
@@ -325,6 +363,7 @@ let db_mgmt_module = function() {
 	// Revealing module
 	return ({
 		create_account: create_account,
+		update_account: update_account,
 		retrieve: retrieve,
 		retrieve_by_id: retrieve_by_id,
 		create_session: create_session,
