@@ -5,14 +5,14 @@ This includes event signin, user profiles, resume uploading, lecture materials, 
 
 ## Setting up a Development Environment
 
-The UFSIT Portal uses a recent version of NodeJS that supports newer Javascript standards,
+The UFSIT Portal uses a recent version of Node.js with Express that supports newer ES8 (aka ES2017),
 MySQL for data persistence, and Heroku for application deployment. AngularJS
 1.X is used for our front-end (the portal is a single-page webapp) along with
-bootstrap for CSS.
+bootstrap for CSS styling.
 
 ### Downloading the app and installing dependencies
 
-If you are a member of UFSIT, you can work directly on this repository.
+If you are a member of UFSIT with the correct access rights, you can work directly on this repository.
 Otherwise, you will need to make a fork of this repository, clone that, and provide any changes via Pull Requests.
 The following steps assume you are a member of the UFSIT organization.
 
@@ -24,16 +24,17 @@ $ cd ufInfoSec_webapp/
 $ npm install
 ```
 
-When running the application, you will access to a local MySQL database for testing.
+When running the application, you will need root access to a local MySQL database for testing.
 If you are on Mac OSX and you use homebrew, you can install this easily:
 
 ```
 $ brew install mysql
-$ mysql.server start
+$ mysql.server start # this will need to be started on reboot
 ```
 
-If you are on a Linux system, install the MySQL using your preferred package manager.
-If you are on Windows, install MySQL directly from the official website
+If you are on a Linux system, install MySQL using your preferred package manager.
+If you are on Windows, install MySQL directly from an official website installer.
+No particular version of MySQL is required (in fact we are actually using MariaDB in Heroku) as we are using the bare minimum of SQL features.
 
 ### Importing the database
 
@@ -46,7 +47,7 @@ a production database dump. If you need access to this, message one of the admin
 Assuming an installed and working database, we must create a credentials file to tell the webapp how
 to communicate with the database. Here is an example file 
 
-```
+```json
 {
     "db":{
         "host":"localhost",
@@ -76,7 +77,7 @@ npm start
 If you have multiple database credentials files (e.g. one for development and another for production), you can
 explicitly pass the filename in an environment variable:
 
-```
+```shell
 CREDENTIALS=credentials.json node app.js
 ```
 
@@ -98,11 +99,66 @@ process when a server file is changed. This will save you from development heada
 To install nodemon, run `npm install -g nodemon`. This will place it in your PATH. From now on,
 you may run `nodemon app.js` instead of `node app.js` or `npm start`.
 
+### Code Map
+The top-level file is `app.js`. This configures Express the site in general. The API directory has the actual routes along with the DB-related helper functions in the `db/` directory. Knowledge of Express should not extend down to the DB directory and should only be handled at the top-level route declarations.
+
+For the front end, the `html/` directory has all of the Angular-based HTML, `css/` all of the stylesheets, `scripts/controller/` all of the NG controllers, `images/` all of the images, and `routes/config.js` the top-level single-page application routing configuration.
+
+```
+├── API/
+│   ├── README.md
+│   ├── admin.js
+│   ├── anonymous.js
+│   ├── db/
+│   │   ├── account_mgmt.js
+│   │   ├── admin.js
+│   │   ├── db_mgmt.js
+│   │   └── event_mgmt.js
+│   ├── event.js
+│   ├── index.js
+│   ├── session.js
+│   └── user.js
+├── app.js
+├── css/
+│   ├── bootstrap.css
+│   └── ...
+├── data/
+│   └── schema.sql
+├── html/
+│   ├── index.html
+│   ├── login.html
+│   ├── ...
+│   └── views/
+│       ├── header.html
+│       ├── home.html
+│       └── ...
+├── images/
+│   └── ...
+├── package.json
+├── routes/
+│   └── config.js
+├── scripts/
+│   └── controllers/
+│       ├── AdminController.js
+│       ├── LoginController.js
+│       └── ...
+├── services/
+│   └── Validate.js
+└── util/
+    └── index.js
+```
+
+### Relevant Documentation
+* AngularJS 1.x - https://docs.angularjs.org/guide
+* Node.js Express - https://expressjs.com/en/4x/api.html
+* Node.sj 9.3.x - https://nodejs.org/dist/latest-v9.x/docs/api/
+* MySQL for Node.js - https://www.npmjs.com/package/mysql
+
 ### Development Guidelines
 
-* *DO*: use tabs for indentation
-* *DO*: use `eslint` to check your code for common style errors and other runtime issues
-* *DO*: `async` and `await` in all API endpoints
+* **DO**: use tabs for indentation
+* **DO**: use `eslint` to check your code for common style errors and other runtime issues
+* **DO**: declare all API endpoints and their substantial subfunctions as `async` and `await` on them 
 
 ## Deploying the Site
 
