@@ -4,6 +4,8 @@
   "description": "A UFSIT specific member portal",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "mon": "type -P \"nodemon\" && nodemon app.js || echo \"Nodemon not installed.\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint"
   },
