@@ -29,8 +29,11 @@ try {
 	let url = process.env.JAWSDB_MARIA_URL;
 
 	if (url == undefined || url == null) {
-		throw new Error('Unable to load database credentials from ' + CREDENTIALS +
-				'.\nEnsure that you have this file available in your current directory.');
+		console.log('[ERROR] Unable to load database credentials from \'' + CREDENTIALS +
+				'\' OR from the JAWSDB_MARIA_URL environment.\n' +
+			'Ensure that you have this file available in your current directory.');
+		process.exit(1);
+		return;
 	}
 
 	sql_pool = mysql.createPool(url);
