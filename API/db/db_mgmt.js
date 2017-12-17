@@ -36,6 +36,19 @@ try {
 	sql_pool = mysql.createPool(url);
 }
 
+/* Check if the SQL server credentials are actually valid instead of waiting for the first
+   query */
+sql_pool.getConnection((error, connection) => {
+	if (error) {
+		console.log('[ERROR] Could not connect to the database:', error.message);
+		console.log('Double check the database configuration you provided.');
+		process.exit(1);
+		return;
+	}
+
+	connection.release();
+});
+
 /* Define the database management module and its public API */
 let db_mgmt_module = function() {
 	/* Create a new account */
