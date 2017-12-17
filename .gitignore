@@ -1,6 +1,8 @@
 # Sensitive
-credentials.json
 .env
+
+# Potentially Sensitive
+*.json
 
 # Vim shit
 *.swp
