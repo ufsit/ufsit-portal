@@ -12,7 +12,7 @@
   "author": "Elan Rasabi",
   "license": "ISC",
   "dependencies": {
-    "angular-translate": "^2.11.1",
+    "angular": "1.6.6",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.6",
     "cookie-parser": "^1.4.3",

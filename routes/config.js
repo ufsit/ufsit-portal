@@ -2,13 +2,13 @@
 
 (function() {
 	// Module "myModule" is created here
-	let app = angular.module('myModule', ['ngRoute', 'pascalprecht.translate']);
+	let app = angular.module('myModule', ['ngRoute']);
 
 	app.config(configure);
 
-	configure.$inject = ['$routeProvider', '$translateProvider', '$locationProvider'];
+	configure.$inject = ['$routeProvider', '$locationProvider'];
 
-	function configure($routeProvider, $translateProvider, $locationProvider) {
+	function configure($routeProvider, $locationProvider) {
 		$locationProvider.html5Mode(true);
 
 		$routeProvider
