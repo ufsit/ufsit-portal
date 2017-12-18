@@ -6,9 +6,11 @@
 
 	app.config(configure);
 
-	configure.$inject = ['$routeProvider', '$translateProvider'];
+	configure.$inject = ['$routeProvider', '$translateProvider', '$locationProvider'];
 
-	function configure($routeProvider, $translateProvider) {
+	function configure($routeProvider, $translateProvider, $locationProvider) {
+		$locationProvider.html5Mode(true);
+
 		$routeProvider
 			.when('/', {
 				templateUrl: 'login.html',
@@ -46,9 +48,19 @@
 				},
 			},
 		})
-		.otherwise({redirectTo: '/'});
+		.otherwise({
+			redirectTo: '/',
+			resolve: {
+				printer: function($window, $http) {
+					let badpath = $window.location.pathname;
 
-		console.log(navigator.language);
+					// We dont care if this works or not
+					// TODO: some how track the previous URL for context
+					$http.post('/api/bad_route', {route: badpath});
+					console.log('Route 404: ' + badpath);
+				},
+			},
+		});
 	}
 
 	app.run(function($rootScope, $location) {

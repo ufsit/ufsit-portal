@@ -48,10 +48,19 @@ app.use('/api', api);
 app.use(express.static('images'));
 app.use(express.static('scripts'));
 app.use(express.static('css'));
-app.use(express.static('html'));
 app.use(express.static('routes'));
 app.use(express.static('services'));
 app.use(express.static('node_modules'));
+
+app.use((req, res, next) => {
+	if (!/.*\.html$/.test(req.url)) {
+		req.url = '/index.html';
+	}
+
+	next();
+});
+
+app.use(express.static('html'));
 
 // Tells the terminal the node has been created at a given port number
 app.listen(PORT, function() {

@@ -57,6 +57,15 @@ routes.get('/', (req, res) => {
 		'Try something more interesting next time :)'});
 });
 
+routes.post('/bad_route', (req, res) => {
+	if (req.body.route) {
+		console.log('[WARN] Application route 404:', req.body.route);
+		res.status(200);
+	} else {
+		res.status(404);
+	}
+});
+
 // All routes in anonymous do not require an existing session or account
 routes.use(require('./anonymous.js'));
 
@@ -67,5 +76,8 @@ routes.use(require('./user.js'));
 routes.use(require('./session.js'));
 routes.use(require('./event.js'));
 routes.use(require('./admin.js'));
+routes.use(function(req, res, next) {
+	res.status(404).json({message: 'Unknown REST URL: /api' + req.url});
+});
 
 module.exports = routes;
