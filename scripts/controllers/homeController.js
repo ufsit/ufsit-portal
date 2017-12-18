@@ -60,8 +60,8 @@
 		$scope.redirect_events_news = function() {
 			$window.open('http://ufsit.org/blog/', '_blank');
 		};
-		//redirect to googleForms that allows writeup submissions
-		$scope.redirect_upload_writeup = function(){
+		// redirect to googleForms that allows writeup submissions
+		$scope.redirect_upload_writeup = function() {
 			$window.open('https://goo.gl/forms/nYJ3nI4Eg56pIjyo1', '_blank');
 		};
 	});
