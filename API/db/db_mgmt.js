@@ -3,6 +3,7 @@
 const fs = require('fs');						// For filesystem I/O
 const mysql = require('mysql');		// For mySQL interaction
 const util = require.main.require('./util');
+const createError = require('http-errors');
 const CREDENTIALS = process.env.CREDENTIALS || 'credentials.json';
 
 let sql_pool = null;
@@ -54,74 +55,56 @@ sql_pool.getConnection((error, connection) => {
 
 /* Define the database management module and its public API */
 let db_mgmt_module = function() {
-	/* Create a new account */
-	function create_account(new_record, callback) {
-		/* Use the check_account_conflict function to check if an account with that
-		email address already exists. In the callback function, either throw an
-		error up through the callback if there was a conflict, or proceed creating
-		the account */
-		check_account_conflict(new_record.email, (error)=>{
-			/* If it does, make a callback with the error */
-			if (error) {
-				if (error.code === 409) {
-					callback({
-						'code': 409,	// HTTP Identifier for the error: 409 => conflict
-						'text': '[db_mgmt.js->]: Error - Attempted to create duplicate account: ' + new_record.email,
-					});
-				} else {
-					callback({
-						'code': 500,	// HTTP Identifier for the error: 500 => Mysql error
-						'text': error.text,
-					});
-				}
-			} else {
-				/* Otherwise proceed creating the account */
-				insert_new_account(new_record, (err)=>{
-					/* If there was an error inserting the record, send it up through the callback */
-					if (err) {
-						callback({
-							'code': 500,	// HTTP Identifier for the error: 409 => conflict
-							'text': err,		// Just send back the raw error text
-						});
-					} else {
-						callback(); // Otherwise call back with no error
-					}
-				});
-			}
-		});
-		/* Helper function: Check if an account with the given email already exists.
-		If it does, call back  with true. If it doesn't, call back with false. */
-		function check_account_conflict(new_email, callback) {
-			/* Form a query to the 'accounts' table for entries with the given email */
-			/* Execute the query using a connection from the connection pool */
+	function queryAsync(query, values) {
+		return new Promise((resolve, reject) => {
 			sql_pool.query(
-				'SELECT `id` FROM `account` WHERE email = ?',
-				[new_email],
+				query,
+				values,
 				function(error, results, fields) {
-					if (error) {	// If there was an error, pass it up through the callback
-						callback({
-							'code': 500,
-							'text': error,
-						});
+					if (error) {
+						// Create a generic HTTP error for display
+						const httperror = createError();
+
+						// copy the MySQL stack trace as the one we just generated is useless
+						httperror.stack = error.stack;
+
+						reject(httperror);
 					} else {
-						/* If the results array has any elements in it, call back with true
-						(to indicate that there was a conflict) */
-						if (results.length > 0) {
-							callback({
-								'code': 409,	// Duplicate
-							});
-						} else {
-							/* Otherwise, call back withhout an error to indicate a lack of conflict */
-							callback();
-						}
+						resolve(results);
 					}
 				}
 			);
+		});
+	}
+
+	/* Create a new account */
+	async function create_account(new_record) {
+		/* Use the check_account_conflict function to check if an account with that
+		email address already exists. In the function, we either throw an
+		error if there was a conflict, or proceed creating
+		the account */
+
+		if (await account_exists(new_record.email)) {
+			throw new createError.Conflict('Attempted to create duplicate account: '
+				+ new_record.email
+			);
+		} else {
+			await insert_new_account(new_record);
+
+			return;
+		}
+
+		/* Helper function: Check if an account with the given email already exists.*/
+		async function account_exists(email) {
+			/* Form a query to the 'accounts' table for entries with the given email */
+			let results = await queryAsync('SELECT `id` FROM `account` WHERE email = ?', email);
+
+			return results.length > 0;
 		}
 
 		/* Helper function: Inserts a new account element into the database with the
 		parameters passed in the new_account object */
-		function insert_new_account(new_account, callback) {
+		async function insert_new_account(new_account) {
 			let values = {
 				full_name: new_account.full_name,
 				email: new_account.email,
@@ -133,30 +116,18 @@ let db_mgmt_module = function() {
 				mass_mail_optin: new_account.in_mailing_list,
 			};
 
-			/* Execute the query using a connection from the connection pool */
-			sql_pool.query(
-				'INSERT INTO `account` SET ?',
-				values,
-				function(error, results, fields) {
-					if (error) {
-						// If there was an error, send it up through the callback
-						callback(error);
-					} else {
-						callback();	// Otherwise call back with no errors
-					}
-				}
-			);
+			return await queryAsync('INSERT INTO `account` SET ?', values);
 		}
 	}
 
-	function update_account(account_id, account_data, callback) {
+	async function update_account(account_id, account_data) {
 		// explicitly prevent primary keys from being clobbered
 		if (account_data.id) {
 			delete account_data.id;
 		}
 
 		// Format the password correctly, if present
-		if (account_data.password.salt && account_data.password.hash) {
+		if (account_data.password && account_data.password.salt && account_data.password.hash) {
 			account_data.password = account_data.password.salt + '$' + account_data.password.hash;
 			delete account_data.salt;
 		} else {
@@ -165,118 +136,63 @@ let db_mgmt_module = function() {
 		}
 
 		if (account_data.length < 1) {
-			return callback('Cannot update profile with zero fields');
+			throw new createError.BadRequest('Cannot update profile with zero fields');
 		}
 
 		// console.log("Updating account", account_id, "with", account_data);
 
-		sql_pool.query(
-			'UPDATE `account` SET ? WHERE id = ?',
-			[account_data, account_id],
-			function(error, results, fields) {
-				if (error) {
-					callback(error);
-				} else {
-					callback();
-				}
-			}
-		);
+		return await sql_pool.query('UPDATE `account` SET ? WHERE id = ?', [account_data, account_id]);
 	}
 
-	function list_users(callback) {
-		sql_pool.query(
-			'SELECT ?? FROM `account`',
-			[['email', 'full_name', 'mass_mail_optin', 'grad_date']],
-			function(error, results, fields) {
-				/* If there was a sql error, send it up through the callback */
-				if (error) {
-					callback({
-						'code': 500,
-						'text': error,
-					}, null);	// 2nd parameter (which is usually the result) is null
-				} else {
-					callback(null, results);
-				}
-			}
-		);
+	async function list_users() {
+		return await queryAsync('SELECT ?? FROM `account`',
+			[['email', 'full_name', 'mass_mail_optin', 'grad_date']]);
 	}
 
 	/* Retrieve an account with the given email address */
-	function retrieve(email_addr, callback) {
+	async function retrieve(email_addr) {
 		/* Form a query to the 'accounts' table for entries with the given email */
 		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'SELECT ?? FROM `account` WHERE email = ?',
-			[['id', 'password', 'full_name'], email_addr],
-			function(error, results, fields) {
-				/* If there was a sql error, send it up through the callback */
-				if (error) {
-					callback({
-						'code': 500,
-						'text': error,
-					}, null);	// 2nd parameter (which is usually the result) is null
-				} else {
-					/* If the results array has any elements in it, call back with the 0th element
-					(entries are unique) */
-					if (results.length > 0) {
-						let pwparts = results[0].password.split('$');
-						// Callback with no error, and 2nd param is the results
-						callback(null, {	// Encapsulate the results nicely for account_mgmt.js
-							'id': results[0].id,
-							'salt': pwparts[0],
-							'hash': pwparts[1],
-							'name': results[0].full_name,
-						});
-					} else {
-						/* Otherwise, call back with a 404 (for no matching record) and null for the result*/
-						callback({
-							'code': 404,	// No results
-							'text': 'No account with email address ' + email_addr,
-						}, null);
-					}
-				}
-			}
-		);
+		const results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
+			[['id', 'password', 'full_name'], email_addr]);
+
+		/* If the results array has any elements in it, call back with the 0th element
+		(entries are unique) */
+		if (results.length <= 0) {
+			throw new createError.NotFound('No account with email address ' + email_addr);
+		}
+
+		let pwparts = results[0].password.split('$');
+
+		return {	// Encapsulate the results nicely for account_mgmt.js
+			'id': results[0].id,
+			'salt': pwparts[0],
+			'hash': pwparts[1],
+			'name': results[0].full_name,
+		};
 	}
 
 	/* Retrieve an account by account ID */
-	function retrieve_by_id(account_id, callback) {
+	async function retrieve_by_id(account_id) {
 		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'SELECT * FROM `account` WHERE id = ?',
-			[account_id],
-			function(error, results, fields) {
-				/* If there was a sql error, send it up through the callback */
-				if (error) {
-					callback({
-						'code': 500,
-						'text': error,
-					}, null);	// 2nd parameter (which is usually the result) is null
-				} else {
-					/* If the results array has any elements in it, call back with the 0th element
-					(entries are unique) */
-					if (results.length > 0) {
-						// Hide certain fields
-						delete results[0].id;
-						delete results[0].password;
+		const results = await queryAsync('SELECT * FROM `account` WHERE id = ?', [account_id]);
 
-						callback(null, results[0]);
-					} else {
-						/* Otherwise, call back with a 404 (for no matching record) and null for the result*/
-						callback({
-							'code': 404,	// No results
-							'text': 'No account with id ' + account_id,
-						}, null);
-					}
-				}
-			}
-		);
+		if (results.length > 0) {
+			// Hide certain fields
+			delete results[0].id;
+			delete results[0].password;
+
+			return results[0];
+		} else {
+			/* Otherwise, return a 404 (for no matching record) and null for the result*/
+			throw new createError.NotFound('No account with id ' + account_id);
+		}
 	}
 
 	/* Create an entry in the sessions table */
-	function create_session(session_token, account_id,
-			start_date, expire_date, ip_address, browser, callback) {
-		let values = {
+	async function create_session(session_token, account_id,
+			start_date, expire_date, ip_address, browser) {
+		const values = {
 			id: session_token,
 			account_id: account_id,
 			start_date: util.mysql_iso_time(start_date),
@@ -286,94 +202,41 @@ let db_mgmt_module = function() {
 		};
 
 		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'INSERT INTO `session` SET ?',
-			values,
-			function(error, results, fields) {
-				if (error) {
-					callback(error);
-				} else {
-					callback();
-				}
-			}
-		);
+		return await queryAsync('INSERT INTO `session` SET ?', values);
 	}
 
 	/* Confirms whether the token corresponds to an active session. If it does, calls back
 		with the email associated with it.*/
-	function get_session(session_token, callback) {
-		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'SELECT * FROM `session` WHERE ?',
-			{id: session_token},
-			function(error, results, fields) {
-				/* If there were no errors... */
-				if (error) {
-					// If there was an error, send it up through the callback
-					callback(error, null);
-				} else {
-					/* If there was a match */
-					if (results.length > 0) {
-						/* Call back with no error and the session */
-						callback(null, results[0]);
-					} else {
-						/* If there was no match */
-						/* Call back with no error, but also no session */
-						callback(null, null);
-					}
-				}
-			}
-		);
+	async function get_session(session_token) {
+		const results = await queryAsync('SELECT * FROM `session` WHERE ?', {id: session_token});
+
+		if (results.length > 0) {
+			return results[0];
+		} else {
+			/* Otherwise, return a 404 (for no matching record) and null for the result*/
+			throw new createError.NotFound('No session with token ' + session_token);
+		}
 	}
 
 	/* Remove an entry from the sessions table */
-	function remove_session(session_id, callback) {
-		/* Execute the query using a connection from the connection pool */
-		sql_pool.query(
-			'DELETE FROM `session` WHERE id = ?',
-			[session_id],
-			function(error, results, fields) {
-				if (error) {
-					callback(error);
-				} else {
-					callback();	// Otherwise call back with no errors
-				}
-			}
-		);
+	async function remove_session(session_id) {
+		return await queryAsync('DELETE FROM `session` WHERE id = ?', [session_id]);
 	}
+
 	/* Sign a user into an event */
-	function sign_in(email, timestamp, callback) {
+	async function sign_in(email, timestamp) {
 		let values = {
 			email: email,
 			timestamp: timestamp,
 		};
 
-		sql_pool.query(
-			'INSERT INTO `event_sign_ins_old` SET ?',
-			values,
-			function(error, results, fields) {
-				if (error) {
-					callback(error);
-				} else {
-					callback();	// Otherwise call back with no errors
-				}
-			}
-		);
+		return await queryAsync('INSERT INTO `event_sign_ins_old` SET ?', values);
 	}
 
 	/* Get all signins for a user with a constraint of time */
-	function get_sign_ins(email, after, callback) {
-		sql_pool.query(
-			'SELECT * FROM `event_sign_ins_old` WHERE `email` = ? AND `timestamp` >= ?',
-			[email, after],
-			function(error, results, fields) {
-				if (error) {
-					callback(error, null);
-				} else {
-					callback(null, results);
-				}
-			}
-		);
+	async function get_sign_ins(email, after) {
+		return await queryAsync('SELECT * FROM `event_sign_ins_old` WHERE `email` = ? AND `timestamp` >= ?',
+			[email, after]);
 	}
 
 	// Revealing module

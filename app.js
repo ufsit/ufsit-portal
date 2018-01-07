@@ -3,6 +3,12 @@
 // Enable app-relative includes (https://gist.github.com/branneman/8048520)
 // Note: use require.main.require('file/path') for app-relative includes
 
+process.on('unhandledRejection', (reason, p) => {
+	console.log('Unhandled Promise rejection at: ', p);
+	console.log('Reason:', reason);
+	throw reason;
+});
+
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');

@@ -17,39 +17,38 @@ routes.use(cookieParser('This secret is used for signing cookies. Here\'s some e
 /* Automagically sanitize req.body. this line follows app.use(bodyParser.json) or the last body parser middleware */
 routes.use(sanitizer.middleware());
 
-function requireLogin(req, res, next) {
+async function requireLogin(req, res, next) {
 	/* The following variable certifies that the cookie is at least signed by us */
 	let signed_cookie = req.signedCookies.session_id;
+
+	if (!signed_cookie) {
+		return res.status(403).send('Not signed in');
+	}
+
 	/* If the cookie is signed, proceed to get some more info from the database */
-	if (signed_cookie) {
-		account_mgmt.validate_session(signed_cookie, (error, session) =>{
-			if (error) {
-				console.log(error);
-				res.status(500).send('Something went wrong on our end');
-			} else {
-				if (session) {
-					req.session = session; // pass on our session variable to the next handlers
-					next();
-				} else {
-					res.status(403).send('Not signed in');
-				}
-			}
-		});
-	} else { // If the cookie wasn't even signed, return a 403 forbidden error
-		res.status(403).send('Not signed in');
+	try {
+		const session = await account_mgmt.validate_session(signed_cookie);
+
+		if (session) {
+			req.session = session; // pass on our session variable to the next handlers
+			return next();
+		} else {
+			return res.status(403).send('Not signed in');
+		}
+	} catch (error) {
+		return next(error);
 	}
 }
 
-function loadAccount(req, res, next) {
-	account_mgmt.get_account_by_id(req.session.account_id, (err, account)=> {
-		if (err) {
-			console.log(err);
-			res.status(500).send('Something went wrong on our end');
-		} else {
-			req.account = account;
-			next();
-		}
-	});
+// Assumes the existance of an active session
+async function loadAccount(req, res, next) {
+	try {
+		const account = await account_mgmt.get_account_by_id(req.session.account_id);
+		req.account = account;
+		return next();
+	} catch (error) {
+		return next(error);
+	}
 }
 
 routes.get('/', (req, res) => {

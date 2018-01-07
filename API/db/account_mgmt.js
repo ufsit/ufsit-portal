@@ -2,6 +2,7 @@
 /* Simple, non-account sign-in. Scrap for parts :) */
 
 const crypto = require('crypto');	// For crypto
+const createError = require('http-errors');
 
 const db_mgmt = require('./db_mgmt.js');	// Abstracts away DB interactions
 
@@ -29,15 +30,12 @@ let account_mgmt_module = (function() {
 			.toString('hex');		// Turn it into a hex string
 	};
 
-	let register_new_user = function(registration_data, callback) {
+	async function register_new_user(registration_data) {
 		/* Validate the email address */
 		if (!(isEmail(registration_data.email))) {
-			/* IF it's not valid, send an error up through the callback */
-			callback({
-				'code': 400,
-				'text': '[account_mgmt.js->]: Error - Attempted to create an account with an invalid email: ' +
-					registration_data.email,
-			});
+			throw new createError.BadRequest('Attempted to create an account with an invalid email: ' +
+				registration_data.email
+			);
 		/* If the email checked out */
 		} else {
 			// Create a slightly modified new_record out of the registration data
@@ -57,47 +55,34 @@ let account_mgmt_module = (function() {
 			new_record.password.hash = hash_password(registration_data.password, new_record.password.salt);
 
 			// Create the record in the database
-			db_mgmt.create_account(new_record, (error)=>{
-				/* If a parameter was sent, it is an error message. Pass it along a callback. */
-				if (error) callback(error);
-				else callback();	// Otherwise, pass no error on the callback
-			});
-		}
-	};
-
-	/* Authenticate a given email and password */
-	function authenticate(login_data, callback) {
-		/* Validate the email address */
-		if (!(isEmail(login_data.email))) {
-			/* IF it's not valid, send an error up through the callback */
-			callback({
-				'code': 400,
-				'text': '[account_mgmt.js->]: Error - Attempted to authenticate an account with an invalid email: '
-					+ login_data.email,
-			});
-		} else {
-			/* Otherwise, attempt to retrieve the account record from the database */
-			db_mgmt.retrieve(login_data.email, (error, result)=>{
-				if (error) {
-					callback(null, error);	// If there was an error, send it up through the callback
-				/* If there was no error, verify the given credentials against those retrieved from the database */
-				} else {
-					let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
-					if (authenticated) {
-						callback(result.id, null);	// Call back without an error
-					} else {
-						callback(null, {
-							'code': 401,
-							'text': '[account_mgmt.js->]: Error - Attempted to authenticate an ' +
-								'account with the wrong credentials: ' + login_data.email,
-						});
-					}
-				}
-			});
+			await db_mgmt.create_account(new_record);
 		}
 	}
 
-	function update_account(account_id, account_data, callback) {
+	/* Authenticate a given email and password */
+	async function authenticate(login_data) {
+		/* Validate the email address */
+		if (!(isEmail(login_data.email))) {
+			/* IF it's not valid, send throw an error */
+			throw new createError.BadRequest('Attempted to authenticate an account with an invalid email: '
+					+ login_data.email);
+		} else {
+			/* Otherwise, attempt to retrieve the account record from the database */
+			const result = await db_mgmt.retrieve(login_data.email);
+
+			/* If there was no error, verify the given credentials against those retrieved from the database */
+			let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
+
+			if (!authenticated) {
+				throw new createError.BadRequest('Attempted to authenticate an ' +
+						'account with the wrong credentials: ' + login_data.email);
+			}
+
+			return result.id;
+		}
+	}
+
+	async function update_account(account_id, account_data) {
 		if (account_data.password) {
 			let newSalt = generate_salt();
 			let newHash = hash_password(account_data.password, newSalt);
@@ -107,18 +92,7 @@ let account_mgmt_module = (function() {
 			account_data.password.hash = newHash;
 		}
 
-		db_mgmt.update_account(account_id, account_data, (error)=> {
-			if (error) {
-				console.log(error);
-
-				callback({
-					code: 500,
-					text: 'Error while updating account',
-				});
-			} else {
-				callback();
-			}
-		});
+		return await db_mgmt.update_account(account_id, account_data);
 	}
 
 	/* Hashes a given password and salt and compares it against an existing hash. */
@@ -136,47 +110,29 @@ let account_mgmt_module = (function() {
 
 	/* Generate a session random 32-byte hex string to use as a session token,
 	 	and store the session in the database, associated with the requesting email address*/
-	function generate_session_token(account_id, ip_address, browser, time_to_expiration, callback) {
+	async function generate_session_token(account_id, ip_address, browser, time_to_expiration) {
 		let token = crypto.randomBytes(16).toString('hex');
 		let start_date = new Date(Date.now());
 		let expire_date = new Date(Date.now() + time_to_expiration);
 
-		db_mgmt.create_session(token, account_id,
-				start_date, expire_date, ip_address, browser, (error)=>{
-			if (error) {
-				callback(error, null);
-			} else {
-				/* Put in a timeout to remove the session from the database when its cookie expires */
-				setTimeout(
-					function() {
-						console.log('Expiring old session ' + token);
-						invalidate_session(token);
-					},
-					time_to_expiration
-				);
-				callback(null, token);
-			}
-		});
+		await db_mgmt.create_session(token, account_id,
+				start_date, expire_date, ip_address, browser);
+
+		/* Put in a timeout to remove the session from the database when its cookie expires */
+		setTimeout(
+			function() {
+				console.log('Expiring old session ' + token);
+				invalidate_session(token);
+			},
+			time_to_expiration
+		);
+
+		return token;
 	}
 
 	/* Removes any entries in the DB with a matching session id */
-	function invalidate_session(session_token) {
-		db_mgmt.remove_session(session_token, (error)=>{
-			if (error) {
-				console.log(error);
-			}
-		});
-	}
-	/* Given an account's email addres, gets the associated name. */
-	function get_name_from_email(email_addr, callback) {
-		db_mgmt.retrieve(email_addr, (error, data)=>{
-			console.log(data);
-			if (error) {
-				callback(error, null);
-			} else {
-				callback(null, data.name);
-			}
-		});
+	async function invalidate_session(session_token) {
+		await db_mgmt.remove_session(session_token);
 	}
 
 	function isEmail(email) {
@@ -191,7 +147,6 @@ let account_mgmt_module = (function() {
 		update_account: update_account,
 		generate_session_token: generate_session_token,
 		validate_session: db_mgmt.get_session,
-		get_name_from_email: get_name_from_email,
 		get_account_by_id: db_mgmt.retrieve_by_id,
 	};
 });
