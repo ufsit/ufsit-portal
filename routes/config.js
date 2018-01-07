@@ -1,3 +1,4 @@
+/* eslint-disable no-invalid-this */
 'use strict';
 
 (function() {
@@ -6,10 +7,29 @@
 
 	app.config(configure);
 
+	app.service('Session', ['$http', function($http) {
+		this.login = function(data) {
+			return $http.post('/api/user/login', data);
+		};
+
+		this.logout = function() {
+			return $http.post('/api/session/logout');
+		};
+
+		this.create = function(test) {
+			this.id = test;
+		};
+
+		this.destroy = function() {
+			this.id = null;
+		};
+	}]);
+
 	configure.$inject = ['$routeProvider', '$locationProvider'];
 
 	function configure($routeProvider, $locationProvider) {
 		$locationProvider.html5Mode(true);
+		$locationProvider.hashPrefix('!');
 
 		$routeProvider
 			.when('/', {
@@ -81,8 +101,12 @@
 
 	app.run(function($rootScope, $location) {
 		$rootScope.$on('$routeChangeError', function(event, current, previous, eventObj) {
-			console.log(eventObj);
-			$location.path('/');
+			if (eventObj.status === 403) {
+				console.log('Session expired.');
+				$location.path('/');
+			} else {
+				console.log('Unknown route change error. Object:', eventObj);
+			}
 		});
 	});
 }());

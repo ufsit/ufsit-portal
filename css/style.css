@@ -1,5 +1,45 @@
 /*Fonts import*/
 @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono|VT323');
+
+.navbar-default .navbar-brand {
+  padding: 0px;
+  color: white;
+}
+.navbar-brand>img {
+  height: 100%;
+  /*padding: 15px;*/
+  width: auto;
+  display: inline;
+}
+
+.navbar-brand {
+  height: 70px;
+  margin-right: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .nav >li >a {
+    padding-top: 25px;
+    padding-bottom: 25px;
+  }
+
+  .navbar-btn {
+    margin-left: 15px;
+    margin-top: 18px;
+    margin-bottom: 18px;
+  }
+}
+
+.navbar-default .navbar-nav >li >a {
+  color: white;
+}
+
+.navbar-toggle {
+  padding: 10px;
+  margin: 20px 15px 20px 0;
+  background-color: #e7e7e7;
+}
+
 .tile {
   width: 100%;
   display: inline-block;
@@ -181,7 +221,9 @@ div.h2-1 {
 	display: inline-block;
 }
 
-
+strong {
+  font-weight: 400;
+}
 
 table {
 	display: Block;

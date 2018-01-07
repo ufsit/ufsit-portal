@@ -3,15 +3,18 @@
 	// This is now just a reference to "myModule" in app.js
 	let app = angular.module('myModule');
 
-	app.controller('homeController', function( $http, $log, $location, $scope, validate, $window) {
+	app.controller('homeController', function( Session, $http, $rootScope, $log, $location, $scope, validate, $window) {
 		$scope.show_name = false;	// Don't show the person's name until it loads
 
 		// Validate the user's session
 		validate_session((is_logged_in, user_data)=>{
 			/* If the user is not logged in, redirect to the login page*/
 			if (!is_logged_in) {
+				Session.destroy();
 				$location.path('/login');
 			} else { // Otherwise, render the page normally
+				Session.create(user_data.name);
+
 				$scope.show_name = true;
 				$scope.full_name = user_data.name;
 				$scope.email_addr = user_data.email;
@@ -44,10 +47,6 @@
 			});
 		};
 
-		$scope.log_out = function() {
-			$http.post('/api/session/logout');
-			$location.path('/login');
-		};
 		// redirect to sharepoint that stores lecture content
 		$scope.redirect_lecture_content = function() {
 			$window.open('https://uflorida-my.sharepoint.com/personal/elan22_ufl_edu/_layouts/15/guestaccess.aspx?folderid=0d67d1c9bc1be4aa68ea7bd61d21b612a&authkey=AbD-gTKCDdCIpE8vtELGWzw', '_blank'); // eslint-disable-line max-len

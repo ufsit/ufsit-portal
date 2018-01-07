@@ -4,6 +4,10 @@
 <head>
   <!-- Required for HTML5 history and angular -->
   <base href="/">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Required for device scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script data-require="angular.js@1.2.15" data-semver="1.2.15" src="https://code.angularjs.org/1.2.15/angular.js"></script>
   <script data-require="angular-route@1.2.14" data-semver="1.2.14" src="https://code.angularjs.org/1.2.14/angular-route.js"></script>
@@ -16,6 +20,7 @@
   <script src="bootstrap/dist/js/bootstrap.js"></script>
   <script src="config.js"></script>
 
+  <script src="controllers/ApplicationController.js"></script>
   <script src="controllers/homeController.js"></script>
   <script src="controllers/LoginController.js"></script>
   <script src="controllers/RegisterController.js"></script>
@@ -26,8 +31,8 @@
 
   <title ng-bind-template="UFSIT Portal{{title}}">UFSIT Portal</title>
 </head>
+<body ng-controller="ApplicationController">
   <div ng-include= "'/views/header.html'"></div>
-<body>
 <!--////////////////            Top of Page   //////////////////////-->
   <div ng-view></div>
 </body>

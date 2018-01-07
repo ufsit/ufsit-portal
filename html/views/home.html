@@ -1,55 +1,8 @@
-
-<!--////////////////            Top of Page   //////////////////////-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<style>
-	body {
-	  font-family: 'VT323', monospace;
-
-	  font-size: 16px;
-	  line-height: 1.5em;
-	  font-weight: 400;
-	}
-
-	p, span, a, ul, li, button {
-	  font-family: inherit;
-	  font-size: inherit;
-	  font-weight: inherit;
-	  line-height: inherit;
-	}
-
-	strong {
-	  font-weight: 600;
-	}
-
-	h1, h3, h4, h5, h6 {
-	  font-family: 'VT323', monospace;
-	  line-height: 1.0em;
-	  font-weight: 300;
-	}
-
-	h2 {
-	  font-family: "Open Sans", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
-	  line-height: 1.5em;
-	  font-weight: 300;
-	}
-
-	strong {
-	  font-weight: 400;
-	}
-
-	.tile{
-		cursor: pointer
-	}
-</style>
-</head>
-<body>
-
-<div class="container-fluid text-center">
+<link rel="stylesheet" type="text/css" href="home.css">
+<div id="home" class="container-fluid text-center">
 	   <div class="col-md-12">
 		  	<div class="container">
-				<h2 ng-show="show_name">Hello, {{full_name}}</h2>
+			  <h2 ng-show="show_name">Hello, <a href="/profile">{{full_name}}</a></h2>
 				<hr>
 			  <div class="row">
 			  </div>
@@ -96,8 +49,3 @@
 			</div>
 		</div>
 	</div>
-	<footer class="container-fluid text-center">
-	  <button type="button" name="button" class="btn btn-danger" ng-click="log_out()">Log Out</button>
-  </footer>
-</body>
-</html>
