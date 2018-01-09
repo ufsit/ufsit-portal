@@ -3,7 +3,7 @@
 	// This is now just a reference to "myModule" in app.js
 	let app = angular.module('myModule');
 
-	app.controller('LoginController', function( $http, $log, $location, $scope, validate) {
+	app.controller('LoginController', function(Session, $http, $log, $location, $scope, validate) {
 		// Prevent popping in before redirection
 		$scope.pageReady = false;
 
@@ -13,6 +13,7 @@
 			if (is_logged_in) {
 				$location.path('/home');
 			} else {
+				Session.destroy();
 				$scope.pageReady = true;
 			}
 		});
@@ -35,7 +36,7 @@
 					(null != $scope.formData.email) &&
 					(null != $scope.formData.password)) {
 				/* Make a request to the services to log in */
-				$http.post('/api/user/login', $scope.formData)
+				Session.login($scope.formData)
 					.success(function(data, status, headers, config) {
 						$location.path('/home');
 					})
@@ -69,18 +70,4 @@
 			});
 		}
 	});
-
-
-	//  app.controller("LoginController", function ( $http, $log, $location, $scope, validate) {
-	//      $scope.login = function (loginForm) {
-	//          if(loginForm.$valid) {
-	//            validate.login($scope.firstname);
-	//        } else {alert("Please fill in login info!")}
-	//      };
-	//
-	//      $scope.register = function () {
-	//          $location.path('/register');
-	//      };
-	//
-	//  });
-}());
+})();
