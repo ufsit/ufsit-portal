@@ -30,7 +30,7 @@
     "passport": "^0.3.2"
   },
   "engines": {
-    "node": "^4.2.6"
+    "node": ">= 7.6.0"
   },
   "devDependencies": {
     "eslint": "^4.7.2",
