@@ -21,7 +21,9 @@ const REALM = process.env.NODE_ENV || 'development';
 const app = express();
 
 // Enable Apache-like logging for all web requests
-app.use(morgan('combined'));
+if (REALM !== 'production') {
+	app.use(morgan('dev'));
+}
 
 // We are in a Heroku environment -- trust the proxy header
 // http://expressjs.com/en/guide/behind-proxies.html
