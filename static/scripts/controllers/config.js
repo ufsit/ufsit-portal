@@ -33,24 +33,24 @@
 
 		$routeProvider
 			.when('/', {
-				templateUrl: 'login.html',
+				templateUrl: 'views/login.html',
 				controller: 'LoginController',
 			})
 		.when('/login', {
 			title: 'Sign In',
-			templateUrl: 'login.html',
+			templateUrl: 'views/login.html',
 			controller: 'LoginController',
 			controllerAs: 'login',
 		})
 		.when('/register', {
 			title: 'Register',
-			templateUrl: 'register.html',
+			templateUrl: 'views/register.html',
 			controller: 'RegisterController',
 			controllerAs: 'register',
 		})
 		.when('/admin', {
 			title: 'Admin List',
-			templateUrl: 'admin.html',
+			templateUrl: 'views/admin.html',
 			controller: 'AdminController',
 			controllerAs: 'admin',
 		})
