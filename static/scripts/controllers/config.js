@@ -57,7 +57,7 @@
 		.when('/home', {
 			title: 'Home',
 			templateUrl: 'views/home.html',
-			controller: 'homeController',
+			controller: 'HomeController',
 			controllerAs: 'home',
 		})
 		.when('/profile', {
