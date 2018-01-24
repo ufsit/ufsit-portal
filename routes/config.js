@@ -73,7 +73,20 @@
 				},
 			},
 		})
-		.when('/user/profile/:user_id', {
+		.when('/profile/edit', {
+			title: 'Edit Profile',
+			templateUrl: 'views/edit_profile.html',
+			controller: 'EditProfileController',
+			controllerAs: 'edit_profile',
+			resolve: {
+				profile_data: function($http) {
+					return $http.get('/api/user/profile').then(function(response) {
+						return response.data;
+					});
+				},
+			},
+		})
+		.when('/profile/:user_id', {
 			templateUrl: 'views/profile.html',
 			controller: 'ProfileController',
 			controllerAs: 'profile',
@@ -83,6 +96,23 @@
 					const user_id = $route.current.params.user_id;
 
 					return $http.get('/api/user/profile/' + user_id).then(function(response) {
+						response.data.user_id = user_id;
+						return response.data;
+					});
+				},
+			},
+		})
+		.when('/profile/:user_id/edit', {
+			templateUrl: 'views/edit_profile.html',
+			controller: 'EditProfileController',
+			controllerAs: 'edit_profile',
+			resolve: {
+				profile_data: function($http, $route) {
+					// see https://docs.angularjs.org/api/ngRoute/service/$routeParams
+					const user_id = $route.current.params.user_id;
+
+					return $http.get('/api/user/profile/' + user_id).then(function(response) {
+						response.data.user_id = user_id;
 						return response.data;
 					});
 				},

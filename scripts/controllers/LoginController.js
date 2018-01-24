@@ -11,7 +11,7 @@
 		validate_session((is_logged_in)=>{
 			/* If the user is logged in, redirect to  home  */
 			if (is_logged_in) {
-				$location.path('/home');
+				$location.path('/home').replace();
 			} else {
 				Session.destroy();
 				$scope.pageReady = true;
