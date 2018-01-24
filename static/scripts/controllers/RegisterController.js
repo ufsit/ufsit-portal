@@ -2,7 +2,7 @@
 (function() {
 	// This is now just a reference to "myModule" in app.js
 	let app = angular.module('myModule');
-	app.controller('RegisterController', function($location, validate, $scope, $http, $log) {
+	app.controller('RegisterController', function($location, $scope, $http, $log) {
 		$scope.formData = {
 			'name': null,
 			'email': null,

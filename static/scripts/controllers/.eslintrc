@@ -1,3 +1,5 @@
 {
-  "globals": { "angular": 1 }
+  "parserOptions": { },
+  "globals": { "angular": 1 },
+  "env": { "browser": true }
 }

@@ -3,7 +3,7 @@
 	// This is now just a reference to "myModule" in app.js
 	let app = angular.module('myModule');
 
-	app.controller('LoginController', function(Session, $http, $log, $location, $scope, validate) {
+	app.controller('LoginController', function(Session, $http, $log, $location, $scope) {
 		// Prevent popping in before redirection
 		$scope.pageReady = false;
 

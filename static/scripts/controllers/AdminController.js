@@ -3,7 +3,7 @@
 	// This is now just a reference to "myModule" in app.js
 	let app = angular.module('myModule');
 
-	app.controller('AdminController', function( $http, $log, $location, $scope, validate) {
+	app.controller('AdminController', function( $http, $log, $location, $scope) {
 		$http.get('/api/admin/list_users')
 			.success(function(data, status, headers, config) {
 				$scope.users = angular.forEach(data, function(v, k) {

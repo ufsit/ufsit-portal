@@ -53,22 +53,22 @@ const api = require('./API');
 app.use('/api', api);
 
 // Specifies what folders have static files the server must read
-app.use(express.static('images'));
-app.use(express.static('scripts'));
-app.use(express.static('css'));
-app.use(express.static('routes'));
-app.use(express.static('services'));
+app.use(express.static('static'));
 app.use(express.static('node_modules'));
 
 app.use((req, res, next) => {
 	if (!/.*\.html$/.test(req.url)) {
 		req.url = '/index.html';
+		console.log(req.url);
 	}
 
 	next();
 });
 
-app.use(express.static('html'));
+// KEEP THIS LINE. Essentially we try for all static files, if this fails, we fall back
+// to Angular for route handling. If angular can match this route, it will, else it will
+// give us a 404 callback
+app.use(express.static('static'));
 
 // Tells the terminal the node has been created at a given port number
 app.listen(PORT, function() {

@@ -15,7 +15,7 @@
 		};
 	});
 
-	app.controller('EditProfileController', function($location, validate, profile_data, $scope, $http, $log, $window) {
+	app.controller('EditProfileController', function($location, profile_data, $scope, $http, $log, $window) {
 		// reformat this profile data item to work with checkbox
 		profile_data.mass_mail_optin = profile_data.mass_mail_optin === 1;
 

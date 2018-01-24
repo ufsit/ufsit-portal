@@ -3,7 +3,7 @@
 	// This is now just a reference to "myModule" in app.js
 	let app = angular.module('myModule');
 
-	app.controller('homeController', function( Session, $http, $rootScope, $log, $location, $scope, validate, $window) {
+	app.controller('homeController', function( Session, $http, $rootScope, $log, $location, $scope, $window) {
 		$scope.show_name = false;	// Don't show the person's name until it loads
 
 		// Validate the user's session
