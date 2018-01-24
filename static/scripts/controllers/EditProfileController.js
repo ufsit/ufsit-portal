@@ -58,10 +58,12 @@
 				return;
 			}
 
+			let endpoint = '';
+
 			if (profile_data.user_id) {
-				var endpoint = '/api/user/profile/' + profile_data.user_id;
+				endpoint = '/api/user/profile/' + profile_data.user_id;
 			} else {
-				var endpoint = '/api/user/profile';
+				endpoint = '/api/user/profile';
 			}
 
 			$http.post(endpoint, $scope.formData)
