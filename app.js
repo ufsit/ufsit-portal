@@ -49,7 +49,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 // Use the API router for REST endpoints, separate from the webserver routing
-const api = require('./API');
+const api = require('./api');
 app.use('/api', api);
 
 // Specifies what folders have static files the server must read
