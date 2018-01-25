@@ -25,6 +25,20 @@
 		};
 	}]);
 
+	app.filter('anyInvalidDirtyFields', function() {
+		return function(form) {
+			for (let prop in form) {
+				if (form.hasOwnProperty(prop)) {
+					if (form[prop] === null || form[prop] === undefined || form[prop].$invalid && form[prop].$dirty) {
+						console.log(prop + ': Invalid!');
+						return true;
+					}
+				}
+			}
+			return false;
+		};
+	});
+
 	configure.$inject = ['$routeProvider', '$locationProvider'];
 
 	function configure($routeProvider, $locationProvider) {

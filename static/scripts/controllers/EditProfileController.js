@@ -2,19 +2,6 @@
 (function() {
 	let app = angular.module('myModule');
 
-	app.filter('anyInvalidDirtyFields', function() {
-		return function(form) {
-			for (let prop in form) {
-				if (form.hasOwnProperty(prop)) {
-					if (form[prop] === undefined || form[prop].$invalid && form[prop].$dirty) {
-						return true;
-					}
-				}
-			}
-			return false;
-		};
-	});
-
 	app.controller('EditProfileController', function($location, profile_data, $scope, $http, $log, $window) {
 		// reformat this profile data item to work with checkbox
 		profile_data.mass_mail_optin = profile_data.mass_mail_optin === 1;
