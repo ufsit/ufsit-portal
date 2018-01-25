@@ -1,9 +1,4 @@
 <style>
-table {
-  margin: 10px;
-  padding: 0px;
-  display: table;
-}
 
 table td {
   padding: 5px;
@@ -17,12 +12,26 @@ table thead td {
   font-style: italic;
 }
 
-table tbody tr.even {
-  background: #ccc;
+table tbody tr.odd {
+  background: #eee;
+}
+
+#account-list {
+  padding: 0px;
+  border: 0px;
+  margin: 0px auto;
+}
+
+@media screen and (min-width: 768px) {
+  #account-list {
+    width: 50%;
+  }
 }
 
 </style>
-<table>
+
+<div class="table-responsive">
+<table id="account-list" class="table">
   <thead>
 	 <tr>
 		<td>Full Name</td>
@@ -33,7 +42,7 @@ table tbody tr.even {
 	 </tr>
   </thead>
   <tbody>
-	 <tr ng-repeat="u in users" ng-class-even="'even'">
+	 <tr ng-repeat="u in users" ng-class-odd="'odd'">
 		<td><a ng-href="/profile/{{u.id}}">{{u.full_name}}</a></td>
 		<td>{{u.email}}</td>
 		<td>{{u.grad_date}}</td>
@@ -42,3 +51,4 @@ table tbody tr.even {
 	 </tr>
   </tbody>
 </table>
+</div>
