@@ -12,11 +12,17 @@ routes.post('/user/register', async (req, res, next) => {
 	let registration_data = {
 		'registration_ip': req.ip,
 		'name': req.body.name,
-		'email': req.body.email.toLowerCase(),	// make emails case sensitive
+		'email': req.body.email.toLowerCase(),	// make emails case insensitive
 		'password': req.body.password,
 		'grad_year': req.body.grad_year,
 		'subscribe': req.body.subscribe,
 	};
+
+	// Double check that we actually got a ufl email
+	if (!/^.+@(cise\.)?ufl\.edu$/.test(registration_data.email)) {
+		return res.status(400).send('Invalid email');
+	}
+
 
 	/* Use the account management module to attempt to register the new user. */
 	try {

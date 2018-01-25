@@ -27,6 +27,7 @@ routes.get('/user/profile/:user_id', async function(req, res, next) {
 	try {
 		const account = await account_mgmt.get_account_by_id(req.params.user_id);
 
+
 		// XXX: HACK
 		const first_name = account.full_name.split(' ')[0];
 		res.status(200).json(Object.assign(account, {profile_name: first_name + '\'s Profile'}));
