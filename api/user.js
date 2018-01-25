@@ -14,7 +14,7 @@ routes.get('/user/profile', function(req, res) {
 
 routes.get('/user/profile/:user_id', async function(req, res, next) {
 	// Just an alias for /user/profile
-	if (req.params.user_id === req.account.id) {
+	if (req.params.user_id === req.session.account_id) {
 		return res.status(200).json(Object.assign(req.account, {profile_name: 'Your Profile'}));
 	}
 
@@ -42,7 +42,7 @@ async function update_user_profile(account_id, req, res, next) {
 	let admin_edit = false;
 	let target_account = {};
 
-	if (req.account.id === account_id) {
+	if (req.session.account_id === account_id) {
 		target_account = req.account;
 	} else {
 		// A foreign edit by an admin
@@ -142,7 +142,7 @@ async function update_user_profile(account_id, req, res, next) {
 
 routes.post('/user/profile', async function(req, res, next) {
 	// No await needed here as all error handling done in the below layer
-	update_user_profile(req.account.id, req, res, next);
+	update_user_profile(req.session.account_id, req, res, next);
 });
 
 routes.post('/user/profile/:user_id', async function(req, res, next) {
