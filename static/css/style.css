@@ -1,6 +1,10 @@
 /*Fonts import*/
 @import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono|VT323');
 
+body {
+  padding-bottom: 15px;
+}
+
 .navbar-default .navbar-brand {
   padding: 0px;
   color: white;
@@ -31,6 +35,15 @@
 }
 
 .navbar-default .navbar-nav >li >a {
+  color: white;
+}
+
+.navbar-default .navbar-nav >li >a:hover, .navbar-default .navbar-nav >li >a:focus{
+  color: white;
+  background-color: #2f5998;
+}
+
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
   color: white;
 }
 
