@@ -13,7 +13,7 @@
 				Session.destroy();
 				$location.path('/login');
 			} else { // Otherwise, render the page normally
-				Session.create(user_data.name);
+				Session.create(user_data.name, user_data.admin);
 
 				$scope.show_name = true;
 				$scope.full_name = user_data.name;

@@ -18,6 +18,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav" ng-show="session.id">
 	  <li ng-class="{ active: isActive('/home')}"><a href="/home" data-toggle="collapse" data-target=".navbar-collapse.in">Home</a></li>
+	  <li ng-show="session.admin" ng-class="{ active: isActive('/admin')}"><a href="/admin" data-toggle="collapse" data-target=".navbar-collapse.in">Admin</a></li>
       </ul>
       <div class="navbar-right" ng-show="session.id">
         <ul class="nav navbar-nav">

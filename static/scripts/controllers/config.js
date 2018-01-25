@@ -16,12 +16,14 @@
 			return $http.post('/api/session/logout');
 		};
 
-		this.create = function(test) {
-			this.id = test;
+		this.create = function(id, admin) {
+			this.id = id;
+			this.admin = admin;
 		};
 
 		this.destroy = function() {
 			this.id = null;
+			this.admin = null;
 		};
 	}]);
 
