@@ -62,13 +62,14 @@ Create this file in the same directory as `app.js` and name it `credentials.json
 Note that this provided file assumes you are using the default `root` user without a password and with a database
 name of `ufsit_portal`. This may be different depending on your MySQL setup.
 
-With this file, you can run the node application using:
+With this file, you can start the server with:
 
 ```
-node app.js
+node run dev
 ```
+Note: This will run both the nodeJS server and the angular server. Both will automatically reload when any of their files are modified.
 
-Or with NPM like:
+To create a production build of the frontend and start the nodeJS server to deploy them, run:
 
 ```
 npm start
@@ -91,7 +92,7 @@ error out if it was not able to find valid credentials for the database.
 
 ## Starting Development
 
-With the webapp running locally, you can visit http://localhost:8080 in your web browser.
+With the webapp running locally, you can visit http://localhost:4200 in your web browser.
 Here you can modify any file on both the server-side and client side. It is **strongly recommended**
 that you use [nodemon](https://github.com/remy/nodemon) to automatically restart the node
 process when a server file is changed. This will save you from development headaches.

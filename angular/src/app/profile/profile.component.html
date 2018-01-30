@@ -1,0 +1,41 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-5 col-md-offset-1">
+      <div class="main_header">
+			</div>
+      <br>
+      
+      <div class="row">
+				<div class="col-md-6">
+					<label class='input-label'>Your name:</label>
+					<p>{{ getProfile().full_name }}</p>
+					<br>
+
+          <label class='input-label'>Email:</label>
+					<p>{{ getProfile().email }}</p>
+					<br>
+
+					<label class='input-label'>Graduation Date:</label>
+					<p>{{ getProfile().grad_date }}</p>
+					<br>
+
+        </div>
+        
+        <div class="col-md-6">
+					<label class='input-label'>Mailing List:</label>
+					<p>{{ getProfile().mass_mail_optin }}</p>
+					<br>
+
+          <label class='input-label'>Registered:</label>
+          <!--
+          <p title="Registered on {{registration_date | date : 'medium'}}">{{registration_date | timeAgo}}</p>
+          
+          <br>
+
+					<a routerLink="{{ getUserLink() }}/edit" class="btn btn-info" role="button">Update Profile</a>
+					-->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

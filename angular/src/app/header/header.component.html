@@ -1,0 +1,28 @@
+
+<header class="navbar navbar-default navbar-fixed-top navbar-expand-lg"> 
+  <a class="navbar-brand" routerLink="/">
+    <img src="assets/sit.png" height="10%" alt="SIT Logo"/>
+    UFSIT Portal
+  </a>
+  <button class="navbar-dark navbar-toggler navbar-toggler-right" type="button" (click)="toggleNavbarCollapsed()" 
+          [attr.aria-expanded]="!getNavbarCollapsed()" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation"> 
+    <span class="navbar-toggler-icon"></span> 
+  </button> 
+
+  <div *ngIf="this.getSession().getCachedLoggedIn()" class="navbar-collapse" [ngbCollapse]="getNavbarCollapsed()" id="navbarContent"> 
+    <ul class="navbar-nav mr-auto"> 
+      <li class="nav-item" [routerLinkActive]="['active']"> 
+        <a class="nav-link" [routerLink]="['/']" (click)="setNavbarCollapsed(true)">Home</a> 
+      </li> 
+    </ul>
+    
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['/profile']" (click)="setNavbarCollapsed(true)">Profile</a>
+      </li>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <button type="button" class="btn btn-danger navbar-btn" data-toggle="collapse" data-target=".navbar-collapse.in" (click)="logout()">Log Out</button>
+      </li>
+    </ul>
+  </div> 
+</header> 

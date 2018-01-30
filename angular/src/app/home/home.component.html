@@ -1,0 +1,50 @@
+<div id="home" class="container-fluid text-center">
+	   <div class="col-md-12">
+		  	<div class="container">
+			  <h2 ng-show="show_name">Hello, <a routerLink="/profile">{{getProfile().full_name}}</a></h2>
+				<hr>
+			  <div class="row">
+			  </div>
+			  <div class="row">
+			  	<div class="col-sm-4">
+			      <div class="tile salmon" ng-click="sign_in()">
+			        <h1 class="title">Meeting Sign-in</h1>
+			        <p>Sign into meetings to get member benefits</p>
+			      </div>
+			    </div>
+			   	<div class="col-sm-4">
+			      <div class="tile blueGray" ng-click="redirect_lecture_content()">
+			        <h1 class="title">Lecture and Exercises</h1>
+			        <p>Checkout old lectures and hands-on exercises</p>
+			      </div>
+			    </div> 
+				<div class="col-sm-4">
+			      <div class="tile red" ng-click="redirect_events_news()">
+			        <h1 class="title">Events and News</h1>
+			        <p>Learn about Meetings, Competitions, and Conferences</p>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="row">
+			    <div class="col-sm-4">
+			      <div class="tile green" ng-click="redirect_update_resume()">
+			        <h1 class="title">Update Resume</h1>
+			        <p>Update/Upload you resume for companies</p>
+			      </div>
+			    </div>
+			    <div class="col-sm-4">
+			      <div class="tile blue disabled"><!--disabled-->
+			        <h1 class="title">CTF Practice Challenges</h1>
+			        <p>Practice CTF challenges and view solutions</p>
+			      </div>
+			    </div>
+				<div class="col-sm-4">
+			      <div class="tile orange" ng-click="redirect_upload_writeup()"><!--disabled-->
+			        <h1 class="title">Submit Writeups</h1>
+			        <p>Submit writeups to up your rank</p>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		</div>
+	</div>

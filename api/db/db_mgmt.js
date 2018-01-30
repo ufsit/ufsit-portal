@@ -112,7 +112,7 @@ let db_mgmt_module = function() {
 				password: new_account.password.salt + '$' + new_account.password.hash,
 				registration_ip: new_account.registration_ip,
 				registration_date: util.mysql_iso_time(new Date(Date.now())),
-				grad_date: new_account.grad_year,
+				grad_date: new_account.grad_date,
 				mass_mail_optin: new_account.in_mailing_list,
 			};
 

@@ -14,7 +14,7 @@ routes.post('/user/register', async (req, res, next) => {
 		'name': req.body.name,
 		'email': req.body.email.toLowerCase(),	// make emails case insensitive
 		'password': req.body.password,
-		'grad_year': req.body.grad_year,
+		'grad_date': req.body.grad_date,
 		'subscribe': req.body.subscribe,
 	};
 

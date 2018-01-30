@@ -47,7 +47,7 @@ let account_mgmt_module = (function() {
 				},
 				'registration_ip': registration_data.registration_ip,
 				'full_name': registration_data.name,	// verbatim
-				'grad_year': registration_data.grad_year,	// verbatim
+				'grad_date': registration_data.grad_date,	// verbatim
 				'in_mailing_list': registration_data.subscribe,	// verbatim
 			};
 
