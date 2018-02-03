@@ -43,7 +43,10 @@ const routes: Routes = [
   {
     path: 'profile/:id',
     canActivate: [AuthGuardService],
-    component: ProfileComponent
+    component: ProfileComponent,
+    resolve: {
+      profile: ProfileResolverService
+    }
   }
 ];
 

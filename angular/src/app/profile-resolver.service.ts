@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, Resolve } from '@angular/router';
+import { Router, Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { RestService } from './rest.service';
 import { SessionService } from './session.service';
@@ -14,10 +14,23 @@ export class ProfileResolverService implements Resolve<any> {
   constructor(private sessionService: SessionService,
               private restService: RestService) { }
 
-  resolve(): Observable<any> {
-    if (this.sessionService.getProfile() == null) {
-      return this.restService.getProfile();
+  resolve(route: ActivatedRouteSnapshot): Observable<any> {
+    // get the id parameter
+    let id = route.params.id;
+
+    // check if there is no id (the user is loading their own profile)
+    if (id == undefined) {
+      // if we currently don't have their profile data cached, get it
+      // from the server
+      if (this.sessionService.getProfile() == null) {
+        return this.restService.getProfile();
+      }
+      // otherwise, return the cached data
+      return of(this.sessionService.getProfile());
+    // otherwise, the user is an admin loading another user's profile
+    } else {
+      // get the other user's data from the server
+      return this.restService.getProfile(id);
     }
-    return of(this.sessionService.getProfile());
   }
 }

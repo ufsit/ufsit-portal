@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 

@@ -31,8 +31,16 @@ export class RestService {
   }
 
   // api call to get a user's profile
-  public getProfile() {
-    return this.get('/user/profile');
+  public getProfile(id: number = undefined) {
+    // if id is undefined, then a user is requesting their own profile
+    if (id == undefined) {
+      // return the user's profile data
+      return this.get('/user/profile');
+    // otherwise, a user is requesting another user's profile
+    } else {
+      // return the other user's profile data
+      return this.get('/user/profile/' + id);
+    }
   }
 
   // to validate a user's session

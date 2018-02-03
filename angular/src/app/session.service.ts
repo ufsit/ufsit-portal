@@ -17,6 +17,8 @@ export class SessionService {
   // it is here rather than the header in case other components need it later
   private cachedLoggedIn: boolean;
 
+  // cache the user's profile data so we don't have to constantly get it
+  // from the server
   private profile = null;
 
   // logs the user in, given their email and password
@@ -33,6 +35,8 @@ export class SessionService {
       res => {
         // set the cached login value to false
         this.cachedLoggedIn = false;
+        // clear the profile data
+        this.profile = null;
         // navigate back to the login page
         this.router.navigate(['/login']);
       }
