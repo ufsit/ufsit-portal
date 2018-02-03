@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Router, Resolve } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { RestService } from './rest.service';
-import { map } from 'rxjs/operators';
+import { SessionService } from './session.service';
+import { of } from 'rxjs/observable/of';
 
 
 @Injectable()
@@ -10,9 +11,13 @@ import { map } from 'rxjs/operators';
 // which uses the resolver
 export class ProfileResolverService implements Resolve<any> {
 
-  constructor(private restService: RestService) { }
+  constructor(private sessionService: SessionService,
+              private restService: RestService) { }
 
   resolve(): Observable<any> {
-    return this.restService.getProfile();
+    if (this.sessionService.getProfile() == null) {
+      return this.restService.getProfile();
+    }
+    return of(this.sessionService.getProfile());
   }
 }

@@ -17,6 +17,8 @@ export class SessionService {
   // it is here rather than the header in case other components need it later
   private cachedLoggedIn: boolean;
 
+  private profile = null;
+
   // logs the user in, given their email and password
   login(formData: {}): Observable<ArrayBuffer> {
     // log the user in by calling the rest service's login function
@@ -84,6 +86,16 @@ export class SessionService {
   // set the cached login value
   public setCachedLoggedIn(newValue: boolean): void {
     this.cachedLoggedIn = newValue;
+  }
+
+  // get profile data
+  public getProfile() {
+    return this.profile;
+  }
+
+  // set profile data
+  public setProfile(newProfile) {
+    this.profile = newProfile;
   }
 
   // register the user using his or her name, email, password, graduation year,

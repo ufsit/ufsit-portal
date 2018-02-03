@@ -10,26 +10,17 @@ import { RestService } from '../rest.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  private profile;
-
   // import the ActivatedRoute so we can get the result of what was resolved
   // before navigating here
-  constructor(private route: ActivatedRoute) { }
+  constructor(private sessionService: SessionService,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
-    // set the profile to the resolved profile data
-    this.profile = this.route.snapshot.data.profile;
-    // convert mass_mail_optin from 0/1 to false/true
-    if (this.profile.mass_mail_optin) {
-      this.profile.mass_mail_optin = true;
-    } else {
-      this.profile.mass_mail_optin = false;
+    if (this.sessionService.getProfile() === this.route.snapshot.data.profile) {
+      return;
     }
-  }
-
-  //public accessor for profile
-  public getProfile(){
-    return this.profile;
+    // set the profile to the resolved profile data
+    this.sessionService.setProfile(this.route.snapshot.data.profile);
   }
 
 }
