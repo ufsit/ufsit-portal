@@ -1,7 +1,10 @@
 'use strict';
 
 let mysql_iso_time = function(date) {
-	return date.toISOString().slice(0, 19).replace('T', ' ');
+	let dateString = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()
+										+ ' ' + date.getHours() + ':' + date.getMinutes() + ':'
+										+ date.getSeconds();
+	return dateString;
 };
 
 // A nasty hack until we have a better and unified permissions system
