@@ -19,13 +19,18 @@
 }
 
 .tile {
-  width: 100%;
   display: inline-block;
   box-sizing: border-box;
   background: #fff;
-  padding: 20px;
-  margin-bottom: 30px;
-  cursor: pointer
+  padding: 0px;
+  margin-bottom: 10%;
+  cursor: pointer;
+  height: 85%;
+  width: 100%;
+}
+.tile img{
+  margin-top: 5%;
+  width: 33%;
 }
 .tile .title {
   margin-top: 0px;
