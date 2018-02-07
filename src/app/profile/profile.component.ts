@@ -66,7 +66,7 @@ export class ProfileComponent implements OnInit {
     let date = new Date(this.profile.registration_date);
     console.log(date);
 
-    let seconds = Math.floor((new Date() - date) / 1000);
+    let seconds = Math.floor((new Date().valueOf() - date.valueOf()) / 1000);
 
     let interval = Math.floor(seconds / 31536000);
 
