@@ -19,6 +19,7 @@ import { AuthGuardService } from './auth-guard.service';
 import { SessionService } from './session.service';
 import { RestService } from './rest.service';
 import { ProfileResolverService } from './profile-resolver.service';
+import { AdminComponent } from './admin/admin.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { ProfileResolverService } from './profile-resolver.service';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    ProfileComponent
+    ProfileComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
