@@ -9,7 +9,7 @@
     "node-monitor": "nodemon app.js --ignore angular/*",
     "angular-monitor": "ng serve --proxy proxy.conf.json",
     "mon": "type -P \"nodemon\" && nodemon app.js || echo \"Nodemon not installed.\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ng test",
     "lint": "eslint",
     "build": "ng build --prod"
   },

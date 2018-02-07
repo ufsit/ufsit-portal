@@ -5,7 +5,7 @@
   },
   "apps": [
     {
-      "root": "angular/src",
+      "root": "src",
       "outDir": "static",
       "assets": [
         "assets",
@@ -33,7 +33,7 @@
   ],
   "e2e": {
     "protractor": {
-      "config": "./angular/protractor.conf.js"
+      "config": "./protractor.conf.js"
     }
   },
   "lint": [
@@ -52,7 +52,7 @@
   ],
   "test": {
     "karma": {
-      "config": "./angular/karma.conf.js"
+      "config": "./karma.conf.js"
     }
   },
   "defaults": {
