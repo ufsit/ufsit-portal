@@ -44,42 +44,11 @@ export class SessionService {
 
   }
 
-  // determines if the user is logged in
+  // determines if the user's session is valid
   // used by the authguard service
-  isLoggedIn(stateUrl: string = ''): Observable<boolean> {
+  validateSession(): Observable<Response> {
     // return the rest service's validate session function
-    return this.restService.validateSession().pipe(
-      // called if the user is logged in
-      map(res => {
-        // make sure the cached login value is true
-        this.cachedLoggedIn = true;
-        // if the user navigates to the login or register page and he or she
-        // is already logged in, navigate to the home page
-        if(stateUrl == '/login' || stateUrl == '/register'){
-          this.router.navigate(['/home']);
-          // return false so the login or register page won't load
-          return false;
-        }
-        // otherwise, the user is elsewhere on the site and already logged in,
-        // so return true to so the route will load
-        return true;
-      }),
-      // called if the user is not logged in
-      catchError(err => {
-        // make sure the cached login value is false
-        this.cachedLoggedIn = false;
-        // if the user is not already at the login or register page
-        // redirect him or her to the login page
-        if (! (stateUrl == '/login' || stateUrl == '/register') ) {
-          this.router.navigate(['/login']);
-          // return false so the login or register page won't load
-          return of(false);
-        }
-        // otherwise the user is already at the login or register page
-        // and is not logged in, so return true so the route will load
-        return of(true);
-      })
-    );
+    return this.restService.validateSession()
   }
 
   // get the cached login value
