@@ -23,22 +23,22 @@ export class HeaderComponent implements OnInit {
     this.session.logout();
   }
 
-  //public accessor for session
-  getSession(){
+  // public accessor for session
+  getSession() {
     return this.session;
   }
 
-  //public accessor for navbarCollapsed
+  // public accessor for navbarCollapsed
   public getNavbarCollapsed() {
     return this.navbarCollapsed;
   }
 
-  //toggle navbarCollapsed
+  // toggle navbarCollapsed
   public toggleNavbarCollapsed() {
     this.navbarCollapsed = !this.navbarCollapsed;
   }
 
-  public setNavbarCollapsed(newState: boolean){
+  public setNavbarCollapsed(newState: boolean) {
     this.navbarCollapsed = newState;
   }
 
