@@ -23,4 +23,8 @@ export class HomeComponent implements OnInit {
     this.sessionService.setProfile(this.route.snapshot.data.profile);
   }
 
+  public getProfile(){
+    return this.sessionService.getProfile();
+  }
+
 }
