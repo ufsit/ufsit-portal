@@ -1,0 +1,27 @@
+table td {
+    padding: 5px;
+  }
+  
+  table thead tr {
+    border-bottom: 1px solid black;
+  }
+  
+  table thead td {
+    font-style: italic;
+  }
+  
+  table tbody tr.odd {
+    background: #eee;
+  }
+  
+  #account-list {
+    padding: 0px;
+    border: 0px;
+    margin: 0px auto;
+  }
+  
+  @media screen and (min-width: 768px) {
+    #account-list {
+      width: 50%;
+    }
+  }

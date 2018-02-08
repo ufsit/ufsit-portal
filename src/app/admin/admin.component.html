@@ -1,3 +1,22 @@
-<p>
-  admin works!
-</p>
+<div class="table-responsive">
+  <table id="account-list" class="table">
+    <thead>
+     <tr>
+      <td>Full Name</td>
+      <td>Email</td>
+      <td>Graduation Year</td>
+      <td>Mailing List?</td>
+      <td>Registration Date</td>
+     </tr>
+    </thead>
+    <tbody>
+     <tr ng-repeat="u in users" ng-class-odd="'odd'">
+      <td><a ng-href="/profile/{{u.id}}">{{u.full_name}}</a></td>
+      <td>{{u.email}}</td>
+      <td>{{u.grad_date}}</td>
+      <td>{{u.mass_mail_optin}}</td>
+      <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
+     </tr>
+    </tbody>
+  </table>
+  </div>
