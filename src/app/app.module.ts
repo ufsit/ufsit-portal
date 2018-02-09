@@ -21,6 +21,7 @@ import { RestService } from './rest.service';
 import { ProfileResolverService } from './profile-resolver.service';
 import { AdminComponent } from './admin/admin.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
+import { AboutComponent } from './about/about.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { SponsorsComponent } from './sponsors/sponsors.component';
     RegisterComponent,
     ProfileComponent,
     AdminComponent,
-    SponsorsComponent
+    SponsorsComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

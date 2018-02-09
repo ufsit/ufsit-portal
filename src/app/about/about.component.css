@@ -1,0 +1,33 @@
+.container-fluid {
+  max-width: 80%;
+}
+
+.top-buffer {
+  margin-top: 2em !important;
+}
+
+.about-text {
+  font-style: oblique;
+}
+
+.fa-size {
+  font-size: 1.5em;
+}
+
+.headshot {
+  max-width: 175px;
+  max-height: 175px;
+  width: 175px;
+  height: 175px;
+  border-radius: 50%;
+}
+
+.headshot-right {
+  float: right;
+  margin-right: 15px;
+}
+
+.headshot-left {
+  float: left;
+  margin-left: 15px;
+}

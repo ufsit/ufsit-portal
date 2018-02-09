@@ -42,6 +42,4 @@ export class HeaderComponent implements OnInit {
     this.navbarCollapsed = newState;
   }
 
-
-
 }
