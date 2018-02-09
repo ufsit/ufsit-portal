@@ -16,15 +16,17 @@ export class HomeComponent implements OnInit {
 
   // set the profile to the resolved profile data
   ngOnInit() {
-    if (this.sessionService.getProfile() === this.route.snapshot.data.profile) {
+    let routeProfile = this.route.snapshot.data.profile;
+    if (routeProfile == null ||
+        this.sessionService.getProfile() === routeProfile) {
       return;
     }
     // set the profile to the resolved profile data
     this.sessionService.setProfile(this.route.snapshot.data.profile);
   }
 
-  public getProfile(){
-    return this.sessionService.getProfile();
+  public getName() {
+    return this.sessionService.getProfile().full_name;
   }
 
 }
