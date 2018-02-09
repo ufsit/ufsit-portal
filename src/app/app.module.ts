@@ -20,6 +20,7 @@ import { SessionService } from './session.service';
 import { RestService } from './rest.service';
 import { ProfileResolverService } from './profile-resolver.service';
 import { AdminComponent } from './admin/admin.component';
+import { SponsorsComponent } from './sponsors/sponsors.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { AdminComponent } from './admin/admin.component';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    AdminComponent
+    AdminComponent,
+    SponsorsComponent
   ],
   imports: [
     BrowserModule,

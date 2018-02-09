@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { SponsorsComponent } from './sponsors/sponsors.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -18,6 +19,14 @@ const routes: Routes = [
     path: 'home',
     canActivate: [AuthGuardService],
     component: HomeComponent,
+    resolve: {
+      profile: ProfileResolverService
+    }
+  },
+  {
+    path: 'sponsors',
+    canActivate: [AuthGuardService],
+    component: SponsorsComponent,
     resolve: {
       profile: ProfileResolverService
     }
