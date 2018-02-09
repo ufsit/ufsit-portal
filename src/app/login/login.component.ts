@@ -47,8 +47,9 @@ export class LoginComponent implements OnInit {
     .subscribe(
       // called if the account was created successfully
       res => {
-        this.sessionService.setCachedLoggedIn(true);
-        this.router.navigate(['/home']);
+        res.subscribe(profile => {
+          this.sessionService.setProfile(profile);
+        });
       },
       // called if there was an error while creatign the account
       err => {

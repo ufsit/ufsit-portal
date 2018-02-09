@@ -9,6 +9,7 @@ import { ProfileComponent } from './profile/profile.component';
 
 import { AuthGuardService } from './auth-guard.service';
 import { ProfileResolverService } from './profile-resolver.service';
+import { HomeResolverService } from './home-resolver.service';
 
 const routes: Routes = [
   {
@@ -21,7 +22,7 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     component: HomeComponent,
     resolve: {
-      profile: ProfileResolverService
+      profile: HomeResolverService
     }
   },
   {

@@ -22,6 +22,7 @@ import { ProfileResolverService } from './profile-resolver.service';
 import { AdminComponent } from './admin/admin.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
 import { AboutComponent } from './about/about.component';
+import { HomeResolverService } from './home-resolver.service';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { AboutComponent } from './about/about.component';
     SessionService,
     RestService,
     HttpClientModule,
-    ProfileResolverService
+    ProfileResolverService,
+    HomeResolverService
   ],
   bootstrap: [AppComponent]
 })

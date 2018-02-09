@@ -22,9 +22,18 @@ export class SessionService {
   private profile = null;
 
   // logs the user in, given their email and password
-  login(formData: {}): Observable<ArrayBuffer> {
+  login(formData: {}): Observable<any> {
     // log the user in by calling the rest service's login function
-    return this.restService.login(formData);
+    return this.restService.login(formData).pipe(
+      map(res => {
+        this.setCachedLoggedIn(true);
+        this.router.navigate(['/home']);
+        return this.restService.getProfile();
+      }),
+      catchError(err => {
+        return err;
+      })
+    );
   }
 
   // logs the user out

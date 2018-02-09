@@ -20,17 +20,11 @@ export class ProfileResolverService implements Resolve<any> {
 
     // check if there is no id (the user is loading their own profile)
     if (id == undefined) {
-      // if we currently don't have their profile data cached, get it
-      // from the server
-      if (this.sessionService.getProfile() == null) {
+      // get the user's own profile data
         return this.restService.getProfile();
-      }
-      // otherwise, return the cached data
-      return of(this.sessionService.getProfile());
-    // otherwise, the user is an admin loading another user's profile
-    } else {
-      // get the other user's data from the server
-      return this.restService.getProfile(id);
     }
+    // otherwise, the user is an admin loading another user's profile
+    // get the other user's data from the server
+    return this.restService.getProfile(id);
   }
 }

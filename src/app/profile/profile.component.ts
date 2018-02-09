@@ -32,11 +32,12 @@ export class ProfileComponent implements OnInit {
       this.title = 'Your Profile';
       this.editLink = '/profile/edit';
 
-      // if there currently cached profile is not equal to the profile
-      // data we just got, update the cached profile data to match
-      let routeProfile = this.route.snapshot.data.profile;
-      if (routeProfile != null && this.sessionService.getProfile() != routeProfile) {
-        this.sessionService.setProfile(this.route.snapshot.data.profile);
+      // get the resolved data
+      const routeProfile = this.route.snapshot.data.profile;
+      // as long as the resolved data isn't null, update the cached profile
+      // information with the resolved data
+      if (routeProfile != null) {
+        this.sessionService.setProfile(routeProfile);
       }
     // otherwise, the user is an admin looking at another user's profile
     // set the title and edit link accordingly
