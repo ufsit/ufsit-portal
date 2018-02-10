@@ -6,24 +6,26 @@
     [attr.aria-expanded]="!getNavbarCollapsed()" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div *ngIf="this.getSession().getCachedLoggedIn()" class="navbar-collapse" [ngbCollapse]="getNavbarCollapsed()" id="navbarContent">
+  <div class="navbar-collapse" [ngbCollapse]="getNavbarCollapsed()" id="navbarContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['/']" (click)="setNavbarCollapsed(true)">Home</a>
+      <li *ngIf="this.getSession().getCachedLoggedIn()" class="nav-item" [routerLinkActive]="['active']">
+        <a id="homeLink" class="nav-link" [routerLink]="['/']" (click)="setNavbarCollapsed(true)">Home</a>
       </li>
       <li class="nav-item" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['/about']" (click)="setNavbarCollapsed(true)">About</a>
+        <a id="aboutLink" class="nav-link" [routerLink]="['/about']" (click)="setNavbarCollapsed(true)">About</a>
       </li>
       <li class="nav-item" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['/sponsors']" (click)="setNavbarCollapsed(true)">Sponsors</a>
+        <a id="sponsorsLink" class="nav-link" [routerLink]="['/sponsors']" (click)="setNavbarCollapsed(true)">Sponsors</a>
       </li>
     </ul>
+  </div>
+  <div *ngIf="this.getSession().getCachedLoggedIn()" class="navbar-collapse" [ngbCollapse]="getNavbarCollapsed()">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['/profile']" (click)="setNavbarCollapsed(true)">Profile</a>
+        <a id="profileLink" class="nav-link" [routerLink]="['/profile']" (click)="setNavbarCollapsed(true)">Profile</a>
       </li>
       <li class="nav-item" [routerLinkActive]="['active']">
-        <button type="button" class="btn btn-danger navbar-btn" data-toggle="collapse" data-target=".navbar-collapse.in" (click)="logout()">Log Out</button>
+        <button id="logOutButton" type="button" class="btn btn-danger navbar-btn" data-toggle="collapse" data-target=".navbar-collapse.in" (click)="logout()">Log Out</button>
       </li>
     </ul>
   </div>

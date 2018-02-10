@@ -27,12 +27,10 @@ const routes: Routes = [
   },
   {
     path: 'sponsors',
-    canActivate: [AuthGuardService],
     component: SponsorsComponent
   },
   {
     path: 'about',
-    canActivate: [AuthGuardService],
     component: AboutComponent
   },
   {
