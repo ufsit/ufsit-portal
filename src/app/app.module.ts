@@ -24,6 +24,7 @@ import { AdminComponent } from './admin/admin.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
 import { AboutComponent } from './about/about.component';
 import { HomeResolverService } from './home-resolver.service';
+import { TimeAgoPipe } from './time-ago.pipe';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { HomeResolverService } from './home-resolver.service';
     AdminComponent,
     SponsorsComponent,
     AboutComponent,
-    FooterComponent
+    FooterComponent,
+    TimeAgoPipe
   ],
   imports: [
     BrowserModule,

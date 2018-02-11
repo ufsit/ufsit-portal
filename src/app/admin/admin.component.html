@@ -15,7 +15,7 @@
       <td>{{u.email}}</td>
       <td>{{u.grad_date}}</td>
       <td>{{u.mass_mail_optin}}</td>
-      <td title="Registered on {{u.registration_date | date : 'medium'}}">{{timeAgo(u.registration_date)}}</td>
+      <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
      </tr>
     </tbody>
   </table>

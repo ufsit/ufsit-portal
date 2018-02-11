@@ -48,6 +48,11 @@ export class RestService {
     return this.get('/session/validate');
   }
 
+  //makes an http request for a list of the members
+  public user_list(variable: string): Observable<Response> {
+    return this.get('/admin' + variable);
+  }
+
   // api call to log out a user
   public logout() {
     return this.post('/session/logout');

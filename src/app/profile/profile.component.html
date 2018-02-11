@@ -27,7 +27,7 @@
           <br>
 
           <label class='input-label'>Registered:</label>
-          <p title="Registered on {{this.getProfile().registration_date | date : 'medium'}}">{{ this.timeAgo() }}</p>
+          <p title="Registered on {{this.getProfile().registration_date | date : 'medium'}}">{{ this.getProfile().registration_date | timeAgo }}</p>
 
           <br>
 
