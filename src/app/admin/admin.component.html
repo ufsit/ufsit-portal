@@ -10,7 +10,7 @@
      </tr>
     </thead>
     <tbody>
-     <tr *ngFor="let u of users">
+     <tr *ngFor="let u of this.getUsers()">
       <td><a routerLink="/profile/{{u.id}}">{{u.full_name}}</a></td>
       <td>{{u.email}}</td>
       <td>{{u.grad_date}}</td>
