@@ -4,14 +4,15 @@
   border-top-style: solid;
   padding: 0px;
   position: relative;
-  bottom:0;
-  width:100%;
+  bottom: 0;
+  width: 100%;
   height: 73px;
 }
 
 .foot-default .foot-nav >li >a {
   color: white;
   margin: 0 auto;
+  padding: 0 auto;
 }
 
 .foot, .foot a {
@@ -29,8 +30,14 @@
   color: white;
 }
 
+.foot-hypertext {
+  text-decoration: underline;
+  color: white;
+}
+
 .foot-fineprint {
-    font-size: .75em;
-    color: white !important;
-    height: 50px;
+  font-family: "Open Sans", "Segoe UI", "Frutiger", "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: .75em;
+  color: white !important;
+  height: 40px !important;
 }
