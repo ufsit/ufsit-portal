@@ -12,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
+import { FooterComponent } from './footer/footer.component';
 
 import { AppRoutingModule } from './/app-routing.module';
 
@@ -35,7 +36,8 @@ import { HomeResolverService } from './home-resolver.service';
     ProfileComponent,
     AdminComponent,
     SponsorsComponent,
-    AboutComponent
+    AboutComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

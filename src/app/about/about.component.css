@@ -15,19 +15,8 @@
 }
 
 .headshot {
-  max-width: 175px;
-  max-height: 175px;
-  width: 175px;
-  height: 175px;
-  border-radius: 50%;
-}
-
-.headshot-right {
-  float: right;
-  margin-right: 15px;
-}
-
-.headshot-left {
-  float: left;
-  margin-left: 15px;
+    max-width: 175px;
+    max-height: 175px;
+    width: 175px;
+    height: 175px;
 }

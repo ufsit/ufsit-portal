@@ -1,5 +1,5 @@
-<header class="navbar navbar-default navbar-fixed-top navbar-expand-lg">
-  <a class="navbar-brand" routerLink="/">
+<header class="navbar navbar-default navbar-fixed-top navbar-expand-lg col">
+  <a class="navbar-brand p-1" routerLink="/">
     <img src="assets/sit.png" height="10%" alt="SIT Logo"/>UFSIT Portal
   </a>
   <button class="navbar-dark navbar-toggler navbar-toggler-right" type="button" (click)="toggleNavbarCollapsed()"
@@ -8,24 +8,22 @@
   </button>
   <div class="navbar-collapse" [ngbCollapse]="getNavbarCollapsed()" id="navbarContent">
     <ul class="navbar-nav mr-auto">
-      <li *ngIf="this.getSession().getCachedLoggedIn()" class="nav-item" [routerLinkActive]="['active']">
-        <a id="homeLink" class="nav-link" [routerLink]="['/']" (click)="setNavbarCollapsed(true)">Home</a>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['/']" (click)="setNavbarCollapsed(true)">Home</a>
       </li>
       <li class="nav-item" [routerLinkActive]="['active']">
-        <a id="aboutLink" class="nav-link" [routerLink]="['/about']" (click)="setNavbarCollapsed(true)">About</a>
+        <a class="nav-link" [routerLink]="['/about']" (click)="setNavbarCollapsed(true)">About</a>
       </li>
       <li class="nav-item" [routerLinkActive]="['active']">
-        <a id="sponsorsLink" class="nav-link" [routerLink]="['/sponsors']" (click)="setNavbarCollapsed(true)">Sponsors</a>
+        <a class="nav-link" [routerLink]="['/sponsors']" (click)="setNavbarCollapsed(true)">Sponsors</a>
       </li>
     </ul>
-  </div>
-  <div *ngIf="this.getSession().getCachedLoggedIn()" class="navbar-collapse" [ngbCollapse]="getNavbarCollapsed()">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item" [routerLinkActive]="['active']">
-        <a id="profileLink" class="nav-link" [routerLink]="['/profile']" (click)="setNavbarCollapsed(true)">Profile</a>
+    <ul *ngIf="this.getSession().getCachedLoggedIn()" class="navbar-nav ml-auto">
+      <li class="nav-item pr-3" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['/profile']" (click)="setNavbarCollapsed(true)">Profile</a>
       </li>
-      <li class="nav-item" [routerLinkActive]="['active']">
-        <button id="logOutButton" type="button" class="btn btn-danger navbar-btn" data-toggle="collapse" data-target=".navbar-collapse.in" (click)="logout()">Log Out</button>
+      <li class="nav-item pt-1 pr-3" [routerLinkActive]="['active']">
+        <button type="button" class="btn btn-danger navbar-btn" data-toggle="collapse" data-target=".navbar-collapse.in" (click)="logout()">Log Out</button>
       </li>
     </ul>
   </div>

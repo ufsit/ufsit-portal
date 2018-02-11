@@ -1,60 +1,65 @@
-<div class="container-fluid">
-	<div class="row" ng-show="pageReady">
-		<div class="col-md-5 col-md-offset-1">
-			<div class="main_header">Sign In</div>
-				<br>
-				<!-- Notification panels -->
-				<div class="row">
-					<div class="col-xs-12">
-						<div *ngIf="notifications.invalid_credentials"
-								class="alert alert-danger alert-dismissible" role="alert">
-							<button type="button" class="close" (click)="notifications.invalid_credentials = false">
-								<span aria-hidden="true">&times;</span></button>
-							<span class="notification_panel"><strong>Error:</strong> Could not authenticate your credentials. Please try again, or make sure that you're registered.</span>
-						</div>
+<div class="container container-fluid" style="min-height: calc(100vh - 152px)">
+  <div class="row" ng-show="pageReady">
+    <div class="col-md-5 col-md-offset-1 p-3">
+      <div class="main_header">Sign In</div>
 
-						<div *ngIf="notifications.generic_error"
-								class="alert alert-danger alert-dismissible" role="alert">
-							<button type="button" class="close" (click)="notifications.generic_error = false">
-								<span aria-hidden="true">&times;</span></button>
-							<span class="notification_panel"><strong>Error</strong> Something went wrong on our end. Please contact the developers.</span>
-						</div>
+      <!-- Notification panels -->
+      <div class="row">
+        <div class="col-xs-12">
 
-						<div *ngIf="notifications.bad_request"
-								class="alert alert-danger alert-dismissible" role="alert">
-							<button type="button" class="close" (click)="notifications.bad_request = false">
-								<span aria-hidden="true">&times;</span></button>
-							<span class="notification_panel"><strong>Error</strong> It looks like you're trying to do something sketchy. Remember that "unauthorized penetration tests" are illegal :P. If you believe this is a mistake, please contact the developers.</span>
-						</div>
+          <div *ngIf="notifications.invalid_credentials" class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" (click)="notifications.invalid_credentials = false">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span class="notification_panel">
+              <strong>Error:</strong> Could not authenticate your credentials. Please try again, or make sure that you're registered.</span>
+          </div>
 
-					</div>
-				</div>
+          <div *ngIf="notifications.generic_error" class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" (click)="notifications.generic_error = false">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span class="notification_panel">
+              <strong>Error</strong> Something went wrong on our end. Please contact the developers.</span>
+          </div>
 
-				<div class="row">
-					<div class="col-md-10 col-md-offset-1">
-						<br>
-						<form name="loginForm" (ngSubmit)="submitLogin(loginForm)" #loginForm="ngForm">
-							<div class="form-group">
-								<label class="input-label">Email</label>
-								<input type="email" class="form-control" placeholder="Email" required [(ngModel)]="formData.email" name="email" pattern="^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@ufl\.edu">
-							</div>
-							<div class="form-group">
-								<label class="input-label">Password</label>
-								<input type="password" class="form-control" placeholder="Password" required [(ngModel)]="formData.password" name="password">
-							</div>
+          <div *ngIf="notifications.bad_request" class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" (click)="notifications.bad_request = false">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span class="notification_panel">
+              <strong>Error</strong> It looks like you're trying to do something sketchy. Remember that "unauthorized penetration
+              tests" are illegal :P. If you believe this is a mistake, please contact the developers.</span>
+          </div>
 
-							<div class="row">
-								<div class="col-xs-12">
-									<button class="btn btn-success input-label">Login</button>
-									<a routerLink="/register"> <input type="button" class="btn btn-primary input-label" value="Need to Register?"> </a>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-5 hidden-xs">
-				<img src="assets/sit.png" alt="" style="width:100%">
-			</div>
-		</div>
-	</div>
+        </div>
+      </div>
+
+      <div class="row p-3">
+        <div class="col-md-10 col-md-offset-1 pt-2">
+          <form name="loginForm" (ngSubmit)="submitLogin(loginForm)" #loginForm="ngForm">
+            <div class="form-group">
+              <label class="input-label">Email</label>
+              <input type="email" class="form-control" placeholder="Email" required [(ngModel)]="formData.email" name="email" pattern="^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@ufl\.edu">
+            </div>
+            <div class="form-group">
+              <label class="input-label">Password</label>
+              <input type="password" class="form-control" placeholder="Password" required [(ngModel)]="formData.password" name="password">
+            </div>
+
+            <div class="row p-3">
+              <div class="col-xs-12">
+                <button class="btn btn-success input-label">Login</button>
+                <a routerLink="/register">
+                  <input type="button" class="btn btn-primary input-label" value="Need to Register?"> </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5 d-none d-md-block pt-4">
+      <img src="assets/sit.png" alt="" style="width:100%">
+    </div>
+  </div>
+</div>
