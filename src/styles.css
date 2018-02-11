@@ -78,6 +78,11 @@ th {
 	padding-bottom: 10px;
 }
 
+/* router outlet component to fill height of screen at a minimum */
+.full-height {
+    min-height: calc(100vh - 146px);
+}
+
 /*
 #forter{
 	margin-left: 0px;
