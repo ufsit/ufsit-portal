@@ -11,7 +11,7 @@
     </thead>
     <tbody>
      <tr *ngFor="let u of users">
-      <td><a href="../profile/{{u.id}}">{{u.full_name}}</a></td>
+      <td><a routerLink="/profile/{{u.id}}">{{u.full_name}}</a></td>
       <td>{{u.email}}</td>
       <td>{{u.grad_date}}</td>
       <td>{{u.mass_mail_optin}}</td>
