@@ -10,6 +10,8 @@ import { of } from 'rxjs/observable/of';
 // provides a service to manage a user's session
 export class SessionService {
 
+  private admin = false;
+
   // import the Router and RestService so we can use them in later functions
   constructor(private router: Router,
               private restService: RestService) {}
@@ -48,6 +50,8 @@ export class SessionService {
         this.profile = null;
         // navigate back to the login page
         this.router.navigate(['/login']);
+        //Needed so that admin tab is not viewable when logged out
+        this.admin = false;
       }
     );
 
@@ -56,8 +60,18 @@ export class SessionService {
   // determines if the user's session is valid
   // used by the authguard service
   validateSession(): Observable<Response> {
-    // return the rest service's validate session function
-    return this.restService.validateSession()
+    //return the rest service's validate session function
+   return this.restService.validateSession().pipe(
+      map(res => {
+          this.admin = res['admin'];
+        return res;
+      })
+    );
+  }
+
+  //returns true if the user is an admin
+  public getAdmin(): boolean {
+    return this.admin;    
   }
 
   // get the cached login value

@@ -10,6 +10,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { AuthGuardService } from './auth-guard.service';
 import { ProfileResolverService } from './profile-resolver.service';
 import { HomeResolverService } from './home-resolver.service';
+import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,11 @@ const routes: Routes = [
     resolve: {
       profile: HomeResolverService
     }
+  },
+  {
+    path: "admin",
+    component: AdminComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: 'sponsors',

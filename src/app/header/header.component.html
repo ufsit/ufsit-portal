@@ -17,6 +17,10 @@
       <li class="nav-item" [routerLinkActive]="['active']">
         <a class="nav-link" [routerLink]="['/sponsors']" (click)="setNavbarCollapsed(true)">Sponsors</a>
       </li>
+      <li *ngIf="this.getSession().getAdmin()" class="nav-item" [routerLinkActive]="['active']">
+        <!--This material should only appear when a user is an admin-->
+        <a class="nav-link" [routerLink]="['/admin']" (click)="setNavbarCollapsed(true)">Admin</a>
+      </li>
     </ul>
     <ul *ngIf="this.getSession().getCachedLoggedIn()" class="navbar-nav ml-auto">
       <li class="nav-item pr-3" [routerLinkActive]="['active']">
