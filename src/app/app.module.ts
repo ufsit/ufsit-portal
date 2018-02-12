@@ -25,6 +25,7 @@ import { SponsorsComponent } from './sponsors/sponsors.component';
 import { AboutComponent } from './about/about.component';
 import { HomeResolverService } from './home-resolver.service';
 import { TimeAgoPipe } from './time-ago.pipe';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { TimeAgoPipe } from './time-ago.pipe';
     SponsorsComponent,
     AboutComponent,
     FooterComponent,
-    TimeAgoPipe
+    TimeAgoPipe,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,
