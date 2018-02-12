@@ -4,8 +4,8 @@ import { RestService } from '../rest.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-edit-profile',
-  templateUrl: './edit-profile.component.html',
+  selector: 'app-edit_profile',
+  templateUrl: './edit_profile.component.html',
   styleUrls: ['../register/register.component.css']
 })
 export class EditProfileComponent implements OnInit {
