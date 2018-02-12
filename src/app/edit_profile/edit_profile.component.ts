@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../session.service';
 import { RestService } from '../rest.service';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-edit_profile',
@@ -34,13 +35,30 @@ export class EditProfileComponent implements OnInit {
   };
 
   constructor(private sessionService: SessionService, 
-              private requests: RestService, private route: ActivatedRoute) { }
+              private requests: RestService, private router: Router) { }
 
   ngOnInit() {
   }
 
-  public cancel_update() {
+  public update_profile(update_form: NgForm) {
+    //Scrolls the user to the top of the page
+    window.scrollTo(0,0);
 
-  };
+    //If the form has not been changed at all, display an error
+    if (!this.form_changed()) {
+      this.notifications.generic_error = true;
+      this.notifications.generic_success = false;   //May not be necessary
+      return;
+    }
 
+    //This block decides where to send the http get request based
+    //on whether it is a user or an admin viewing the account
+    let endpoint = '';
+    if (this.sessionService.getProfile().user_id) {
+      endpoint = this.sessionService.getProfile().user_id;
+    }
+
+    this.sessionService.update_profile(this.formData + endpoint);
+
+  }
 }

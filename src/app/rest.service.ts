@@ -64,4 +64,8 @@ export class RestService {
     return this.post('/user/register', formData, {responseType: 'text'});
   }
 
+  public update(formData: {}) { //The first argument here is not correct yet
+    return this.post('/user', formData, {responseType: 'text'});
+  }
+
 }

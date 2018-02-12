@@ -7,20 +7,20 @@
 				<!-- Notification panel -->
 				<div class="row">
 					<div class="col-xs-12">
-						<div ng-show="notification.generic_error"
+						<div *ngIf="notification.generic_error"
 								class="alert alert-danger alert-dismissible" role="alert">
-							<button type="button" class="close" ng-click="notification.generic_error = false">
+							<button type="button" class="close" (click)="notification.generic_error = false">
 								<span aria-hidden="true">&times;</span></button>
 							<span class="notification_panel"><strong>Error</strong> {{ notification.error_text }}</span>
 						</div>
 
-						<div ng-show="notification.generic_success"
+						<div *ngIf="notification.generic_success"
 								class="alert alert-success alert-dismissible" role="alert">
-							<button type="button" class="close" ng-click="notification.generic_success = false">
+							<button type="button" class="close" (click)="notification.generic_success = false">
 								<span aria-hidden="true">&times;</span></button>
 							<span class="notification_panel"><strong>Success</strong> {{ notification.success_text }}</span>
 							<ul>
-								<li ng-repeat="u in notification.success_items">{{u}}</li>
+								<li *ngFor="let u of notification.success_items">{{u}}</li>
 							</ul>
 						</div>
 					</div>
@@ -28,7 +28,7 @@
 
 				<div class="row">
 					<div class="col-md-10 col-md-offset-1" >
-						<form name="edit_profile">
+						<form name="edit_profile" (ngSubmit) = "update_profile(changesform)" #changesform = "ngForm">
 							<div class="form-group">
 								<label class="input-label">Name</label>
 								<input required type="text"
@@ -100,11 +100,11 @@
 								name="confirm_password"
 								password-verify="formData.new_password">
 								<p class="form-hint-error"
-								ng-show="edit_profile.confirm_password.$invalid">Your passwords need to match.</p>
+								*ngIf="edit_profile.confirm_password.$invalid">Your passwords need to match.</p>
 							</div>
 
-							<button ng-click="update_profile()" ng-disabled="(formData | anyInvalidDirtyFields) || edit_profile.$invalid" class="btn btn-success">Update</button>
-							<button ng-click="cancel_update()" class="btn btn-danger">Cancel</button>
+							<button ng-disabled="(formData | anyInvalidDirtyFields) || edit_profile.$invalid" class="btn btn-success">Update</button>
+							<button (click)="cancel_update()" class="btn btn-danger" [routerLink]="['/']">Cancel</button>
 						</form>
 					</div>
 				</div>
