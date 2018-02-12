@@ -6,6 +6,7 @@ import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
+import { EditProfileComponent } from './edit_profile/edit_profile.component';
 
 import { AuthGuardService } from './auth-guard.service';
 import { ProfileResolverService } from './profile-resolver.service';
@@ -29,6 +30,11 @@ const routes: Routes = [
   {
     path: "admin",
     component: AdminComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: "edit_profile",
+    component: EditProfileComponent,
     canActivate: [AuthGuardService]
   },
   {
