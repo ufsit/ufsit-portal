@@ -1,0 +1,113 @@
+<link rel="stylesheet">
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-5 col-md-offset-1">
+		<div class="main_header">{{ profile_name }}</div>
+				<br>
+				<!-- Notification panel -->
+				<div class="row">
+					<div class="col-xs-12">
+						<div ng-show="notification.generic_error"
+								class="alert alert-danger alert-dismissible" role="alert">
+							<button type="button" class="close" ng-click="notification.generic_error = false">
+								<span aria-hidden="true">&times;</span></button>
+							<span class="notification_panel"><strong>Error</strong> {{ notification.error_text }}</span>
+						</div>
+
+						<div ng-show="notification.generic_success"
+								class="alert alert-success alert-dismissible" role="alert">
+							<button type="button" class="close" ng-click="notification.generic_success = false">
+								<span aria-hidden="true">&times;</span></button>
+							<span class="notification_panel"><strong>Success</strong> {{ notification.success_text }}</span>
+							<ul>
+								<li ng-repeat="u in notification.success_items">{{u}}</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1" >
+						<form name="edit_profile">
+							<div class="form-group">
+								<label class="input-label">Name</label>
+								<input required type="text"
+								name="name"
+								ng-model="formData.name" class="form-control" placeholder="Full Name" ng-minlength="3">
+							</div>
+
+							<div class="form-group">
+								<label class="input-label">E-mail address</label>
+								<input disabled type="text" class="form-control" placeholder="Email"
+								name="email"
+								ng-model="formData.email">
+							</div>
+
+							<div class="checkbox">
+								<label class="input-label">
+									<input type="checkbox"
+									name="subscribe"
+									ng-model="formData.subscribe"> Subscribe to SIT email updates
+								</label>
+							</div>
+
+							<div class="row">
+								<div class="form-group col-md-6">
+									<label class="input-label">Graduation Semester</label>
+									<select required aria-required="true" class="form-control"
+										name="grad_year"
+										ng-model="formData.grad_year">
+										<option value="">Select a semester</option>
+										<option>2017 (Fall)</option>
+										<option>Already Graduated</option>
+										<option>2018 (Spring)</option>
+										<option>2018 (Summer)</option>
+										<option>2018 (Fall)</option>
+										<option>2019 (Spring)</option>
+										<option>2019 (Summer)</option>
+										<option>2019 (Fall)</option>
+										<option>2020 (Spring)</option>
+										<option>2020 (Summer)</option>
+										<option>2020 (Fall)</option>
+										<option>2021 (Spring)</option>
+										<option>2021 (Summer)</option>
+										<option>2021 (Fall)</option>
+										<option>2022 (Spring)</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="input-label">Existing Password</label>
+								<input type="password" class="form-control" placeholder="Password"
+								name="old_password"
+								ng-model="formData.old_password">
+								<p class="form-hint">Only enter your passwords if you are changing them.</p>
+							</div>
+
+							<div class="form-group" ng-class="{ 'has-error' : edit_profile.new_password.$dirty && edit_profile.new_password.$invalid }">
+								<label class="input-label">New password</label>
+								<input type="password" class="form-control" name="new_password" placeholder="New password"
+								ng-model="formData.new_password"
+								password-verify="formData.confirm_password">
+								<p class="form-hint">Do <b>not</b> use your Gatorlink or an existing password!</p>
+							</div>
+
+							<div class="form-group" ng-class="{ 'has-error' : edit_profile.confirm_password.$dirty && edit_profile.confirm_password.$invalid }">
+								<label class="input-label">Confirm password</label>
+								<input type="password" class="form-control" placeholder="Confirm password"
+								ng-model="formData.confirm_password"
+								name="confirm_password"
+								password-verify="formData.new_password">
+								<p class="form-hint-error"
+								ng-show="edit_profile.confirm_password.$invalid">Your passwords need to match.</p>
+							</div>
+
+							<button ng-click="update_profile()" ng-disabled="(formData | anyInvalidDirtyFields) || edit_profile.$invalid" class="btn btn-success">Update</button>
+							<button ng-click="cancel_update()" class="btn btn-danger">Cancel</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
