@@ -54,14 +54,14 @@ describe('HomeComponent', () => {
   });
 
   it('the user\'s name is shown at the top of the page', () => {
-    let sessionService = TestBed.get(SessionService);
+    const sessionService = TestBed.get(SessionService);
     console.log(element.querySelector('#userName'));
     expect(element.querySelector('#userName').innerHTML)
       .toBe(sessionService.getProfile().full_name);
   });
 
   it('the user\'s name should be responsive to a change in value', () => {
-    let sessionService = TestBed.get(SessionService);
+    const sessionService = TestBed.get(SessionService);
     sessionService.setProfile({ full_name: 'Another User' });
     fixture.detectChanges();
     fixture.whenStable().then(() => {
