@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 // provides a service to manage a user's session
@@ -28,12 +29,15 @@ export class SessionService {
     // log the user in by calling the rest service's login function
     return this.restService.login(formData).pipe(
       map(res => {
-        this.setCachedLoggedIn(true);
-        this.router.navigate(['/home']);
-        return this.restService.getProfile();
+        this.restService.getProfile().subscribe(profile => {
+          this.setProfile(profile);
+          this.router.navigate(['/home']);
+          this.setCachedLoggedIn(true);
+        });
+        return res;
       }),
       catchError(err => {
-        return err;
+        return of(err);
       })
     );
   }
@@ -71,7 +75,7 @@ export class SessionService {
 
   //returns true if the user is an admin
   public getAdmin(): boolean {
-    return this.admin;    
+    return this.admin;
   }
 
   // get the cached login value

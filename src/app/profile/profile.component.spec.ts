@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SessionService } from '../session.service';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs/observable/of';
+import { TimeAgoPipe } from '../time-ago.pipe';
 
 class MockSessionService {
   private profile;
@@ -31,7 +32,7 @@ describe('ProfileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProfileComponent ],
+      declarations: [ ProfileComponent, TimeAgoPipe ],
       imports: [ RouterTestingModule ],
       providers: [
         {provide: SessionService, useClass: MockSessionService},
