@@ -68,7 +68,7 @@ export class RegisterComponent implements OnInit {
     this.sessionService.register(this.formData.value)
     .subscribe(
       res => {
-        // if the account was created successfully, notify user and 
+        // if the account was created successfully, notify user and
         // navigate to the login page
         if (res === 'Success') {
           alert('Success! Your account has been created. You may now log in');
