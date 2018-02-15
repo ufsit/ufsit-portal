@@ -155,14 +155,14 @@ function badLoginTest(component: LoginComponent,
     password: password
   });
   component.notifications.invalid_credentials = false;
-    component.submitLogin();
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(component.notifications.invalid_credentials).toBe(true);
-      expect(component.notifications.bad_request).toBe(false);
-      expect(component.notifications.generic_error).toBe(false);
-      expect(element.querySelector('#invalidCredentialsAlert')).toBeTruthy();
-      expect(element.querySelector('#badRequestAlert')).not.toBeTruthy();
-      expect(element.querySelector('#genericErrorAlert')).not.toBeTruthy();
-    });
+  component.submitLogin();
+  fixture.detectChanges();
+  fixture.whenStable().then(() => {
+    expect(component.notifications.invalid_credentials).toBe(true);
+    expect(component.notifications.bad_request).toBe(false);
+    expect(component.notifications.generic_error).toBe(false);
+    expect(element.querySelector('#invalidCredentialsAlert')).toBeTruthy();
+    expect(element.querySelector('#badRequestAlert')).not.toBeTruthy();
+    expect(element.querySelector('#genericErrorAlert')).not.toBeTruthy();
+  });
 }

@@ -100,11 +100,18 @@ export class SessionService {
 
   // register the user using his or her name, email, password, graduation year,
   // and subscribe preference
-  register(formData: {}): Observable<ArrayBuffer> {
-    return this.restService.register(formData);
+  register(formData: {}): Observable<any> {
+    return this.restService.register(formData).pipe(
+      map(res => {
+        return res;
+      }),
+      catchError(err => {
+        return of(err);
+      })
+    );
   }
 
-  //update the user's profile with new name, email, password, or grad year
+  // update the user's profile with new name, email, password, or grad year
   public update_profile(formData: {}): Observable<ArrayBuffer> {
     return this.restService.update(formData);
   }
