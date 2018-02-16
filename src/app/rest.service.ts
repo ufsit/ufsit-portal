@@ -22,6 +22,7 @@ export class RestService {
   private post(relativeUrl: string, data: any = '', options: any = {}) {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/x-www-form-urlencoded');
+      console.log('The url you are trying to go to is: ' + this.baseUrl + relativeUrl);
     return this.http.post(this.baseUrl + relativeUrl, data, options);
   }
 
@@ -64,8 +65,8 @@ export class RestService {
     return this.post('/user/register', formData, {responseType: 'text'});
   }
 
-  public update(formData: {}) { //The first argument here is not correct yet
-    return this.post('/user', formData, {responseType: 'text'});
+  public update(formData: {}) {
+    return this.post('/user/profile', formData, {responseType: 'text'});
   }
 
 }

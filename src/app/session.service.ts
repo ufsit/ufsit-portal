@@ -112,7 +112,7 @@ export class SessionService {
   }
 
   // update the user's profile with new name, email, password, or grad year
-  public update_profile(formData: {}): Observable<ArrayBuffer> {
+  public update_profile(formData: {}): Observable<any> {
     return this.restService.update(formData);
   }
 
