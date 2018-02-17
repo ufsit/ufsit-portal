@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormGroup } from '@angular/forms';
 
 @Injectable()
 // provides a service to manage a user's session
@@ -112,8 +113,8 @@ export class SessionService {
   }
 
   // update the user's profile with new name, email, password, or grad year
-  public update_profile(formData: {}): Observable<any> {
-    return this.restService.update(formData);
+  public update_profile(formData: FormGroup, url:string): Observable<any> {
+    return this.restService.update(formData, url);
   }
 
 }

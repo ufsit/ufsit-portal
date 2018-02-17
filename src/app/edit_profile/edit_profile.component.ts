@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../session.service';
 import { RestService } from '../rest.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ProfileResolverService } from '../profile-resolver.service';
 
 @Component({
   selector: 'app-edit_profile',
@@ -35,9 +36,11 @@ export class EditProfileComponent implements OnInit {
   }
 
   constructor(private sessionService: SessionService,
-              private requests: RestService, private router: Router) { }
+              private requests: RestService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.sessionService.setProfile(this.route.snapshot.data.profile);
+
     const fb: FormBuilder = new FormBuilder();
     this.formData = fb.group({
       name: [this.sessionService.getProfile().full_name, [
@@ -79,13 +82,12 @@ export class EditProfileComponent implements OnInit {
       endpoint = this.sessionService.getProfile().user_id;
     }
 
-    this.sessionService.update_profile(this.formData + endpoint).subscribe(
+    this.sessionService.update_profile(this.formData, endpoint).subscribe(
       // called if the account was created successfully
       res => {
-        console.log('HELLOOO');
-        if (res === 'Success') {
-          alert('Success!  Your account has been changed.');
-          this.router.navigate(['/home']);
+        if (res.status === undefined) {
+          window.location.reload();
+          alert('Success!  You have changed:\n ' + res);
         }
         else if (res.status === 409) {
           this.notifications.email_conflict = true;
@@ -103,17 +105,4 @@ export class EditProfileComponent implements OnInit {
       }
     );
   }
-
-  //Getter functions
-  public get_success() {
-    return this.success_text;
-  }
-  public get_error() {
-    return this.error_text;
-  }
-
-  public get_success_items() {
-    return this.success_items;
-  }
-
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { FormGroup } from '@angular/forms';
 
 @Injectable()
 // provides a layer of abstraction between the api and the rest of the frontend
@@ -22,7 +23,6 @@ export class RestService {
   private post(relativeUrl: string, data: any = '', options: any = {}) {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/x-www-form-urlencoded');
-      console.log('The url you are trying to go to is: ' + this.baseUrl + relativeUrl);
     return this.http.post(this.baseUrl + relativeUrl, data, options);
   }
 
@@ -65,8 +65,8 @@ export class RestService {
     return this.post('/user/register', formData, {responseType: 'text'});
   }
 
-  public update(formData: {}) {
-    return this.post('/user/profile', formData, {responseType: 'text'});
+  public update(formData: FormGroup, url: string) {
+    return this.post('/user/profile' + url, formData.value, {responseType: 'text'});
   }
 
 }
