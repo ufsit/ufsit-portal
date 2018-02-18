@@ -24,7 +24,10 @@ export class HomeComponent implements OnInit {
   }
 
   public getName() {
-    return this.sessionService.getProfile().full_name;
+    if (this.sessionService.getProfile() != null) {
+      return this.sessionService.getProfile().full_name;
+    }
+    return '';
   }
 
 }

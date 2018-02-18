@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { FormGroup } from '@angular/forms';
 
 @Injectable()
 // provides a layer of abstraction between the api and the rest of the frontend
@@ -31,9 +32,9 @@ export class RestService {
   }
 
   // api call to get a user's profile
-  public getProfile(id: number = undefined) {
+  public getProfile(id?: number) {
     // if id is undefined, then a user is requesting their own profile
-    if (id == undefined) {
+    if (id === undefined) {
       // return the user's profile data
       return this.get('/user/profile');
     // otherwise, a user is requesting another user's profile
@@ -48,7 +49,7 @@ export class RestService {
     return this.get('/session/validate');
   }
 
-  //makes an http request for a list of the members
+  // makes an http request for a list of the members
   public user_list(variable: string): Observable<Response> {
     return this.get('/admin' + variable);
   }
@@ -62,6 +63,10 @@ export class RestService {
   // graduation year, and subscribe preferences
   public register(formData: {}) {
     return this.post('/user/register', formData, {responseType: 'text'});
+  }
+
+  public update(formData: FormGroup, url: string) {
+    return this.post('/user/profile' + url, formData.value, {responseType: 'text'});
   }
 
 }
