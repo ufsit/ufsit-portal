@@ -1,0 +1,20 @@
+.jumbotron {
+    margin-bottom: 0px;
+    min-height: 300px;
+    background: blue;
+    background-image: url(../../assets/sponsors/gator2.jpg);
+    /*background-position: 50% 50%;*/
+    background-position: center;
+    background-size: 40%;
+    background-repeat: no-repeat;
+    color: black;
+    text-align: center;
+    text-shadow:orangered 0.3em 0.3em 0.3em;
+    font-size: 30px;
+    border: 5px solid;
+}
+
+.vertical-center {
+    display: flex;
+    align-items: center;
+}
