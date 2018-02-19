@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { ShowdownModule } from 'ngx-showdown';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -26,6 +27,7 @@ import { AboutComponent } from './about/about.component';
 import { HomeResolverService } from './home-resolver.service';
 import { TimeAgoPipe } from './time-ago.pipe';
 import { EditProfileComponent } from './edit_profile/edit_profile.component';
+import { WriteupsComponent } from './writeups/writeups.component';
 
 
 @NgModule({
@@ -41,7 +43,8 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
     AboutComponent,
     FooterComponent,
     TimeAgoPipe,
-    EditProfileComponent
+    EditProfileComponent,
+    WriteupsComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,8 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    ShowdownModule
   ],
   providers: [
     AuthGuardService,

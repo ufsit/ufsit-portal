@@ -12,6 +12,7 @@ import { AuthGuardService } from './auth-guard.service';
 import { ProfileResolverService } from './profile-resolver.service';
 import { HomeResolverService } from './home-resolver.service';
 import { AdminComponent } from './admin/admin.component';
+import { WriteupsComponent } from './writeups/writeups.component';
 
 const routes: Routes = [
   {
@@ -70,6 +71,11 @@ const routes: Routes = [
     resolve: {
       profile: ProfileResolverService
     }
+  },
+  {
+    path: 'writeups',
+    canActivate: [AuthGuardService],
+    component: WriteupsComponent
   }
 ];
 
