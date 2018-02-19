@@ -43,6 +43,14 @@ export class WriteupsComponent implements OnInit {
     });*/
   }
 
+<<<<<<< HEAD
+=======
+  public getHtml() {
+    //return this.converter.makeHtml(this.markdownInput);
+
+  }
+
+>>>>>>> 06341d085f0cbe6f832346e72cd63df4b72e9d24
   public switchToWrite() {
     this.hidden.write = false;
     this.hidden.preview = true;
