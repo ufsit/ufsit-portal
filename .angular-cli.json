@@ -21,6 +21,7 @@
       "styles": [
         "assets/css/bootstrap.min.css",
         "assets/css/bootstrap-grid.min.css",
+        "assets/css/github-markdown.css",
         "styles.css"
       ],
       "scripts": [],

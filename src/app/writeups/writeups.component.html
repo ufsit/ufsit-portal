@@ -1,0 +1,23 @@
+<div class="container container-fluid full-height">
+  <div class="row">
+    <div class="col-md-5 col-md-offset-1">
+      <div id="profileTitle" class="main_header">Submit Writeups
+      </div>
+      <br>
+    </div>
+  </div>
+  
+  <ul class="nav nav-tabs">
+      <li class="nav-item" (click)="switchToWrite()">
+        <a id="writeTab" class="nav-link active">Write</a>
+      </li>
+      <li class="nav-item" (click)="switchToPreview()">
+        <a id="previewTab" class="nav-link">Preview</a>
+      </li>
+    </ul>
+
+      <textarea [hidden]="hidden.write" class="markdownInput form-control" [(ngModel)]="markdownInput">
+      </textarea>
+  <showdown [hidden]="hidden.preview" class="markdown-body" [value]="setMarkdownInput" [options]="options"></showdown>
+        
+</div>
