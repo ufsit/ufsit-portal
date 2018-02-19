@@ -10,7 +10,7 @@ import { ProfileResolverService } from '../profile-resolver.service';
 @Component({
   selector: 'app-edit_profile',
   templateUrl: './edit_profile.component.html',
-  styleUrls: ['../register/register.component.css']
+  styleUrls: ['../app.component.css']
 })
 
 export class EditProfileComponent implements OnInit {
@@ -24,19 +24,18 @@ export class EditProfileComponent implements OnInit {
     invalid_credentials: false,
     generic_error: false,
     bad_request: false,
-    email_conflict: false
   };
 
   // Checks to see if any of the data in the form has changed when the user tries to submit the form
   private form_changed() {
     return (this.sessionService.getProfile().full_name !== this.formData.value.name ||
         this.sessionService.getProfile().email !== this.formData.value.email ||
-        this.sessionService.getProfile().grad_date !== this.formData.value.grad_year);
+        this.sessionService.getProfile().grad_date !== this.formData.value.grad_year ||
+        (this.formData.value.new_password !== '' && this.formData.value.confirm_password !== ''));
        // (this.sessionService.getProfile().mass_mail_optin this.formData.value.subscribe);
   }
 
-  constructor(private sessionService: SessionService,
-              private requests: RestService, private route: ActivatedRoute) { }
+  constructor(private sessionService: SessionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.sessionService.setProfile(this.route.snapshot.data.profile);
@@ -64,15 +63,16 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
-  public update_profile(update_form: NgForm) {
+  public update_profile() {
     // Scrolls the user to the top of the page
     window.scrollTo(0, 0);
 
     // If the form is not valid display error
-    if (!this.formData.valid || 
+    if (!this.formData.valid || this.formData.value.old_password === '' ||
       this.formData.value.new_password !== this.formData.value.confirm_password ||
       this.formData.value.grad_year === 'Select a semester' || !this.form_changed()) {
       this.notifications.invalid_credentials = true;
+      return;
     }
 
     // This block decides where to send the http get request based
@@ -90,17 +90,17 @@ export class EditProfileComponent implements OnInit {
           alert('Success!  You have changed:\n ' + res);
         }
         else if (res.status === 409) {
-          this.notifications.email_conflict = true;
-        }
-        else if (res.status === 400) {
           this.notifications.bad_request = true;
         }
+        else if (res.status === 400) {
+          this.notifications.invalid_credentials = true;
+        }
         else {
-          this.notifications.generic_error
+          this.notifications.generic_error = true;
         }
       },
       err => {
-        this.notifications.bad_request = true;
+        this.notifications.invalid_credentials = true;
         window.scrollTo(0, 0);
       }
     );
