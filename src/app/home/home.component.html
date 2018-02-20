@@ -9,7 +9,7 @@
 			</div>
 			<div class="row">
 				<div class="col-sm-4">
-					<div class="card tile">
+					<div class="card tile" (click)="signin()">
 						<img src="assets/edit.svg">
 
 						<div class="card-body">
@@ -59,7 +59,7 @@
 					</div>
 				</div>
 				<div class="col-sm-4">
-					<div class="card tile">
+					<div (click)="routeTo('/writeups')" class="card tile">
 						<img src="assets/file-code.svg">
 						<div class="card-body">
 							<h3 class="card-title">Submit Writeups</h3>
