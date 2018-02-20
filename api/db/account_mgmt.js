@@ -41,6 +41,7 @@ let account_mgmt_module = (function() {
 			// Create a slightly modified new_record out of the registration data
 			let new_record = {
 				'email': registration_data.email,	// Copied verbatim
+				'ufl_email': registration_data.ufl_email,	// Copied verbatim, verbatim
 				'password': {		// Will be hashed and salted, null for now
 					'salt': null,
 					'hash': null,

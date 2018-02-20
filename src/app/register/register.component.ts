@@ -39,7 +39,13 @@ export class RegisterComponent implements OnInit {
       email: ['', [
         Validators.required,
         // tslint:disable-next-line:max-line-length
-        Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
+        Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+      ]],
+      ufl_email: ['', [
+        Validators.required,
+        // tslint:disable-next-line:max-line-length
+        Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+      ]],
       password: ['', [
         Validators.required
       ]],
@@ -63,7 +69,7 @@ export class RegisterComponent implements OnInit {
       this.notifications.invalid_credentials = true;
       return;
     }
-
+          
     // otherwise, submit the form data to create a new account
     this.sessionService.register(this.formData.value)
     .subscribe(

@@ -108,6 +108,7 @@ let db_mgmt_module = function() {
 			let values = {
 				full_name: new_account.full_name,
 				email: new_account.email,
+				ufl_email: new_account.ufl_email,
 				permissions: '',
 				password: new_account.password.salt + '$' + new_account.password.hash,
 				registration_ip: new_account.registration_ip,

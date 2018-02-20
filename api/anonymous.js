@@ -13,6 +13,7 @@ routes.post('/user/register', async (req, res, next) => {
 		'registration_ip': req.ip,
 		'name': req.body.name,
 		'email': req.body.email.toLowerCase(),	// make emails case insensitive
+		'ufl_email': req.body.ufl_email.toLowerCase(),	// make emails case insensitive
 		'password': req.body.password,
 		'grad_date': req.body.grad_date,
 		'subscribe': req.body.subscribe,
@@ -22,7 +23,11 @@ routes.post('/user/register', async (req, res, next) => {
 	if (!/^.+@(cise\.)?ufl\.edu$/.test(registration_data.email)) {
 		return res.status(400).send('Invalid email');
 	}
-
+	
+	// Double check that we actually got a ufl email
+	if (!/^.+@(cise\.)?ufl\.edu$/.test(registration_data.ufl_email)) {
+		return res.status(400).send('Invalid email');
+	}
 
 	/* Use the account management module to attempt to register the new user. */
 	try {
