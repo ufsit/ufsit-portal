@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
+import { EventsComponent } from './events/events.component';
 import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -54,6 +55,10 @@ const routes: Routes = [
     path: 'register',
     canActivate: [AuthGuardService],
     component: RegisterComponent
+  },
+  {
+    path: 'events',
+    component: EventsComponent
   },
   {
     path: 'profile',

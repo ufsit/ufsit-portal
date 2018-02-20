@@ -22,6 +22,7 @@ import { RestService } from './rest.service';
 import { ProfileResolverService } from './profile-resolver.service';
 import { AdminComponent } from './admin/admin.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
+import { EventsComponent } from './events/events.component';
 import { AboutComponent } from './about/about.component';
 import { HomeResolverService } from './home-resolver.service';
 import { TimeAgoPipe } from './time-ago.pipe';
@@ -38,6 +39,7 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
     ProfileComponent,
     AdminComponent,
     SponsorsComponent,
+    EventsComponent,
     AboutComponent,
     FooterComponent,
     TimeAgoPipe,
