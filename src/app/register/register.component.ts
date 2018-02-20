@@ -37,12 +37,12 @@ export class RegisterComponent implements OnInit {
         Validators.required
       ]],
       email: ['', [
-        Validators.required,
+        //Validators.required,
         // tslint:disable-next-line:max-line-length
         Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
       ]],
       ufl_email: ['', [
-        Validators.required,
+        //Validators.required,
         // tslint:disable-next-line:max-line-length
         Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
       ]],
@@ -63,13 +63,26 @@ export class RegisterComponent implements OnInit {
   submitRegistration() {
     // if the form is invalid, the password and confirm password don't match,
     // or the grad_date has not been chosen, display an error and do nothing
+    console.log(this.formData.value)
     if (!this.formData.valid ||
         this.formData.value.password !== this.formData.value.confirm_password ||
-        this.formData.value.grad_date === 'Select a semester') {
+        this.formData.value.grad_date === 'Select a semester' ||
+        this.formData.value.email === this.formData.value.ufl_email ||
+        (this.formData.value.email === '' && this.formData.value.ufl_email === '')
+      ) {
       this.notifications.invalid_credentials = true;
       return;
     }
-          
+
+    if(this.formData.value.ufl_email === '')
+    {
+      this.formData.value.ufl_email = 'left_blank@ufl.edu'
+    } 
+    else if(this.formData.value.email === '')
+    {
+      this.formData.value.email = 'left_blank@ufl.edu'
+    }
+
     // otherwise, submit the form data to create a new account
     this.sessionService.register(this.formData.value)
     .subscribe(

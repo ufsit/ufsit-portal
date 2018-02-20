@@ -36,6 +36,12 @@ let account_mgmt_module = (function() {
 			throw new createError.BadRequest('Attempted to create an account with an invalid email: ' +
 				registration_data.email
 			);
+		}
+		/* Validate the ufl email address */
+		else if (!(isEmail(registration_data.ufl_email))) {
+			throw new createError.BadRequest('Attempted to create an account with an invalid ufl email: ' +
+				registration_data.email
+			);
 		/* If the email checked out */
 		} else {
 			// Create a slightly modified new_record out of the registration data
