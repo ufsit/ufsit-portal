@@ -28,6 +28,7 @@ import { HomeResolverService } from './home-resolver.service';
 import { TimeAgoPipe } from './time-ago.pipe';
 import { EditProfileComponent } from './edit_profile/edit_profile.component';
 import { WriteupsComponent } from './writeups/writeups.component';
+import { ExternalFileService } from './external-file.service';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { WriteupsComponent } from './writeups/writeups.component';
     RestService,
     HttpClientModule,
     ProfileResolverService,
-    HomeResolverService
+    HomeResolverService,
+    ExternalFileService
   ],
   bootstrap: [AppComponent]
 })

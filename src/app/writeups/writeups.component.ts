@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, NgModel } from '@angular/forms';
+import { FormGroup, FormBuilder, NgModel, Validators } from '@angular/forms';
 import { IConverterOptionsChangeable } from 'ngx-showdown';
+import { ExternalFileService } from '../external-file.service';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class WriteupsComponent implements OnInit {
     backslashEscapesHTMLTags:             true,
     emoji:                                true
   };
-  markdownInput = '';
+  formData: FormGroup;
   setMarkdownInput = '';
 
   hidden = {
@@ -34,13 +35,21 @@ export class WriteupsComponent implements OnInit {
     preview: true
   };
 
-  constructor() { }
+  constructor(private externalFileService: ExternalFileService) { }
 
   ngOnInit() {
-    /*const fb: FormBuilder = new FormBuilder();
+    const fb: FormBuilder = new FormBuilder();
     this.formData = fb.group({
-      markdownInput: ['', []]
-    });*/
+      challengeName: ['', [
+        Validators.required
+      ]],
+      ctfName: ['', [
+        Validators.required
+      ]],
+      markdownInput: ['', [
+        Validators.required
+      ]]
+    });
   }
 
   public switchToWrite() {
@@ -55,7 +64,13 @@ export class WriteupsComponent implements OnInit {
     this.hidden.preview = false;
     document.getElementById('writeTab').classList.remove('active');
     document.getElementById('previewTab').classList.add('active');
-    this.setMarkdownInput = this.markdownInput;
+    this.setMarkdownInput = this.formData.value.markdownInput;
+  }
+
+  public submitWriteup() {
+    let file = new File([this.formData.value.markdownInput], 'upload.md', {type: 'text/plain'});
+    this.externalFileService.UploadWriteUp(file);
+
   }
 
 }

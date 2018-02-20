@@ -1,8 +1,23 @@
-.markdownInput {
+.full-width {
   width: 100%;
+}
+.markdownInput {
   height: 80vh;
 }
 
 ngb-tabset{
   width: 100%;
+}
+
+.markdown-body {
+  width: 100%;
+}
+
+.markdown-body > pre {
+  overflow: auto;
+}
+
+.markdown-body table {
+  border: none;
+  padding: 0px;
 }

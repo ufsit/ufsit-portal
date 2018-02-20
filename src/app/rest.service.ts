@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
@@ -14,8 +14,8 @@ export class RestService {
   constructor(private http: HttpClient) { }
 
   // basic get request
-  private get(relativeUrl: string): Observable<any> {
-    return this.http.get(this.baseUrl + relativeUrl);
+  private get(relativeUrl: string, params?: HttpParams): Observable<any> {
+    return this.http.get(this.baseUrl + relativeUrl, {params: params});
   }
 
   // basic post request
@@ -67,6 +67,20 @@ export class RestService {
 
   public update(formData: {}) {
     return this.post('/user/profile', formData, {responseType: 'text'});
+  }
+
+  public signin(email: string) {
+    return this.post('/event/sign_in', {email: email});
+  }
+
+  public getSignedRequest(file: File) {
+    return this.get('/upload/sign', new HttpParams()
+                                    .set('file-name', file.name)
+                                    .set('file-type', file.type));
+  }
+
+  public uploadWriteup(file: File, signedRequest: any) {
+    return this.post('/upload/writeup');
   }
 
 }

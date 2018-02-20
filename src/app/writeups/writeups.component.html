@@ -6,18 +6,46 @@
       <br>
     </div>
   </div>
-  
-  <ul class="nav nav-tabs">
-      <li class="nav-item" (click)="switchToWrite()">
-        <a id="writeTab" class="nav-link active">Write</a>
-      </li>
-      <li class="nav-item" (click)="switchToPreview()">
-        <a id="previewTab" class="nav-link">Preview</a>
-      </li>
-    </ul>
 
-      <textarea [hidden]="hidden.write" class="markdownInput form-control" [(ngModel)]="markdownInput">
-      </textarea>
-  <showdown [hidden]="hidden.preview" class="markdown-body" [value]="setMarkdownInput" [options]="options"></showdown>
-        
+  <div class="row">
+    <form class="full-width" (ngSubmit)="submitWriteup()" [formGroup]="formData">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label class="input-label">Challenge Name</label>
+          <input type="name" class="form-control" placeholder="Callenge Name" formControlName="challengeName">
+        </div>
+      
+        <div class="form-group col-md-6">
+          <label class="input-label">CTF Name</label>
+          <input type="email" class="form-control" placeholder="CTF Name" formControlName="ctfName">
+        </div>
+      </div>
+
+      <div class="row">
+        <ul class="nav nav-tabs">
+          <li class="nav-item" (click)="switchToWrite()">
+            <a id="writeTab" class="nav-link active">Write</a>
+          </li>
+          <li class="nav-item" (click)="switchToPreview()">
+            <a id="previewTab" class="nav-link">Preview</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="row">
+        <textarea [hidden]="hidden.write" class="markdownInput full-width form-control" formControlName="markdownInput">
+        </textarea>
+        <showdown [hidden]="hidden.preview" class="markdown-body" [value]="setMarkdownInput" [options]="options"></showdown>    
+      </div>
+      
+      <div class="row">
+        <button [disabled]="!this.formData.valid" class="btn btn-success">Submit</button>
+      </div>
+      
+
+    </form>
+  </div>
+  
+  
+  
 </div>
