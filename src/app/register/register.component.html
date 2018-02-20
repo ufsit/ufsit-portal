@@ -1,6 +1,6 @@
-<div class="container-fluid full-height">
+<div class="container container-fluid full-height">
 	<div class="row">
-		<div class="col-md-5 col-md-offset-1">
+		<div class="col-md-5 col-md-offset-1 p-3">
 			<div class="main_header">Register</div>
 				<br>
 				<!-- Notification panels -->
@@ -68,7 +68,6 @@
 								<div class="form-group col-md-6">
 									<label class="input-label">Graduation Semester</label>
 									<select required aria-required="true" class="form-control" formControlName="grad_date">
-										<option disabled hidden value="Select a semester">Select a semester</option>
 										<option value="Already Graduated">Already Graduated</option>
 										<option value="2018 (Spring)">2018 (Spring)</option>
 										<option value="2018 (Summer)">2018 (Summer)</option>
@@ -94,7 +93,7 @@
 									<input type="checkbox" formControlName="subscribe"> Subscribe to SIT email updates
 								</label>
 							</div>
-							<button class="btn btn-success">Submit</button>
+							<button [disabled]="!this.formData.valid" class="btn btn-success">Submit</button>
 						</form>
 					</div>
 				</div>
