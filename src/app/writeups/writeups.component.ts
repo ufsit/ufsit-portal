@@ -68,8 +68,12 @@ export class WriteupsComponent implements OnInit {
   }
 
   public submitWriteup() {
-    let file = new File([this.formData.value.markdownInput], 'upload.md', {type: 'text/plain'});
-    this.externalFileService.UploadWriteUp(file);
+    let name = this.formData.value.ctfName + '/'
+                + this.formData.value.challengeName + '/'
+                + 'upload.md';
+    this.externalFileService.uploadWriteup(this.formData.value.markdownInput,
+                                          this.formData.value.ctfName,
+                                          this.formData.value.challengeName);
 
   }
 

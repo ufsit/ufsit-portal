@@ -7,19 +7,15 @@ export class ExternalFileService {
   constructor(private restService: RestService) {
   }
 
-  public UploadWriteUp(file: File) {
-    this.restService.getSignedRequest(file).subscribe(
-    res => {
-      console.log(res);
-      if (res.status === 200) {
-        const response = JSON.parse(res);
-        this.restService.uploadWriteup(file, response.signedRequest)
+  public uploadWriteup(data: string, ctfName: string, challengeName: string) {
+    this.restService.uploadWriteup(data, ctfName, challengeName).subscribe(
+      res => {
+        console.log(res);
+      },
+      err => {
+        console.log(err);
       }
-    },
-    err => {
-      console.log(err);
-    });
-    console.log(file);
+    );
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { SessionService } from '../session.service';
 
@@ -12,7 +12,8 @@ export class HomeComponent implements OnInit {
   // import the ActivatedRoute so we can get the result of what was resolved
   // before navigating here
   constructor(private sessionService: SessionService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private router: Router) { }
 
   ngOnInit() {
     // get the resolved profile data
@@ -28,6 +29,10 @@ export class HomeComponent implements OnInit {
       return this.sessionService.getProfile().full_name;
     }
     return '';
+  }
+
+  public routeTo(path: string) {
+    this.router.navigate([path]);
   }
 
 }

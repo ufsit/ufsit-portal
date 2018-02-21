@@ -20,10 +20,6 @@ const REALM = process.env.NODE_ENV || 'development';
 // Initialize our Express class
 const app = express();
 
-// Initialize AWS
-const aws = require('aws-sdk');
-aws.config.region = 'us-east-1';
-
 // Enable Apache-like logging for all web requests
 if (REALM !== 'production') {
 	app.use(morgan('dev'));

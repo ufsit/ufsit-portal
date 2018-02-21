@@ -73,14 +73,21 @@ export class RestService {
     return this.post('/event/sign_in', {email: email});
   }
 
-  public getSignedRequest(file: File) {
+  public getSignedRequest(file: Blob, name: string) {
     return this.get('/upload/sign', new HttpParams()
-                                    .set('file-name', file.name)
+                                    .set('file-name', name)
                                     .set('file-type', file.type));
   }
 
-  public uploadWriteup(file: File, signedRequest: any) {
-    return this.post('/upload/writeup');
+  public uploadWriteup(data: string, ctfName: string, challengeName: string) {
+    // return this.http.post(signedRequest, file);
+    return this.post('/upload/writeup',
+      {
+        data: data,
+        ctfName: ctfName,
+        challengeName: challengeName
+      }
+    );
   }
 
 }
