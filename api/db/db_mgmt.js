@@ -90,7 +90,7 @@ let db_mgmt_module = function() {
 			);
 		} 
 
-		else if (await account_exists(new_record.ufl_email)) { //check ufl_email
+		else if (await ufl_account_exists(new_record.ufl_email)) { //check ufl_email
 			throw new createError.Conflict('Attempted to create duplicate account: '
 				+ new_record.ufl_email
 			);
@@ -112,7 +112,17 @@ let db_mgmt_module = function() {
 			}
 			return false;
 		}
-
+		
+		/* Helper function: Check if an account with the given ufl email already exists.*/
+		async function ufl_account_exists(ufl_email) {
+			if(ufl_email !== 'left_blank@ufl.edu') //check if placeholder email used
+			{
+				/* Form a query to the 'accounts' table for entries with the given email */
+				let results = await queryAsync('SELECT `id` FROM `account` WHERE ufl_email = ?', ufl_email);
+				return results.length > 0;
+			}
+			return false;
+		}
 		/* Helper function: Inserts a new account element into the database with the
 		parameters passed in the new_account object */
 		async function insert_new_account(new_account) {
@@ -166,6 +176,29 @@ let db_mgmt_module = function() {
 		/* Form a query to the 'accounts' table for entries with the given email */
 		/* Execute the query using a connection from the connection pool */
 		const results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
+			[['id', 'password', 'full_name'], email_addr]);
+
+		/* If the results array has any elements in it, call back with the 0th element
+		(entries are unique) */
+		if (results.length <= 0) {
+			throw new createError.NotFound('No account with email address ' + email_addr);
+		}
+
+		let pwparts = results[0].password.split('$');
+
+		return {	// Encapsulate the results nicely for account_mgmt.js
+			'id': results[0].id,
+			'salt': pwparts[0],
+			'hash': pwparts[1],
+			'name': results[0].full_name,
+		};
+	}
+
+	/* Retrieve an account with the given ufl email address */
+	async function ufl_retrieve(email_addr) {
+		/* Form a query to the 'accounts' table for entries with the given email */
+		/* Execute the query using a connection from the connection pool */
+		const results = await queryAsync('SELECT ?? FROM `account` WHERE ufl_email = ?',
 			[['id', 'password', 'full_name'], email_addr]);
 
 		/* If the results array has any elements in it, call back with the 0th element
@@ -256,6 +289,7 @@ let db_mgmt_module = function() {
 		create_account: create_account,
 		update_account: update_account,
 		retrieve: retrieve,
+		ufl_retrieve: ufl_retrieve,
 		retrieve_by_id: retrieve_by_id,
 		create_session: create_session,
 		get_session: get_session,

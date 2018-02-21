@@ -78,21 +78,33 @@ let account_mgmt_module = (function() {
 					+ login_data.email);
 		} else {
 			/* Otherwise, attempt to retrieve the account record from the database */
+			//const result;
 			try{
-			const result = await db_mgmt.retrieve(login_data.email);
+				const result = await db_mgmt.retrieve(login_data.email);
+				
+				/* If there was no error, verify the given credentials against those retrieved from the database */
+				let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
+
+				if (!authenticated) {
+					throw new createError.BadRequest('Attempted to authenticate an ' +
+							'account with the wrong credentials: ' + login_data.email);
+				}
+
+				return result.id;
 			} catch(error) {
-			const result = await db_mgmt.retrieve(login_data.ufl_email);	
+				const result = await db_mgmt.ufl_retrieve(login_data.ufl_email);	
+				
+				/* If there was no error, verify the given credentials against those retrieved from the database */
+				let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
+
+				if (!authenticated) {
+					throw new createError.BadRequest('Attempted to authenticate an ' +
+							'account with the wrong credentials: ' + login_data.email);
+				}
+			
+				return result.id;
 			}
-
-			/* If there was no error, verify the given credentials against those retrieved from the database */
-			let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
-
-			if (!authenticated) {
-				throw new createError.BadRequest('Attempted to authenticate an ' +
-						'account with the wrong credentials: ' + login_data.email);
-			}
-
-			return result.id;
+			
 		}
 	}
 
