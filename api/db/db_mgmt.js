@@ -84,11 +84,19 @@ let db_mgmt_module = function() {
 		error if there was a conflict, or proceed creating
 		the account */
 
-		if (await account_exists(new_record.email)) {
+		if (await account_exists(new_record.email)) { //check email
 			throw new createError.Conflict('Attempted to create duplicate account: '
 				+ new_record.email
 			);
-		} else {
+		} 
+
+		else if (await account_exists(new_record.ufl_email)) { //check ufl_email
+			throw new createError.Conflict('Attempted to create duplicate account: '
+				+ new_record.ufl_email
+			);
+		} 
+		
+		else {
 			await insert_new_account(new_record);
 
 			return;
@@ -96,10 +104,13 @@ let db_mgmt_module = function() {
 
 		/* Helper function: Check if an account with the given email already exists.*/
 		async function account_exists(email) {
-			/* Form a query to the 'accounts' table for entries with the given email */
-			let results = await queryAsync('SELECT `id` FROM `account` WHERE email = ?', email);
-
-			return results.length > 0;
+			if(email !== 'left_blank@ufl.edu') //check if placeholder email used
+			{
+				/* Form a query to the 'accounts' table for entries with the given email */
+				let results = await queryAsync('SELECT `id` FROM `account` WHERE email = ?', email);
+				return results.length > 0;
+			}
+			return false;
 		}
 
 		/* Helper function: Inserts a new account element into the database with the
@@ -147,7 +158,7 @@ let db_mgmt_module = function() {
 
 	async function list_users() {
 		return await queryAsync('SELECT ?? FROM `account`',
-			[['id', 'email', 'full_name', 'mass_mail_optin', 'grad_date', 'registration_date']]);
+			[['id', 'email', 'ufl_email', 'full_name', 'mass_mail_optin', 'grad_date', 'registration_date']]);
 	}
 
 	/* Retrieve an account with the given email address */

@@ -19,10 +19,12 @@ routes.post('/user/register', async (req, res, next) => {
 		'subscribe': req.body.subscribe,
 	};
 
+	/*
 	// Double check that we actually got a ufl email
 	if (!/^.+@(cise\.)?ufl\.edu$/.test(registration_data.email)) {
 		return res.status(400).send('Invalid email');
 	}
+	*/
 	
 	// Double check that we actually got a ufl email
 	if (!/^.+@(cise\.)?ufl\.edu$/.test(registration_data.ufl_email)) {
@@ -41,6 +43,7 @@ routes.post('/user/register', async (req, res, next) => {
 routes.post('/user/login', async (req, res, next) => {
 	let login_data = {
 		'email': req.body.email,
+		'ufl_email':req.body.ufl_email,
 		'password': req.body.password,
 	};
 

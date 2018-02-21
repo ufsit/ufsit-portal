@@ -37,13 +37,16 @@ let account_mgmt_module = (function() {
 				registration_data.email
 			);
 		}
+		
 		/* Validate the ufl email address */
 		else if (!(isEmail(registration_data.ufl_email))) {
 			throw new createError.BadRequest('Attempted to create an account with an invalid ufl email: ' +
 				registration_data.email
 			);
+		}
+		
 		/* If the email checked out */
-		} else {
+		else {
 			// Create a slightly modified new_record out of the registration data
 			let new_record = {
 				'email': registration_data.email,	// Copied verbatim
@@ -75,7 +78,11 @@ let account_mgmt_module = (function() {
 					+ login_data.email);
 		} else {
 			/* Otherwise, attempt to retrieve the account record from the database */
+			try{
 			const result = await db_mgmt.retrieve(login_data.email);
+			} catch(error) {
+			const result = await db_mgmt.retrieve(login_data.ufl_email);	
+			}
 
 			/* If there was no error, verify the given credentials against those retrieved from the database */
 			let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
