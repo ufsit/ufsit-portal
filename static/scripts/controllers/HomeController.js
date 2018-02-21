@@ -63,5 +63,9 @@
 		$scope.redirect_upload_writeup = function() {
 			$window.open('https://goo.gl/forms/nYJ3nI4Eg56pIjyo1', '_blank');
 		};
+		// redirect to googleForms that allows writeup submissions
+		$scope.redirect_upload_writeup = function() {
+			$window.open('http://reg.conferences.dce.ufl.edu/Basic/1400066823?rs=4CD36707-424A-4C07-A43C-5579C59B3ACA', '_blank');
+		};
 	});
 }());
