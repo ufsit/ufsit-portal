@@ -29,6 +29,12 @@
           <li class="nav-item" (click)="switchToPreview()">
             <a id="previewTab" class="nav-link">Preview</a>
           </li>
+          <li class="nav-item" (click)="switchToImages()">
+            <a id="imagesTab" class="nav-link">Images</a>
+          </li>
+          <li class="nav-item" (click)="switchToUpdate()">
+            <a id="updateTab" class="nav-link">Update</a>
+          </li>
         </ul>
       </div>
       
@@ -36,12 +42,29 @@
         <textarea [hidden]="hidden.write" class="markdownInput full-width form-control" formControlName="markdownInput">
         </textarea>
         <showdown [hidden]="hidden.preview" class="markdown-body" [value]="setMarkdownInput" [options]="options"></showdown>    
+        <table *ngIf="this.submittedWriteups.length !== 0"  [hidden]="hidden.update" id="account-list" class="table table-striped">
+          <thead>
+           <tr>
+            <td>CTF Name</td>
+            <td>Challenge Name</td>
+            <td></td>
+           </tr>
+          </thead>
+          <tbody>
+           <tr *ngFor="let entry of this.submittedWriteups">
+            <td>{{entry.ctfName}}</td>
+            <td>{{entry.challengeName}}</td>
+            <td><button type="button" class="btn btn-outline-primary" 
+              (click)="load(entry.ctfName, entry.challengeName, entry.fileName)">Load</button></td>
+           </tr>
+          </tbody>
+        </table>
+        <p *ngIf="this.submittedWriteups.length === 0 && !hidden.update">No writeups submitted.</p>
       </div>
       
       <div class="row">
         <button [disabled]="!this.formData.valid" class="btn btn-success">Submit</button>
-      </div>
-      
+      </div>      
 
     </form>
   </div>

@@ -8,14 +8,11 @@ export class ExternalFileService {
   }
 
   public uploadWriteup(data: string, ctfName: string, challengeName: string) {
-    this.restService.uploadWriteup(data, ctfName, challengeName).subscribe(
-      res => {
-        console.log(res);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    return this.restService.uploadWriteup(data, ctfName, challengeName);
+  }
+
+  public getWriteup(ctfName: string, challengeName: string, fileName: string) {
+    return this.restService.getWriteup(ctfName, challengeName, fileName);
   }
 
 }

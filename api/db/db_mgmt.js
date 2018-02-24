@@ -239,6 +239,21 @@ let db_mgmt_module = function() {
 			[email, after]);
 	}
 
+	/* Get a list of the user's writeup submissions */
+	async function get_writeup_submissions(account_id) {
+		return await queryAsync('SELECT `key` FROM `writeup_submissions` WHERE `account_id` = ?',
+			account_id);
+	}
+
+	/* Records a writeup submission */
+	async function record_writeup_submission(account_id, key) {
+		const values = {
+			account_id: account_id,
+			key: key,
+		};
+		return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
+	}
+
 	// Revealing module
 	return ({
 		create_account: create_account,
@@ -251,6 +266,8 @@ let db_mgmt_module = function() {
 		sign_in: sign_in,
 		get_sign_ins: get_sign_ins,
 		list_users: list_users,
+		get_writeup_submissions: get_writeup_submissions,
+		record_writeup_submission: record_writeup_submission,
 	});
 };
 

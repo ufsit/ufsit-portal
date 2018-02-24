@@ -90,4 +90,13 @@ export class RestService {
     );
   }
 
+  public getSubmittedWriteups() {
+    return this.get('/writeups/submitted');
+  }
+
+  public getWriteup(ctfName: string, challengeName: string, fileName: string) {
+    return this.get('/writeups/get/' + ctfName + '/' + challengeName + '/'
+                    + fileName);
+  }
+
 }
