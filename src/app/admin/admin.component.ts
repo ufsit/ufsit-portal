@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RestService } from '../rest.service';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-admin',
@@ -11,7 +12,7 @@ import { RestService } from '../rest.service';
 export class AdminComponent implements OnInit {
   private users;
 
-  constructor(private requests: RestService) { }
+  constructor(private requests: RestService, private modalService: NgbModal) { }
 
   ngOnInit() {
     // Uses the RestService to make an http request for a list of users
@@ -34,6 +35,10 @@ export class AdminComponent implements OnInit {
 
   public getUsers() {
     return this.users;
+  }
+
+  public open(content: any) {
+    this.modalService.open(content);
   }
 
 }
