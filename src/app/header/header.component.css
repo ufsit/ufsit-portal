@@ -9,22 +9,17 @@
   padding: 0px;
   color: white;
 }
+
 .navbar-brand>img {
   height: 100%;
   /*padding: 15px;*/
   width: auto;
-  display: inline;
+  /*display: inline;*/
 }
 
 .navbar-brand {
   height: 70px;
   margin-right: 20px;
-}
-
-@media(max-width:767px) {
-  .navbar, .navbar a{
-    line-height: 20px;
-  }
 }
 
 .navbar-default .navbar-nav >li >a {
@@ -42,6 +37,10 @@
 }
 
 @media (max-width: 767px) {
+
+    .navbar, .navbar a{
+        line-height: 20px;
+    }
 
     .nav-item {
         border-style: solid;
