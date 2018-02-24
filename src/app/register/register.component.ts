@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
       confirm_password: ['', [
         Validators.required
       ]],
-      grad_date: ['Select a semester', [
+      grad_date: ['Already Graduated', [
         Validators.required
       ]],
       subscribe: ['true', []]

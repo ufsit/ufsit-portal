@@ -64,15 +64,19 @@ export class EditProfileComponent implements OnInit {
   }
 
   public update_profile() {
+    this.notifications.invalid_credentials = false;
+    this.notifications.bad_request = false;
+    this.notifications.generic_error = false;
     // Scrolls the user to the top of the page
     window.scrollTo(0, 0);
 
     // If the form is not valid display error
-    if (!this.formData.valid || this.formData.value.old_password === '' ||
+    if (!this.formData.valid ||
       this.formData.value.new_password !== this.formData.value.confirm_password ||
       this.formData.value.grad_year === 'Select a semester' || !this.form_changed()) {
       this.notifications.invalid_credentials = true;
-      return;
+        console.log("asd;lkjadfs;lkadsfkjl;sdfkjladsfkj;lasdfkj;laskjlfadskj;ladskj;lsadfkj;lkjlasafsd");
+        return;
     }
 
     // This block decides where to send the http get request based
