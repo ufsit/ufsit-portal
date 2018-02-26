@@ -30,4 +30,13 @@ export class HomeComponent implements OnInit {
     return '';
   }
 
+  public redirectLectures() {
+    // tslint:disable-next-line:max-line-length
+    window.open('https://uflorida-my.sharepoint.com/personal/elan22_ufl_edu/_layouts/15/guestaccess.aspx?folderid=0d67d1c9bc1be4aa68ea7bd61d21b612a&authkey=AbD-gTKCDdCIpE8vtELGWzw', '_blank');
+  }
+
+  public redirectResume() {
+    window.open('https://docs.google.com/forms/d/e/1FAIpQLScP-7T3VGFAcgVOcr12ErLfM0qIh4P9YjaxvCE8dqxIQ2sxVQ/viewform', '_blank');
+  }
+
 }
