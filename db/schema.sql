@@ -73,6 +73,11 @@ CREATE TABLE `writeup_submissions` (
 	`key` varchar(255) NOT NULL
 );
 
+CREATE TABLE `image_uploads` (
+	`account_id` INT NOT NULL,
+	`key` varchar(255) NOT NULL
+);
+
 ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`rank`) REFERENCES `account_rank`(`id`);
 
 ALTER TABLE `event_signin` ADD CONSTRAINT `event_signin_fk0` FOREIGN KEY (`event_id`) REFERENCES `event`(`id`);
@@ -86,3 +91,5 @@ ALTER TABLE `session` ADD CONSTRAINT `session_fk0` FOREIGN KEY (`account_id`) RE
 ALTER TABLE `site_log` ADD CONSTRAINT `site_log_fk0` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`);
 
 ALTER TABLE `writeup_submissions` ADD CONSTRAINT `writeup_submissions_fk0` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`); 
+
+ALTER TABLE `image_uploads` ADD CONSTRAINT `image_uploads_fk0` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`); 

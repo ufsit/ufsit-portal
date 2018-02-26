@@ -1,8 +1,12 @@
-.full-width {
+.fullWidth {
   width: 100%;
 }
-.markdownInput {
-  height: 80vh;
+.markdownInput, .minHeight {
+  min-height: 80vh;
+}
+
+table {
+  display: table;
 }
 
 ngb-tabset{
@@ -21,3 +25,11 @@ ngb-tabset{
   border: none;
   padding: 0px;
 } 
+
+.btn {
+  margin: 0px;
+}
+
+.thumbnail {
+  max-height: 20rem;
+}

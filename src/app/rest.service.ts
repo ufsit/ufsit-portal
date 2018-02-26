@@ -69,18 +69,20 @@ export class RestService {
     return this.post('/user/profile', formData, {responseType: 'text'});
   }
 
+  // api call to sign a user into an event
   public signin(email: string) {
     return this.post('/event/sign_in', {email: email});
   }
 
-  public getSignedRequest(file: Blob, name: string) {
-    return this.get('/upload/sign', new HttpParams()
-                                    .set('file-name', name)
-                                    .set('file-type', file.type));
+  // api call to get a signed url for an image
+  public signImage(fileName: string, fileType: string) {
+    return this.get('/upload/image', new HttpParams()
+                                    .set('file-name', fileName)
+                                    .set('file-type', fileType));
   }
 
+  // api call to upload a writeup
   public uploadWriteup(data: string, ctfName: string, challengeName: string) {
-    // return this.http.post(signedRequest, file);
     return this.post('/upload/writeup',
       {
         data: data,
@@ -90,13 +92,25 @@ export class RestService {
     );
   }
 
+  // api call to get a list of submitted writeups
   public getSubmittedWriteups() {
     return this.get('/writeups/submitted');
   }
 
+  // api call to get a writeup
   public getWriteup(ctfName: string, challengeName: string, fileName: string) {
     return this.get('/writeups/get/' + ctfName + '/' + challengeName + '/'
                     + fileName);
+  }
+
+  // api call to upload an image directly
+  public uploadImage(image: File, url: string) {
+    const formData = new FormData();
+    formData.append('image', image, image.name);
+    return this.http.put(url, image, {headers: new HttpHeaders({
+      'Content-Type': image.type,
+      'x-amz-acl': 'private'
+    })});
   }
 
 }
