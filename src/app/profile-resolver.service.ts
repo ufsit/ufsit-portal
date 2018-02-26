@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router, Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { RestService } from './rest.service';
-import { SessionService } from './session.service';
 import { of } from 'rxjs/observable/of';
 
 
@@ -11,8 +10,7 @@ import { of } from 'rxjs/observable/of';
 // which uses the resolver
 export class ProfileResolverService implements Resolve<any> {
 
-  constructor(private sessionService: SessionService,
-              private restService: RestService) { }
+  constructor(private restService: RestService) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<any> {
     // get the id parameter

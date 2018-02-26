@@ -50,6 +50,7 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     NgbModule.forRoot()
   ],
   providers: [

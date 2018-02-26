@@ -36,7 +36,10 @@ const routes: Routes = [
   {
     path: "edit_profile",
     component: EditProfileComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService],
+    resolve: {
+      profile: ProfileResolverService
+    }
   },
   {
     path: 'sponsors',

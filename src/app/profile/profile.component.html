@@ -1,7 +1,7 @@
-<div class="container-fluid full-height">
+<div class="container container-fluid full-height">
   <div class="row">
     <div class="col-md-5 col-md-offset-1">
-      <div class="main_header">{{ this.getTitle() }}
+      <div id="profileTitle" class="main_header">{{ this.getTitle() }}
       </div>
       <br>
 
@@ -31,7 +31,7 @@
 
           <br>
 
-          <a routerLink="{{ this.getEditLink() }}" class="btn btn-info" role="button">Update Profile</a>
+          <a id="updateProfileButton" routerLink="{{ this.getEditLink() }}" class="btn btn-info" role="button">Update Profile</a>
         </div>
       </div>
     </div>

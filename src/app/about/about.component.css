@@ -1,5 +1,5 @@
 .container-fluid {
-  max-width: 80%;
+  max-width: 90%;
 }
 
 .top-buffer {
@@ -19,4 +19,13 @@
     max-height: 175px;
     width: 175px;
     height: 175px;
+}
+
+@media (max-width: 425px) {
+    .headshot {
+        display: none;
+    }
+    h4 {
+        font-size: 1.5em;
+    }
 }

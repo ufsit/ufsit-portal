@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgForm } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SessionService } from '../session.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,10 +12,7 @@ import { Router } from '@angular/router';
 
 export class LoginComponent implements OnInit {
   // the html form will be bound to these class attributes
-  formData = {
-    'email': '',
-    'password': ''
-  };
+  formData: FormGroup;
 
   // flags which control which notifications are displayed
   // a notification is displayed when its flag is set to true
@@ -28,37 +24,54 @@ export class LoginComponent implements OnInit {
 
   // import the SessionService and router so we can use them later
   // in other functions
-  constructor(private sessionService: SessionService,
-              private router: Router) {
+  constructor(private sessionService: SessionService) {
 
   }
 
   ngOnInit() {
+    const fb: FormBuilder = new FormBuilder();
+    this.formData = fb.group({
+      email: ['', [
+        Validators.required,
+        // tslint:disable-next-line:max-line-length
+        Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
+      password: ['', [
+        Validators.required
+      ]]
+    });
   }
 
   // function is called when the user clicks the submit button
-  submitLogin(loginForm: NgForm) {
-    if (!loginForm.valid) {
+  submitLogin() {
+    // make sure the form is valid
+    if (!this.formData.valid) {
       this.notifications.invalid_credentials = true;
       return;
     }
 
-    this.sessionService.login(this.formData)
-    .subscribe(
-      // called if the account was created successfully
+    // create the form data to submit
+    const data = {
+      email: this.formData.value.email,
+      password: this.formData.value.password
+    };
+
+    this.sessionService.login(data).subscribe(
+      // called if an error was not thrown
       res => {
-        res.subscribe(profile => {
-          this.sessionService.setProfile(profile);
-        });
-      },
-      // called if there was an error while creatign the account
-      err => {
-        // depending on the error code, display the appropriate notification
-        if (err.status === 400) {
-          this.notifications.bad_request = true;
+        // successful login
+        if (res === 'Successfully Authenticated') {
+
+        // invalid credentials
+        } else if (res.status < 500) {
+          this.notifications.invalid_credentials = true;
+        // other error
         } else {
           this.notifications.generic_error = true;
         }
+      },
+      // called if there was an error while logging in
+      err => {
+        this.notifications.bad_request = true;
       }
     );
   }
