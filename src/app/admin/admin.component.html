@@ -21,16 +21,48 @@
   </table>
   <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Create new poll</button>
 
+  <!-- This section is everything in the pop-up window -->
   <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
-      <h4 class="modal-title">Modal title</h4>
+      <h3 class="modal-title">Create Poll</h3>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="modal-body">
-      <p>One fine body&hellip;</p>
+
+    <!-- This is where all the input is handled -->
+    <div class="modal-body">  
+       <form [formGroup]="orderForm" (ngSubmit)="OnSubmit(orderForm.value)">
+        <div>
+          <h4 class="modal-title">Poll Title:</h4>
+          <input type="text" formControlName="pollTitle" placeholder="Title"/>
+          <br><hr>
+        </div>
+
+        <!-- The outer for loop that displays each of the questions/positions to be voted on in the poll -->
+        <div formArrayName="items" *ngFor="let item of orderForm.value.items; let i = index;">
+          <div [formGroupName]="i">
+            <h5>Position/Question:</h5>
+            <input type="text" formControlName="question" placeholder="To Be Voted on....."/>
+            <!-- The inner for loop for all the question answers -->
+            <div *ngFor="let ans of item.answer; let j = index;">
+              <div [formGroupName]="j">
+                <h5>Answers/Candidates:</h5>
+                <input type="text" formControlName="answer" placeholder="things yoo"/>
+              </div>
+            </div>
+             
+
+            <br><br>
+          </div>
+        </div>
+
+        <button type="submit">Save</button>
+        <button type="button" (click)="addItem()">Add More</button>
+      </form>
     </div>
+
+    <!-- Submit button -->
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Submit (does nothing currently)</button>
     </div>

@@ -27,7 +27,6 @@ import { HomeResolverService } from './home-resolver.service';
 import { TimeAgoPipe } from './time-ago.pipe';
 import { EditProfileComponent } from './edit_profile/edit_profile.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,7 +56,7 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
     RestService,
     HttpClientModule,
     ProfileResolverService,
-    HomeResolverService
+    HomeResolverService,
   ],
   bootstrap: [AppComponent]
 })
