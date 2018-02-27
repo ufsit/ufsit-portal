@@ -55,13 +55,14 @@ export class AdminComponent implements OnInit {
   createQuestion(): FormGroup {
     return this.formBuilder.group({
       question: '',
-      answers: ['']
+      answers: this.formBuilder.array([ this.createAnswers()])    
+      //Added this ^ in because the array needs to be a FormArray so that it can link to the html
     });
   }
 
   createAnswers(): FormGroup {
     return this.formBuilder.group({
-      answer: '',
+      answer: 'dog',
     });
   }
 
@@ -78,5 +79,9 @@ export class AdminComponent implements OnInit {
 
   public OnSubmit(formValue: any) {
     console.log(formValue);
+  }
+
+  public returnArray(x) {
+    Array.from(x)
   }
 }

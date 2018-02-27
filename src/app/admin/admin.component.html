@@ -45,13 +45,13 @@
             <h5>Position/Question:</h5>
             <input type="text" formControlName="question" placeholder="To Be Voted on....."/>
             <!-- The inner for loop for all the question answers -->
-            <div *ngFor="let ans of item.answer; let j = index;">
-              <div [formGroupName]="j">
-                <h5>Answers/Candidates:</h5>
-                <input type="text" formControlName="answer" placeholder="things yoo"/>
+            <div *ngFor="let ans of item.value.answers; let j = index;">
+              <h5>Answers/Candidates:</h5>
+              <div [formGroupName]="j">  
+                <input type="text" formControlName="answers" placeholder="things yoo"/>
               </div>
             </div>
-             
+        
 
             <br><br>
           </div>
