@@ -1,0 +1,188 @@
+<div class="container container-fluid full-height">
+  <div class="row">
+    <div class="col-md-5 col-md-offset-1">
+      <div id="profileTitle" class="main_header">Submit Writeups
+      </div>
+      <br>
+    </div>
+  </div>
+
+  <!-- Notification panels -->
+  <div class="row">
+    <div class="col-xs-12">
+
+      <div *ngIf="notifications.writeup_submit_successful" id="writeupSubmitSuccessfulAlert" class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.writeup_submit_successful = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          Writeup submitted</span>
+      </div>
+
+      <div *ngIf="notifications.writeup_submit_error" id="writeupSubmitErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.writeup_submit_error = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> There was an error while submitting your writeup.
+           Please save your work and contact the developers.</span>
+      </div>
+
+      <div *ngIf="notifications.form_invalid" id="formInvalidAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.writeup_submit_error = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> One or more of the fields in the form is invalid.</span>
+      </div>
+
+      <div *ngIf="notifications.image_upload_successful" id="imageUploadSuccessfulAlert" class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.image_upload_successful = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          Image uploaded</span>
+      </div>
+
+      <div *ngIf="notifications.image_upload_error" id="imageUploadErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.image_upload_error = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> There was an error while uploading your image.
+           Please save your work and contact the developers.</span>
+      </div>
+
+      <div *ngIf="notifications.writeup_list_error" id="writeupListErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.writeup_list_error = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> There was an error while getting your submitted writeups.
+           Please contact the developers.</span>
+      </div>
+
+      <div *ngIf="notifications.writeup_load_error" id="writeupLoadErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.writeup_load_error = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> There was an error while loading this writeup.
+           Please contact the developers.</span>
+      </div>
+
+      <div *ngIf="notifications.writeup_load_successful" id="writeupLoadSuccessfulAlert" class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.writeup_load_successful = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          Writeup loaded</span>
+      </div>
+
+      <div *ngIf="notifications.generic_error" id="genericErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.generic_error = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> Something went wrong on our end. Please contact the developers.</span>
+      </div>
+
+      <div *ngIf="notifications.bad_request" id="badRequestAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.bad_request = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> It looks like you're trying to do something sketchy. Remember that "unauthorized penetration
+          tests" are illegal :P. If you believe this is a mistake, please contact the developers.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <form class="fullWidth" (ngSubmit)="submitWriteup()" [formGroup]="formData">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label class="input-label">Challenge Name</label>
+          <input type="name" class="form-control" placeholder="Callenge Name" formControlName="challengeName">
+        </div>
+      
+        <div class="form-group col-md-6">
+          <label class="input-label">CTF Name</label>
+          <input type="email" class="form-control" placeholder="CTF Name" formControlName="ctfName">
+        </div>
+      </div>
+
+      <div class="row">
+        <ul class="nav nav-tabs">
+          <li class="nav-item" (click)="switchToWrite()">
+            <a id="writeTab" class="nav-link active">Write</a>
+          </li>
+          <li class="nav-item" (click)="switchToPreview()">
+            <a id="previewTab" class="nav-link">Preview</a>
+          </li>
+          <li class="nav-item" (click)="switchToImages()">
+            <a id="imagesTab" class="nav-link">Images</a>
+          </li>
+          <li class="nav-item" (click)="switchToUpdate()">
+            <a id="updateTab" class="nav-link">Update</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="row">
+        <textarea [hidden]="hidden.write" class="markdownInput fullWidth form-control" formControlName="markdownInput">
+        </textarea>
+        
+        <showdown [hidden]="hidden.preview" class="minHeight markdown-body card fullWidth" [value]="setMarkdownInput" [options]="options"></showdown>    
+        
+        <div [hidden]="hidden.images" class="minHeight card fullWidth">
+          <div class="row">
+            <form (ngSubmit)="uploadImage()">
+                <span class="btn btn-default btn-file">
+                  <input type="file" (change)="handleFileChange($event.target.files)">
+                </span>
+              <button class="btn btn-success">Submit</button>
+            </form>
+          </div>
+          <div id="imageBank" class="row">
+            <div *ngFor="let img of images">
+              <img src={{img}} class="thumbnail img-thumbnail">
+              <a href={{img}}>{{img}}</a>
+            </div>
+          </div>
+        </div>
+
+        <div [hidden]="hidden.update" class="minHeight card fullWidth">
+          <table *ngIf="this.submittedWriteups.length !== 0" id="account-list" class="table table-striped fullWidth">
+            <thead class="fullWidth">
+             <tr>
+              <td>CTF Name</td>
+              <td>Challenge Name</td>
+              <td></td>
+             </tr>
+            </thead>
+            <tbody class="fullWidth">
+             <tr *ngFor="let entry of this.submittedWriteups">
+              <td>{{entry.ctfName}}</td>
+              <td>{{entry.challengeName}}</td>
+              <td><button type="button" class="btn btn-outline-primary" 
+                (click)="load(entry.ctfName, entry.challengeName, entry.fileName)">Load</button></td>
+             </tr>
+            </tbody>
+          </table>
+          <p *ngIf="this.submittedWriteups.length === 0">No writeups submitted.</p>
+        </div>
+        
+      </div>
+      
+      <div class="row">
+        <button [disabled]="!this.formData.valid" class="btn btn-success">Submit</button>
+      </div>      
+
+    </form>
+  </div>
+  
+  
+  
+</div>

@@ -16,7 +16,7 @@ table thead td {
   margin: 0px auto;
 }
 
-@media screen and (min-width: 768px) {
+@media (min-width: 768px) {
   #account-list {
     width: 50%;
   }
