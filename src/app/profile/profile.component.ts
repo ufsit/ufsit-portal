@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
     // set the title and editLink accordingly
     if (id == undefined) {
       this.title = 'Your Profile';
-      this.editLink = '/edit_profile';
+      this.editLink = '/profile/edit';
 
       // get the resolved data
       const routeProfile = this.route.snapshot.data.profile;

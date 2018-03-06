@@ -30,17 +30,9 @@ const routes: Routes = [
     }
   },
   {
-    path: "admin",
+    path: 'admin',
     component: AdminComponent,
     canActivate: [AuthGuardService]
-  },
-  {
-    path: "edit_profile",
-    component: EditProfileComponent,
-    canActivate: [AuthGuardService],
-    resolve: {
-      profile: ProfileResolverService
-    }
   },
   {
     path: 'sponsors',
@@ -73,9 +65,25 @@ const routes: Routes = [
     }
   },
   {
+    path: 'profile/edit',
+    component: EditProfileComponent,
+    canActivate: [AuthGuardService],
+    resolve: {
+      profile: ProfileResolverService
+    }
+  },
+  {
     path: 'profile/:id',
     canActivate: [AuthGuardService],
     component: ProfileComponent,
+    resolve: {
+      profile: ProfileResolverService
+    }
+  },
+  {
+    path: 'profile/:id/edit',
+    component: EditProfileComponent,
+    canActivate: [AuthGuardService],
     resolve: {
       profile: ProfileResolverService
     }
