@@ -14,6 +14,10 @@ import { ProfileResolverService } from '../profile-resolver.service';
 })
 
 export class EditProfileComponent implements OnInit {
+  // profile holds the profile data we are currently viewing
+  private profile;
+  private title = '';
+
   formData: FormGroup;
   private success_text: String;
   private error_text: String;
@@ -38,25 +42,39 @@ export class EditProfileComponent implements OnInit {
   constructor(private sessionService: SessionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.sessionService.setProfile(this.route.snapshot.data.profile);
+    // get the id of the user we are viewing
+    const id = this.route.snapshot.params.id;
+
+    // set the profile data based on what the resolver returned to us
+    this.profile = this.route.snapshot.data.profile;
+
+    // if there is no id (the user is looking at their own profile)
+    // set the title and editLink accordingly
+    if (id == undefined) {
+      this.title = 'Your Profile';
+    // otherwise, the user is an admin looking at another user's profile
+    // set the title and edit link accordingly
+    } else {
+      this.title = this.profile.full_name + '\'s Profile';
+    }
 
     const fb: FormBuilder = new FormBuilder();
     this.formData = fb.group({
-      name: [this.sessionService.getProfile().full_name, [
+      name: [this.profile.full_name, [
         Validators.required
       ]],
-      email: [this.sessionService.getProfile().email, [
+      email: [this.profile.email, [
         Validators.required,
         // tslint:disable-next-line:max-line-length
         Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
-      
+
       old_password: ['', []],
-      
+
       new_password: ['', []],
 
       confirm_password: ['', []],
 
-      grad_year: [this.sessionService.getProfile().grad_date, [
+      grad_year: [this.profile.grad_date, [
         Validators.required
       ]],
       subscribe: ['true', []]
@@ -75,7 +93,6 @@ export class EditProfileComponent implements OnInit {
       this.formData.value.new_password !== this.formData.value.confirm_password ||
       this.formData.value.grad_year === 'Select a semester' || !this.form_changed()) {
       this.notifications.invalid_credentials = true;
-        console.log("asd;lkjadfs;lkadsfkjl;sdfkjladsfkj;lasdfkj;laskjlfadskj;ladskj;lsadfkj;lkjlasafsd");
         return;
     }
 
@@ -92,14 +109,11 @@ export class EditProfileComponent implements OnInit {
         if (res.status === undefined) {
           window.location.reload();
           alert('Success!  You have changed:\n ' + res);
-        }
-        else if (res.status === 409) {
+        } else if (res.status === 409) {
           this.notifications.bad_request = true;
-        }
-        else if (res.status === 400) {
+        } else if (res.status === 400) {
           this.notifications.invalid_credentials = true;
-        }
-        else {
+        } else {
           this.notifications.generic_error = true;
         }
       },
