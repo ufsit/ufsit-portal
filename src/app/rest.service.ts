@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { FormGroup } from '@angular/forms';
@@ -15,8 +15,8 @@ export class RestService {
   constructor(private http: HttpClient) { }
 
   // basic get request
-  private get(relativeUrl: string): Observable<any> {
-    return this.http.get(this.baseUrl + relativeUrl);
+  private get(relativeUrl: string, params?: HttpParams): Observable<any> {
+    return this.http.get(this.baseUrl + relativeUrl, {params: params});
   }
 
   // basic post request
@@ -67,6 +67,50 @@ export class RestService {
 
   public update(formData: FormGroup, url: string) {
     return this.post('/user/profile' + url, formData.value, {responseType: 'text'});
+  }
+
+  // api call to sign a user into an event
+  public signin(email: string) {
+    return this.post('/event/sign_in', {email: email});
+  }
+
+  // api call to get a signed url for an image
+  public signImage(fileName: string, fileType: string) {
+    return this.get('/upload/image', new HttpParams()
+                                    .set('file-name', fileName)
+                                    .set('file-type', fileType));
+  }
+
+  // api call to upload a writeup
+  public uploadWriteup(data: string, ctfName: string, challengeName: string) {
+    return this.post('/upload/writeup',
+      {
+        data: data,
+        ctfName: ctfName,
+        challengeName: challengeName
+      }
+    );
+  }
+
+  // api call to get a list of submitted writeups
+  public getSubmittedWriteups() {
+    return this.get('/writeups/submitted');
+  }
+
+  // api call to get a writeup
+  public getWriteup(ctfName: string, challengeName: string, fileName: string) {
+    return this.get('/writeups/get/' + ctfName + '/' + challengeName + '/'
+                    + fileName);
+  }
+
+  // api call to upload an image directly
+  public uploadImage(image: File, url: string) {
+    const formData = new FormData();
+    formData.append('image', image, image.name);
+    return this.http.put(url, image, {headers: new HttpHeaders({
+      'Content-Type': image.type,
+      'x-amz-acl': 'private'
+    })});
   }
 
 }
