@@ -50,6 +50,11 @@
         padding-left: 2em;
     }
 
+    .nav-link {
+        margin-top: .75em;
+        margin-bottom: .75em;
+    }
+
     .nav-item-top {
         border-top-width: 2px;
     }
