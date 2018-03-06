@@ -1,71 +1,24 @@
-<div class="table-responsive full-height">
-  <table id="account-list" class="table table-striped">
-    <thead>
-     <tr>
-      <td>Full Name</td>
-      <td>Email</td>
-      <td>Graduation Year</td>
-      <td>Mailing List?</td>
-      <td>Registration Date</td>
-     </tr>
-    </thead>
-    <tbody>
-     <tr *ngFor="let u of this.getUsers()">
-      <td><a routerLink="/profile/{{u.id}}">{{u.full_name}}</a></td>
-      <td>{{u.email}}</td>
-      <td>{{u.grad_date}}</td>
-      <td>{{u.mass_mail_optin}}</td>
-      <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
-     </tr>
-    </tbody>
-  </table>
-  <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Create new poll</button>
+<div *ngIf="notifications.emptyField" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+	<button type="button" class="close" (click)="notifications.emptyField = false">
+	<span aria-hidden="true">&times;</span></button>
+  <span class="notification_panel"><strong>Error</strong> Cannot have empty field</span>
+</div>
 
-  <!-- This section is everything in the pop-up window -->
-  <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-      <h3 class="modal-title">Create Poll</h3>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
+<div class="full-height">
+  <form [formGroup]="orderForm" (ngSubmit)="onSubmit(orderForm)">
+    <h3>Position</h3>
+    <input type="text" formControlName="position" placeholder="Position"/>
+    
+    <br><br>
+
+    <div formArrayName="candidates" *ngFor="let cand of orderForm.controls.candidates.controls; let i = index;">
+      <div [formGroupName]="i">
+        <h6>Candidate</h6>
+        <input type="textarea" formControlName="candidate" placeholder="To Be Voted on....."/>
+      </div>
     </div>
 
-    <!-- This is where all the input is handled -->
-    <div class="modal-body">  
-       <form [formGroup]="orderForm" (ngSubmit)="OnSubmit(orderForm.value)">
-        <div>
-          <h4 class="modal-title">Poll Title:</h4>
-          <input type="text" formControlName="pollTitle" placeholder="Title"/>
-          <br><hr>
-        </div>
-
-        <!-- The outer for loop that displays each of the questions/positions to be voted on in the poll -->
-        <div formArrayName="items" *ngFor="let item of orderForm.value.items; let i = index;">
-          <div [formGroupName]="i">
-            <h5>Position/Question:</h5>
-            <input type="text" formControlName="question" placeholder="To Be Voted on....."/>
-            <!-- The inner for loop for all the question answers -->
-            <div *ngFor="let ans of item.value.answers; let j = index;">
-              <h5>Answers/Candidates:</h5>
-              <div [formGroupName]="j">  
-                <input type="text" formControlName="answers" placeholder="things yoo"/>
-              </div>
-            </div>
-        
-
-            <br><br>
-          </div>
-        </div>
-
-        <button type="submit">Save</button>
-        <button type="button" (click)="addItem()">Add More</button>
-      </form>
-    </div>
-
-    <!-- Submit button -->
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Submit (does nothing currently)</button>
-    </div>
-  </ng-template>
-
-  </div>
+    <button type="submit">Save</button>
+    <button type="button" (click)="addItem()">Add More</button>
+  </form>
+</div>

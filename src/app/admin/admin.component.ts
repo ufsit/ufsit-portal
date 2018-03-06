@@ -12,8 +12,11 @@ import { NgForm, FormBuilder, FormGroup, Validators, FormArray, FormControl } fr
 
 export class AdminComponent implements OnInit {
   private users;
-  //private arr = [];
   public orderForm: FormGroup;
+
+  notifications = {
+    emptyField: false
+  }
 
   constructor(private requests: RestService, private modalService: NgbModal,
               private formBuilder: FormBuilder) { }
@@ -37,8 +40,10 @@ export class AdminComponent implements OnInit {
       });
     
       this.orderForm = this.formBuilder.group({
-        pollTitle: '',
-        items: this.formBuilder.array([ this.createQuestion()])
+        position: ['', [
+          Validators.required
+        ]],
+        candidates: this.formBuilder.array([ this.createQuestion()])
       });
   }
 
@@ -54,34 +59,32 @@ export class AdminComponent implements OnInit {
 
   createQuestion(): FormGroup {
     return this.formBuilder.group({
-      question: '',
-      answers: this.formBuilder.array([ this.createAnswers()])    
-      //Added this ^ in because the array needs to be a FormArray so that it can link to the html
+      candidate: ['', [
+        Validators.required
+      ]]
     });
-  }
-
-  createAnswers(): FormGroup {
-    return this.formBuilder.group({
-      answer: 'dog',
-    });
-  }
-
-  get items(): FormArray {
-    return this.orderForm.get('items') as FormArray;
   }
 
   public addItem(): void {
-    this.items.push(this.createQuestion());
-  }
-  // public addAnswer(thing: FormBuilder.arr): void {
-  //   thing.push(this.createAnswers());
-  // }
-
-  public OnSubmit(formValue: any) {
-    console.log(formValue);
+    const control = <FormArray>this.orderForm.controls['candidates'];
+    control.push(this.createQuestion());
   }
 
-  public returnArray(x) {
-    Array.from(x)
+  emptyForm(form: any) {
+    if (form.position === '') {
+      return true;
+    }
+    for (let x of form.candidates) {
+      if (x.candidate === '') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public onSubmit(formValue: any) {
+    if (this.emptyForm(formValue.value)) {
+      this.notifications.emptyField = true;
+    }
   }
 }
