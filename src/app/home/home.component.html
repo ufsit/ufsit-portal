@@ -1,59 +1,71 @@
 <div id="home" class="container-fluid text-center full-height">
-	<div class="col-md-12">
-		<div class="container">
-			<h2 ng-show="show_name">Hello,
-				<a id="userName" routerLink="/profile">{{getName()}}</a>
-			</h2>
-			<hr>
-			<div class="row justify-content-center">
-				<div class="col-md-4" (click)="redirectLectures()">
-					<div class="card tile">
-						<img class="card-image" src="assets/folder-open.svg">
+    <div class="col-md-12">
+        <div class="container">
 
-						<div class="card-body">
-							<h3 class="card-title">Lectures and Exercises</h3>
-							<p class="card-text">Checkout old lectures and hands-on exercises</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card tile" [routerLink]="['/events']">
-						<img class="card-image" src="assets/calendar-alt.svg">
+            <h2 ng-show="show_name">Hello,
+                <a id="userName" routerLink="/profile">{{getName()}}</a>
+            </h2>
+            <hr>
 
-						<div class="card-body">
-							<h3 class="card-title" > Events and News</h3>
-							<p class="card-text">Learn about Meetings, Competitions, and Conferences</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4" (click)="redirectResume()">
-					<div class="card tile">
-						<img class="card-image" src="assets/file-pdf.svg">
-						<div class="card-body">
-							<h3 class="card-title">Update Resume</h3>
-							<p class="card-text">Update/Upload you resume for companies</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card tile disabled">
-						<img class="card-image" src="assets/list-alt.svg">
-						<div class="card-body">
-							<h3 class="card-title">CTF Practice Challenges</h3>
-							<p class="card-text">Practice CTF challenges and view solutions</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div (click)="routeTo('/writeups')" class="card tile">
-						<img class="card-image" src="assets/file-code.svg">
-						<div class="card-body">
-							<h3 class="card-title">Submit Writeups</h3>
-							<p class="card-text">Submit writeups to up your rank</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+            <div class="row justify-content-center">
+
+                <div class="col-md-4" (click)="redirect(lecturePath)">
+                    <div class="card tile">
+                        <img class="card-image" src="assets/folder-open.svg">
+                        <div class="card-body">
+                            <h3 class="card-title">Lectures and Exercises</h3>
+                            <p class="card-text">Checkout old lectures and hands-on exercises</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card tile" (click)="routeTo('/events')">
+                        <img class="card-image" src="assets/calendar-alt.svg">
+                        <div class="card-body">
+                            <h3 class="card-title"> Events and News</h3>
+                            <p class="card-text">Learn about Meetings, Competitions, and Conferences</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" (click)="redirect(resumePath)">
+                    <div class="card tile">
+                        <img class="card-image" src="assets/file-pdf.svg">
+                        <div class="card-body">
+                            <h3 class="card-title">Update Resume</h3>
+                            <p class="card-text">Update/Upload you resume for companies</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card tile disabled">
+                        <img class="card-image" src="assets/list-alt.svg">
+                        <div class="card-body">
+                            <h3 class="card-title">CTF Practice Challenges</h3>
+                            <p class="card-text">Practice CTF challenges and view solutions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card tile" (click)="routeTo('/writeups')">
+                        <img class="card-image" src="assets/file-code.svg">
+                        <div class="card-body">
+                            <h3 class="card-title">Submit Writeups</h3>
+                            <p class="card-text">Submit writeups to up your rank</p>
+                        </div>
+                    </div>
+                </div>
+                <div class=col-md-4 *ngFor="let at of this.getCustomTiles()">
+                    <div class="card tile" (click)="redirect(at.link)">
+                        <img class="card-image" src="assets/star.svg">
+                        <div class="card-body">
+                            <h3 class="card-title">{{at.title}}</h3>
+                            <p class="card-text">{{at.description}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 </div>
