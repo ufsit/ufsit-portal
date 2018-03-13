@@ -74,9 +74,9 @@ export class RestService {
     return this.post('/event/sign_in', {email: email});
   }
 
-  // api call to get a signed url for an image
-  public signImage(fileName: string, fileType: string) {
-    return this.get('/upload/image', new HttpParams()
+  // api call to get a signed url for an file
+  public signFile(fileName: string, fileType: string) {
+    return this.get('/upload/file', new HttpParams()
                                     .set('file-name', fileName)
                                     .set('file-type', fileType));
   }
@@ -103,14 +103,19 @@ export class RestService {
                     + fileName);
   }
 
-  // api call to upload an image directly
-  public uploadImage(image: File, url: string) {
+  // api call to upload an file directly
+  public uploadFile(file: File, url: string) {
     const formData = new FormData();
-    formData.append('image', image, image.name);
-    return this.http.put(url, image, {headers: new HttpHeaders({
-      'Content-Type': image.type,
+    formData.append('file', file, file.name);
+    return this.http.put(url, file, {headers: new HttpHeaders({
+      'Content-Type': file.type,
       'x-amz-acl': 'private'
     })});
+  }
+
+  // api call to get a list of submitted writeups
+  public getUploadedFiles() {
+    return this.get('/writeups/files/uploaded');
   }
 
 }

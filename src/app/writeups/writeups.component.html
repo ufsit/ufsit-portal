@@ -36,20 +36,20 @@
           <strong>Error</strong> One or more of the fields in the form is invalid.</span>
       </div>
 
-      <div *ngIf="notifications.image_upload_successful" id="imageUploadSuccessfulAlert" class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" (click)="notifications.image_upload_successful = false">
+      <div *ngIf="notifications.file_upload_successful" id="fileUploadSuccessfulAlert" class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.file_upload_successful = false">
           <span aria-hidden="true">&times;</span>
         </button>
         <span class="notification_panel">
-          Image uploaded</span>
+          File uploaded</span>
       </div>
 
-      <div *ngIf="notifications.image_upload_error" id="imageUploadErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
-        <button type="button" class="close" (click)="notifications.image_upload_error = false">
+      <div *ngIf="notifications.file_upload_error" id="fileUploadErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.file_upload_error = false">
           <span aria-hidden="true">&times;</span>
         </button>
         <span class="notification_panel">
-          <strong>Error</strong> There was an error while uploading your image.
+          <strong>Error</strong> There was an error while uploading your file.
            Please save your work and contact the developers.</span>
       </div>
 
@@ -121,8 +121,8 @@
           <li class="nav-item" (click)="switchToPreview()">
             <a id="previewTab" class="nav-link">Preview</a>
           </li>
-          <li class="nav-item" (click)="switchToImages()">
-            <a id="imagesTab" class="nav-link">Images</a>
+          <li class="nav-item" (click)="switchToFiles()">
+            <a id="filesTab" class="nav-link">Files</a>
           </li>
           <li class="nav-item" (click)="switchToUpdate()">
             <a id="updateTab" class="nav-link">Update</a>
@@ -136,20 +136,21 @@
         
         <showdown [hidden]="hidden.preview" class="minHeight markdown-body card fullWidth" [value]="setMarkdownInput" [options]="options"></showdown>    
         
-        <div [hidden]="hidden.images" class="minHeight card fullWidth">
+        <div [hidden]="hidden.files" class="minHeight card fullWidth">
           <div class="row">
-            <form (ngSubmit)="uploadImage()">
+            <form (ngSubmit)="uploadFile()">
                 <span class="btn btn-default btn-file">
                   <input type="file" (change)="handleFileChange($event.target.files)">
                 </span>
               <button class="btn btn-success">Submit</button>
             </form>
           </div>
-          <div id="imageBank" class="row">
-            <div *ngFor="let img of images">
-              <img src={{img}} class="thumbnail img-thumbnail">
-              <a href={{img}}>{{img}}</a>
+          <div id="fileBank" class="row">
+            <div *ngFor="let file of files">
+              <img *ngIf="isImage(file)" src={{file}} class="thumbnail img-thumbnail">
+              <a href={{file}}>{{file}}</a>
             </div>
+            <br>
           </div>
         </div>
 

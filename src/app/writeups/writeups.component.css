@@ -33,3 +33,7 @@ ngb-tabset{
 .thumbnail {
   max-height: 20rem;
 }
+
+#fileBank {
+  display: contents;
+}

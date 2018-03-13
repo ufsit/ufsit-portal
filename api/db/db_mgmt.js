@@ -254,14 +254,20 @@ let db_mgmt_module = function() {
 		return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
 	}
 
-	/* Records an image upload */
-	async function record_image_upload(account_id, key) {
+	/* Records an file upload */
+	async function record_file_upload(account_id, key) {
 		const values = {
 			account_id: account_id,
 			key: key,
 		};
-		return await queryAsync('INSERT INTO `image_uploads` SET ?', values);
+		return await queryAsync('INSERT INTO `file_uploads` SET ?', values);
 	}
+
+		/* Get a list of the user's writeup submissions */
+		async function get_file_uploads(account_id) {
+			return await queryAsync('SELECT `key` FROM `file_uploads` WHERE `account_id` = ?',
+				account_id);
+		}
 
 	// Revealing module
 	return ({
@@ -277,7 +283,8 @@ let db_mgmt_module = function() {
 		list_users: list_users,
 		get_writeup_submissions: get_writeup_submissions,
 		record_writeup_submission: record_writeup_submission,
-		record_image_upload: record_image_upload,
+		record_file_upload: record_file_upload,
+		get_file_uploads: get_file_uploads,
 	});
 };
 

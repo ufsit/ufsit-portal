@@ -31,20 +31,20 @@ export class WriteupsComponent implements OnInit {
   };
   // holds CTF name and challenge name
   formData: FormGroup;
-  // holds currently selected image
-  image: File = null;
+  // holds currently selected file
+  file: File = null;
   // holds the markdown input being shown in the preview tab
   setMarkdownInput = '';
   // holds a list of all submitted writeups
   submittedWriteups = [];
-  // holds a list of uploaded images
-  images = [];
+  // holds a list of uploaded files
+  files = [];
 
   // hides/displays tabs
   hidden = {
     write: false,
     preview: true,
-    images: true,
+    files: true,
     update: true
   };
 
@@ -53,8 +53,8 @@ export class WriteupsComponent implements OnInit {
     writeup_submit_successful: false,
     writeup_submit_error: false,
     form_invalid: false,
-    image_upload_successful: false,
-    image_upload_error: false,
+    file_upload_successful: false,
+    file_upload_error: false,
     writeup_list_error: false,
     writeup_load_error: false,
     writeup_load_successful: false,
@@ -104,11 +104,12 @@ export class WriteupsComponent implements OnInit {
     this.setMarkdownInput = this.formData.value.markdownInput;
   }
 
-  // hide all tab content, then display images tab
-  public switchToImages() {
+  // hide all tab content, then display files tab
+  public switchToFiles() {
     this.hideAll();
-    this.hidden.images = false;
-    document.getElementById('imagesTab').classList.add('active');
+    this.hidden.files = false;
+    document.getElementById('filesTab').classList.add('active');
+    this.getUploadedFiles();
   }
 
   // hide all tab content, then display update tab
@@ -185,34 +186,65 @@ export class WriteupsComponent implements OnInit {
     );
   }
 
-  // keeps the internal image variable up to date with the user's selection
+  // keeps the internal file variable up to date with the user's selection
   public handleFileChange(files: FileList) {
-    this.image = files.item(0);
+    this.file = files.item(0);
   }
 
-  // uploads an image
-  public uploadImage() {
-    // get a signed url we can use to directly upload the image
-    this.externalFileService.signImage(this.image.name, this.image.type).subscribe(
+  // uploads an file
+  public uploadFile() {
+    // get a signed url we can use to directly upload the file
+    this.externalFileService.signFile(this.file.name, this.file.type).subscribe(
       res => {
-        // upload the image to the provided url
-        this.externalFileService.uploadImage(this.image, res.url).subscribe(
+        // upload the file to the provided url
+        this.externalFileService.uploadFile(this.file, res.url).subscribe(
           uploadRes => {
-            // add the image to the list of uploaded images
-            this.images.push(window.location.origin + '/api/' + res.key);
-            this.notifications.image_upload_successful = true;
+            // add the file to the list of uploaded files
+            console.log(res);
+            this.files.push(window.location.origin + '/api/' + res.key);
+            this.notifications.file_upload_successful = true;
           },
           uploadErr => {
-            this.notifications.image_upload_error = true;
+            this.notifications.file_upload_error = true;
             console.log(uploadErr);
           }
         );
       },
       err => {
-        this.notifications.image_upload_error = true;
+        this.notifications.file_upload_error = true;
         console.log(err);
       }
     );
+  }
+
+  // gets a list of all writeups submitted by the user
+  public getUploadedFiles() {
+    this.restService.getUploadedFiles().subscribe(
+      res => {
+        // clear the list of submitted writeups
+        this.files = [];
+        // iterate over each writeup entry
+        for (const entry of res) {
+          // add each entry to the list
+          this.files.push(window.location.origin + '/api/' + entry.key);
+        }
+      },
+      err => {
+        this.notifications.writeup_list_error = true;
+        console.log(err);
+      }
+    );
+  }
+
+  public isImage(filename) {
+    let fileExt = filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
+    fileExt = fileExt.toLowerCase();
+    if (fileExt === 'jpg' || fileExt === 'jpeg' || fileExt === 'exif'
+      || fileExt === 'tiff' || fileExt === 'gif' || fileExt === 'bmp'
+      || fileExt === 'png'){
+        return true;
+    }
+    return false;
   }
 
 }

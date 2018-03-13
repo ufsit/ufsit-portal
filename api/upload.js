@@ -3,7 +3,7 @@
 const routes = require('express').Router(); // eslint-disable-line new-cap
 const fs = require('fs');						// For filesystem I/O
 const aws = require('aws-sdk');
-const AWS_CREDENTIALS = process.env.aws || 'aws.json';
+const AWS_CREDENTIALS = process.env.AWS || 'aws.json';
 const aws_credentials = JSON.parse(fs.readFileSync(AWS_CREDENTIALS, 'utf8'));
 const db_mgmt = require('./db/db_mgmt.js');
 const util = require('../util/index.js');
@@ -55,14 +55,14 @@ routes.post('/upload/writeup', async (req, res) => {
   });
 });
 
-// upload an image
-routes.get('/upload/image', async (req, res) => {
+// upload a file
+routes.get('/upload/file', async (req, res) => {
   // get the file name, type, and extension
   const fileName = req.query['file-name'];
   const fileType = req.query['file-type'];
   const fileExt = '.' + fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
 
-  let prefix = 'writeups/images/';
+  let prefix = 'writeups/files/';
   // hash the name
   let name = util.md5(fileName);
 
@@ -84,10 +84,10 @@ async function getUnusedName(req, res, s3, prefix, name, fileType, fileExt) {
   // check if the file name is already used
   s3.headObject({Bucket: aws_credentials.s3Bucket, Key: key}, async (err, data) => {
     if (err) {
-      // if it is not, get a signed url and record the image upload
+      // if it is not, get a signed url and record the file upload
       if (err.code === 'NotFound') {
         let url = getSignedUrl(key, fileType);
-        await db_mgmt.record_image_upload(req.session.account_id, key);
+        await db_mgmt.record_file_upload(req.session.account_id, key);
         res.status(200).json({url: url, key: key});
       // if some other error occurred, return the error
       } else {
