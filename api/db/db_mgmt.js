@@ -259,8 +259,8 @@ let db_mgmt_module = function () {
     }
 
     /* Get a list of the user's writeup submissions */
-    async function get_writeup_submissions(account_id) {
-        return await queryAsync('SELECT `key` FROM `writeup_submissions` WHERE `account_id` = ?',
+    async function get_file_uploads(account_id) {
+        return await queryAsync('SELECT `key` FROM `file_uploads` WHERE `account_id` = ?',
             account_id);
     }
 
@@ -273,13 +273,13 @@ let db_mgmt_module = function () {
         return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
     }
 
-    /* Records an image upload */
-    async function record_image_upload(account_id, key) {
+    /* Records a file upload */
+    async function record_file_upload(account_id, key) {
         const values = {
             account_id: account_id,
             key: key,
         };
-        return await queryAsync('INSERT INTO `image_uploads` SET ?', values);
+        return await queryAsync('INSERT INTO `file_uploads` SET ?', values);
     }
 
     // Revealing module
@@ -298,9 +298,9 @@ let db_mgmt_module = function () {
         delete_tile: delete_tile,
         custom_tiles: custom_tiles,
         tile_click: tile_click,
-        get_writeup_submissions: get_writeup_submissions,
+        get_file_uploads: get_file_uploads,
         record_writeup_submission: record_writeup_submission,
-        record_image_upload: record_image_upload,
+        record_file_upload: record_file_upload,
     });
 };
 

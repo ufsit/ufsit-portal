@@ -94,9 +94,9 @@ export class RestService {
         return this.post('/event/sign_in', { email: email });
     }
 
-    // api call to get a signed url for an image
-    public signImage(fileName: string, fileType: string) {
-        return this.get('/upload/image', new HttpParams()
+    // api call to get a signed url for a file
+    public signFile(fileName: string, fileType: string) {
+        return this.get('/upload/file', new HttpParams()
             .set('file-name', fileName)
             .set('file-type', fileType));
     }
@@ -123,13 +123,13 @@ export class RestService {
             + fileName);
     }
 
-    // api call to upload an image directly
-    public uploadImage(image: File, url: string) {
+    // api call to upload a file directly
+    public uploadFile(file: File, url: string) {
         const formData = new FormData();
-        formData.append('image', image, image.name);
-        return this.http.put(url, image, {
+        formData.append('file', file, file.name);
+        return this.http.put(url, file, {
             headers: new HttpHeaders({
-                'Content-Type': image.type,
+                'Content-Type': file.type,
                 'x-amz-acl': 'private'
             })
         });
