@@ -1,39 +1,89 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm, FormGroup, FormBuilder, FormsModule } from '@angular/forms';
 import { RestService } from '../rest.service';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.css']
+    selector: 'app-admin',
+    templateUrl: './admin.component.html',
+    styleUrls: ['./admin.component.css']
 })
 
-
 export class AdminComponent implements OnInit {
-  private users;
 
-  constructor(private requests: RestService) { }
+    formData: FormGroup;
+    private users;
+    private customTiles;
 
-  ngOnInit() {
-    // Uses the RestService to make an http request for a list of users
-    this.requests.user_list('/list_users').subscribe(
-      // This portion of code is run if the list is properly returned
-      res => {
-        // TODO: FIX JANKINESS
-        let i = 0;
-        while (res[i] != undefined) {
-          let user = res[i];
-          user['mass_mail_optin'] = (user['mass_mail_optin'] === 1) ? 'Yes' : 'No';
-          ++i;
+    constructor(
+        private requests: RestService
+    ) { }
+
+    ngOnInit() {
+
+        const fb: FormBuilder = new FormBuilder();
+        this.formData = fb.group({ name: [], description: [], link: [] });
+
+        this.requests.customTiles().subscribe(
+            success => { this.customTiles = success; },
+            failure => { console.log(failure); }
+        );
+
+        this.requests.userList('/list_users').subscribe(
+            success => {
+                for (let i = 0; success[i] !== undefined; i++) {
+                    const user = success[i];
+                    user['mass_mail_optin'] = (user['mass_mail_optin'] === 1) ? 'Yes' : 'No';
+                }
+                this.users = success;
+            },
+            failure => { console.log(failure); }
+        );
+
+    }
+
+    private isNotDuplicate(item) {
+        let val = true;
+        this.customTiles.forEach(function (ct) {
+            if (ct.name === item.name
+                && ct.description === item.description
+                && ct.link === item.link) {
+                val = false;
+            }
+        });
+        return val;
+    }
+
+    public getUsers() {
+        return this.users;
+    }
+
+    public getCustomTiles() {
+        return this.customTiles;
+    }
+
+    public addTile(formData: FormGroup) {
+        const item = formData.value;
+        if (item.name !== null && item.description !== null && item.link !== null) {
+            if (this.isNotDuplicate(item)) {
+                this.requests.addTile(item);
+                window.open(item.link, '_blank');
+                this.formData.reset();
+                this.requests.customTiles().subscribe(
+                    success => { this.customTiles = success; },
+                    failure => { console.log(failure); }
+                );
+            } else {
+                // duplicate to current tile
+            }
         }
-        this.users = res;
-      },
-      error => {    // This portion of code is run when there was an error retrieving the user list
-        console.log(error);
-      });
-  }
+    }
 
-  public getUsers() {
-    return this.users;
-  }
+    public deleteTile(id) {
+        this.requests.deleteTile(id);
+        this.requests.customTiles().subscribe(
+            success => { this.customTiles = success; },
+            failure => { console.log(failure); }
+        );
+    }
 
 }
