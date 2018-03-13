@@ -25,14 +25,14 @@ class MockExternalFileService {
     });
   }
 
-  public signImage(fileName: string, fileType: string) {
+  public signFile(fileName: string, fileType: string) {
     return of({
-      url: 'http://localhost/api/upload/image/image.jpg',
-      key: 'writeups/images/image.jpg'
+      url: 'http://localhost/api/upload/file/file.jpg',
+      key: 'writeups/files/file.jpg'
     });
   }
 
-  public uploadImage(image: File, url: string) {
+  public uploadFile(file: File, url: string) {
     return of(null);
   }
 }
@@ -104,8 +104,8 @@ describe('WriteupsComponent', () => {
         expect(component.notifications.writeup_submit_successful).toBe(true);
         expect(component.notifications.writeup_submit_error).toBe(false);
         expect(component.notifications.form_invalid).toBe(false);
-        expect(component.notifications.image_upload_successful).toBe(false);
-        expect(component.notifications.image_upload_error).toBe(false);
+        expect(component.notifications.file_upload_successful).toBe(false);
+        expect(component.notifications.file_upload_error).toBe(false);
         expect(component.notifications.writeup_list_error).toBe(false);
         expect(component.notifications.writeup_load_error).toBe(false);
         expect(component.notifications.writeup_load_successful).toBe(false);
@@ -115,8 +115,8 @@ describe('WriteupsComponent', () => {
         expect(element.querySelector('#writeupSubmitSuccessfulAlert')).toBeTruthy();
         expect(element.querySelector('#writeupSubmitErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#formInvalidAlert')).not.toBeTruthy();
-        expect(element.querySelector('#imageUploadSuccessfulAlert')).not.toBeTruthy();
-        expect(element.querySelector('#imageUploadErrorAlert')).not.toBeTruthy();
+        expect(element.querySelector('#fileUploadSuccessfulAlert')).not.toBeTruthy();
+        expect(element.querySelector('#fileUploadErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupListErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupLoadErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupLoadSuccessfulAlert')).not.toBeTruthy();
@@ -160,8 +160,8 @@ describe('WriteupsComponent', () => {
         expect(component.notifications.writeup_submit_successful).toBe(false);
         expect(component.notifications.writeup_submit_error).toBe(false);
         expect(component.notifications.form_invalid).toBe(false);
-        expect(component.notifications.image_upload_successful).toBe(false);
-        expect(component.notifications.image_upload_error).toBe(false);
+        expect(component.notifications.file_upload_successful).toBe(false);
+        expect(component.notifications.file_upload_error).toBe(false);
         expect(component.notifications.writeup_list_error).toBe(false);
         expect(component.notifications.writeup_load_error).toBe(false);
         expect(component.notifications.writeup_load_successful).toBe(true);
@@ -171,8 +171,8 @@ describe('WriteupsComponent', () => {
         expect(element.querySelector('#writeupSubmitSuccessfulAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupSubmitErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#formInvalidAlert')).not.toBeTruthy();
-        expect(element.querySelector('#imageUploadSuccessfulAlert')).not.toBeTruthy();
-        expect(element.querySelector('#imageUploadErrorAlert')).not.toBeTruthy();
+        expect(element.querySelector('#fileUploadSuccessfulAlert')).not.toBeTruthy();
+        expect(element.querySelector('#fileUploadErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupListErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupLoadErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupLoadSuccessfulAlert')).toBeTruthy();
@@ -182,21 +182,21 @@ describe('WriteupsComponent', () => {
     });
   });
 
-  describe('uploading image', () => {
-    it('should upload image', () => {
-      component.image = new File(['data'], 'image.jpg');
-      component.uploadImage();
+  describe('uploading file', () => {
+    it('should upload file', () => {
+      component.file = new File(['data'], 'file.jpg');
+      component.uploadFile();
 
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(element.querySelector('#imageBank').html()
-          .indexOf('writeups/images/image.jpg')).not.toBe(-1);
+        expect(element.querySelector('#fileBank').html()
+          .indexOf('writeups/files/file.jpg')).not.toBe(-1);
 
         expect(component.notifications.writeup_submit_successful).toBe(false);
         expect(component.notifications.writeup_submit_error).toBe(false);
         expect(component.notifications.form_invalid).toBe(false);
-        expect(component.notifications.image_upload_successful).toBe(true);
-        expect(component.notifications.image_upload_error).toBe(false);
+        expect(component.notifications.file_upload_successful).toBe(true);
+        expect(component.notifications.file_upload_error).toBe(false);
         expect(component.notifications.writeup_list_error).toBe(false);
         expect(component.notifications.writeup_load_error).toBe(false);
         expect(component.notifications.writeup_load_successful).toBe(false);
@@ -206,8 +206,8 @@ describe('WriteupsComponent', () => {
         expect(element.querySelector('#writeupSubmitSuccessfulAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupSubmitErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#formInvalidAlert')).not.toBeTruthy();
-        expect(element.querySelector('#imageUploadSuccessfulAlert')).toBeTruthy();
-        expect(element.querySelector('#imageUploadErrorAlert')).not.toBeTruthy();
+        expect(element.querySelector('#fileUploadSuccessfulAlert')).toBeTruthy();
+        expect(element.querySelector('#fileUploadErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupListErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupLoadErrorAlert')).not.toBeTruthy();
         expect(element.querySelector('#writeupLoadSuccessfulAlert')).not.toBeTruthy();
@@ -237,8 +237,8 @@ function testInvalidForm(component: WriteupsComponent,
     expect(component.notifications.writeup_submit_successful).toBe(false);
     expect(component.notifications.writeup_submit_error).toBe(false);
     expect(component.notifications.form_invalid).toBe(true);
-    expect(component.notifications.image_upload_successful).toBe(false);
-    expect(component.notifications.image_upload_error).toBe(false);
+    expect(component.notifications.file_upload_successful).toBe(false);
+    expect(component.notifications.file_upload_error).toBe(false);
     expect(component.notifications.writeup_list_error).toBe(false);
     expect(component.notifications.writeup_load_error).toBe(false);
     expect(component.notifications.writeup_load_successful).toBe(false);
@@ -248,8 +248,8 @@ function testInvalidForm(component: WriteupsComponent,
     expect(element.querySelector('#writeupSubmitSuccessfulAlert')).not.toBeTruthy();
     expect(element.querySelector('#writeupSubmitErrorAlert')).not.toBeTruthy();
     expect(element.querySelector('#formInvalidAlert')).toBeTruthy();
-    expect(element.querySelector('#imageUploadSuccessfulAlert')).not.toBeTruthy();
-    expect(element.querySelector('#imageUploadErrorAlert')).not.toBeTruthy();
+    expect(element.querySelector('#fileUploadSuccessfulAlert')).not.toBeTruthy();
+    expect(element.querySelector('#fileUploadErrorAlert')).not.toBeTruthy();
     expect(element.querySelector('#writeupListErrorAlert')).not.toBeTruthy();
     expect(element.querySelector('#writeupLoadErrorAlert')).not.toBeTruthy();
     expect(element.querySelector('#writeupLoadSuccessfulAlert')).not.toBeTruthy();

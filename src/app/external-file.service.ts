@@ -9,9 +9,9 @@ export class ExternalFileService {
               private sessionService: SessionService) {
   }
 
-  // gets a signed url to upload an image
-  public signImage(fileName: string, fileType: string) {
-    return this.restService.signImage(fileName, fileType);
+  // gets a signed url to upload an file
+  public signFile(fileName: string, fileType: string) {
+    return this.restService.signFile(fileName, fileType);
   }
 
   // uploads a writeup
@@ -24,9 +24,9 @@ export class ExternalFileService {
     return this.restService.getWriteup(ctfName, challengeName, fileName);
   }
 
-  // uploads an image
-  public uploadImage(image: File, url: string) {
-    return this.restService.uploadImage(image, url);
+  // uploads an file
+  public uploadFile(file: File, url: string) {
+    return this.restService.uploadFile(file, url);
   }
 
 }

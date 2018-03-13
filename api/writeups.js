@@ -4,7 +4,7 @@ const routes = require('express').Router(); // eslint-disable-line new-cap
 const db_mgmt = require('./db/db_mgmt.js');
 const fs = require('fs');						// For filesystem I/O
 const aws = require('aws-sdk');
-const AWS_CREDENTIALS = process.env.aws || 'aws.json';
+const AWS_CREDENTIALS = process.env.AWS || 'aws.json';
 const aws_credentials = JSON.parse(fs.readFileSync(AWS_CREDENTIALS, 'utf8'));
 
 // returns a list of writeups the user has submitted
@@ -45,8 +45,14 @@ routes.get('/writeups/get/:ctfName/:challengeName/:fileName', async (req, res) =
   });
 });
 
-// returns a writeup image
-routes.get('/writeups/images/:fileName', async (req, res) => {
+// returns a list of files the user has submitted
+routes.get('/writeups/files/uploaded', async (req, res) => {
+  const list = await db_mgmt.get_file_uploads(req.session.account_id);
+  res.status(200).send(list);
+});
+
+// returns a writeup file
+routes.get('/writeups/files/:fileName', async (req, res) => {
   // configure s3
   const s3 = new aws.S3({
     region: aws_credentials.region,
@@ -58,10 +64,10 @@ routes.get('/writeups/images/:fileName', async (req, res) => {
   // configure the parameters
   const params = {
     Bucket: aws_credentials.s3Bucket,
-    Key: 'writeups/images/' + req.params.fileName,
+    Key: 'writeups/files/' + req.params.fileName,
   };
 
-  // pipe the image back
+  // pipe the file back
   s3.getObject(params).createReadStream().pipe(res);
 });
 

@@ -135,4 +135,9 @@ export class RestService {
         });
     }
 
+  // api call to get a list of submitted writeups
+  public getUploadedFiles() {
+    return this.get('/writeups/files/uploaded');
+  }
+
 }
