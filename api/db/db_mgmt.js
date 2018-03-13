@@ -259,6 +259,12 @@ let db_mgmt_module = function () {
     }
 
     /* Get a list of the user's writeup submissions */
+    async function get_writeup_submissions(account_id) {
+        return await queryAsync('SELECT `key` FROM `writeup_submissions` WHERE `account_id` = ?',
+            account_id);
+    }
+
+    /* Get a list of the user's writeup submissions */
     async function get_file_uploads(account_id) {
         return await queryAsync('SELECT `key` FROM `file_uploads` WHERE `account_id` = ?',
             account_id);
@@ -294,13 +300,14 @@ let db_mgmt_module = function () {
         sign_in: sign_in,
         get_sign_ins: get_sign_ins,
         list_users: list_users,
+        get_writeup_submissions: get_writeup_submissions,
+        record_writeup_submission: record_writeup_submission,
+        record_file_upload: record_file_upload,
+        get_file_uploads: get_file_uploads,
         add_tile: add_tile,
         delete_tile: delete_tile,
         custom_tiles: custom_tiles,
-        tile_click: tile_click,
-        get_file_uploads: get_file_uploads,
-        record_writeup_submission: record_writeup_submission,
-        record_file_upload: record_file_upload,
+        tile_click: tile_click
     });
 };
 
