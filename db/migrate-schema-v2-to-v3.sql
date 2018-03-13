@@ -13,15 +13,6 @@ CREATE TABLE `tiles` (
 	`name` varchar(127) NOT NULL,
 	`description` varchar(255) NOT NULL,
 	`link` varchar(255) NOT NULL,
-	`deleted` BOOLEAN NOT NULL DEFAULT '0',
-	PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `tiles` (
-	`id` INT NOT NULL AUTO_INCREMENT,
-	`name` varchar(127) NOT NULL,
-	`description` varchar(255) NOT NULL,
-	`link` varchar(255) NOT NULL,
 	`deleted` BOOLEAN NOT NULL DEFAULT FALSE,
 	PRIMARY KEY (`id`)
 );
