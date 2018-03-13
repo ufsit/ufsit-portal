@@ -54,7 +54,22 @@ export class RestService {
         return this.get('/app/custom_tiles');
     }
 
-    // api call to register a user, given his or her name , email, password,
+    // analytics track user clicks
+    public customTileClick(id) {
+        this.post('/app/tile_click', { id }, { responseType: 'text' }).subscribe();
+    }
+
+    // admin can add new custom tiles
+    public addTile(item) {
+        this.post('/admin/add_tile', item, { responseType: 'text' }).subscribe();
+    }
+
+    // admin can remove previously added custom tiles
+    public deleteTile(id) {
+        this.post('/admin/delete_tile', { id }, { responseType: 'text' }).subscribe();
+    }
+
+    // api call to register a user, given his or her name, email, password,
     // graduation year, and subscribe preferences
     public register(formData: {}) {
         return this.post('/user/register', formData, { responseType: 'text' });

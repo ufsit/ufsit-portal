@@ -57,6 +57,11 @@ export class HomeComponent implements OnInit {
         window.open(path, '_blank');
     }
 
+    public customTileClick(id, link) {
+        this.requests.customTileClick(id);
+        this.redirect(link);
+    }
+
     public routeTo(path: string) {
         this.router.navigate([path]);
     }

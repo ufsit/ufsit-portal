@@ -54,12 +54,12 @@
                         </div>
                     </div>
                 </div>
-                <div class=col-md-4 *ngFor="let at of this.getCustomTiles()">
-                    <div class="card tile" (click)="redirect(at.link)">
+                <div class=col-md-4 *ngFor="let ct of this.getCustomTiles()">
+                    <div class="card tile" (click)="customTileClick(ct.id, ct.link)">
                         <img class="card-image" src="assets/star.svg">
                         <div class="card-body">
-                            <h3 class="card-title">{{at.title}}</h3>
-                            <p class="card-text">{{at.description}}</p>
+                            <h3 class="card-title">{{ct.name}}</h3>
+                            <p class="card-text">{{ct.description}}</p>
                         </div>
                     </div>
                 </div>

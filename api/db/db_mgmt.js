@@ -139,18 +139,33 @@ let db_mgmt_module = function () {
             throw new createError.BadRequest('Cannot update profile with zero fields');
         }
 
-        // console.log("Updating account", account_id, "with", account_data);
-
         return await sql_pool.query('UPDATE `account` SET ? WHERE id = ?', [account_data, account_id]);
     }
 
     async function custom_tiles() {
-        return await queryAsync('SELECT * FROM `tiles`');
+        return await queryAsync('SELECT * FROM `tiles` WHERE `deleted`= FALSE');
+    }
+
+    async function tile_click(user_id, tile_id) {
+        const results = await queryAsync('SELECT * FROM `tile_clicks` WHERE `user_id` = ? AND `tile_id` = ?', [user_id, tile_id]);
+        if (results.length <= 0) {
+            const values = { user_id, tile_id };
+            return await queryAsync('INSERT INTO `tile_clicks` SET ?', values);
+        }
     }
 
     async function list_users() {
         return await queryAsync('SELECT ?? FROM `account`',
             [['id', 'email', 'full_name', 'mass_mail_optin', 'grad_date', 'registration_date']]);
+    }
+
+    async function add_tile(name, description, link) {
+        const values = { name: name, description: description, link: link };
+        return await queryAsync('INSERT INTO `tiles` SET ?', values);
+    }
+
+    async function delete_tile(id) {
+        return await queryAsync('UPDATE `tiles` SET `deleted` = TRUE WHERE `id` = ?', id);
     }
 
     /* Retrieve an account with the given email address */
@@ -160,8 +175,8 @@ let db_mgmt_module = function () {
         const results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
             [['id', 'password', 'full_name'], email_addr]);
 
-		/* If the results array has any elements in it, call back with the 0th element
-		(entries are unique) */
+        /* If the results array has any elements in it, call back with the 0th element
+        (entries are unique) */
         if (results.length <= 0) {
             throw new createError.NotFound('No account with email address ' + email_addr);
         }
@@ -209,8 +224,8 @@ let db_mgmt_module = function () {
         return await queryAsync('INSERT INTO `session` SET ?', values);
     }
 
-	/* Confirms whether the token corresponds to an active session. If it does, calls back
-		with the email associated with it.*/
+    /* Confirms whether the token corresponds to an active session. If it does, calls back
+        with the email associated with it.*/
     async function get_session(session_token) {
         const results = await queryAsync('SELECT * FROM `session` WHERE ?', { id: session_token });
 
@@ -279,7 +294,10 @@ let db_mgmt_module = function () {
         sign_in: sign_in,
         get_sign_ins: get_sign_ins,
         list_users: list_users,
+        add_tile: add_tile,
+        delete_tile: delete_tile,
         custom_tiles: custom_tiles,
+        tile_click: tile_click,
         get_writeup_submissions: get_writeup_submissions,
         record_writeup_submission: record_writeup_submission,
         record_image_upload: record_image_upload,
