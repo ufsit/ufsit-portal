@@ -28,6 +28,7 @@ export class AdminComponent implements OnInit {
         this.users = res;
       },
       error => {    // This portion of code is run when there was an error retrieving the user list
+        //console.log("I love pi");
         console.log(error);
       });
   }
