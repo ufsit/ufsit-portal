@@ -102,13 +102,9 @@
   <div class="row">
     <form class="fullWidth" (ngSubmit)="submitWriteup()" [formGroup]="formData">
       <div class="row">
-        <div class="form-group col-md-6">
-          <label class="input-label">Challenge Name</label>
-          <input type="name" class="form-control" placeholder="Challenge Name" formControlName="challengeName">
-        </div>
-        <div class="form-group col-md-6">
-          <label class="input-label">CTF Name</label>
-          <input type="email" class="form-control" placeholder="CTF Name" formControlName="ctfName">
+        <div class="form-group col-md-12">
+          <label class="input-label">Writeup Name</label>
+          <input type="name" class="form-control" placeholder="Name" formControlName="writeupName">
         </div>
       </div>
 
@@ -157,17 +153,15 @@
           <table *ngIf="this.submittedWriteups.length !== 0" id="account-list" class="table table-striped fullWidth">
             <thead class="fullWidth">
              <tr>
-              <td>CTF Name</td>
-              <td>Challenge Name</td>
+              <td>Writeup Name</td>
               <td></td>
              </tr>
             </thead>
             <tbody class="fullWidth">
              <tr *ngFor="let entry of this.submittedWriteups">
-              <td>{{entry.ctfName}}</td>
-              <td>{{entry.challengeName}}</td>
+              <td>{{entry.writeupName}}</td>
               <td><button type="button" class="btn btn-outline-primary" 
-                (click)="load(entry.ctfName, entry.challengeName, entry.fileName)">Load</button></td>
+                (click)="load(entry.key)">Load</button></td>
              </tr>
             </tbody>
           </table>

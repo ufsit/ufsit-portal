@@ -15,13 +15,13 @@ export class ExternalFileService {
   }
 
   // uploads a writeup
-  public uploadWriteup(data: string, ctfName: string, challengeName: string) {
-    return this.restService.uploadWriteup(data, ctfName, challengeName);
+  public uploadWriteup(data: string, writeupName: string) {
+    return this.restService.uploadWriteup(data, writeupName);
   }
 
   // gets a writeup
-  public getWriteup(ctfName: string, challengeName: string, fileName: string) {
-    return this.restService.getWriteup(ctfName, challengeName, fileName);
+  public getWriteup(key: string) {
+    return this.restService.getWriteup(key);
   }
 
   // uploads an file

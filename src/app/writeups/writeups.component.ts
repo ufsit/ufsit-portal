@@ -69,10 +69,7 @@ export class WriteupsComponent implements OnInit {
     // add the form requirements
     const fb: FormBuilder = new FormBuilder();
     this.formData = fb.group({
-      challengeName: ['', [
-        Validators.required
-      ]],
-      ctfName: ['', [
+      writeupName: ['', [
         Validators.required
       ]],
       markdownInput: ['', [
@@ -127,15 +124,14 @@ export class WriteupsComponent implements OnInit {
       return;
     }
     this.externalFileService.uploadWriteup(this.formData.value.markdownInput,
-                                          this.formData.value.ctfName,
-                                          this.formData.value.challengeName)
+                                          this.formData.value.writeupName)
       .subscribe(
         res => {
           this.notifications.writeup_submit_successful = true;
         },
         err => {
           this.notifications.writeup_submit_error = true;
-          console.log(err);
+          // console.log(err);
         }
       );
 
@@ -149,12 +145,14 @@ export class WriteupsComponent implements OnInit {
         this.submittedWriteups = [];
         // iterate over each writeup entry
         for (const entry of res) {
-          let pieces = entry.key.split('/');
+          // let pieces = entry.key.split('/');
           // add the information from each entry to the list
           this.submittedWriteups.push({
-            ctfName: pieces[1],
-            challengeName: pieces[2],
-            fileName: pieces[3]
+            // ctfName: pieces[1],
+            // challengeName: pieces[2],
+            // fileName: pieces[3]
+            writeupName: entry.name,
+            key: entry.key
           });
         }
       },
@@ -166,14 +164,13 @@ export class WriteupsComponent implements OnInit {
   }
 
   // loads a previously submitted writeup
-  public load(ctfName: string, challengeName: string, fileName: string) {
+  public load(key: string) {
     // get the writeup
-    this.externalFileService.getWriteup(ctfName, challengeName, fileName).subscribe(
+    this.externalFileService.getWriteup(key).subscribe(
       res => {
         // update the form with the writeup information
         this.formData.patchValue({
-          ctfName: res.ctfName,
-          challengeName: res.challengeName,
+          writeupName: res.name,
           markdownInput: res.text
         });
         this.setMarkdownInput = res.text;
@@ -200,7 +197,6 @@ export class WriteupsComponent implements OnInit {
         this.externalFileService.uploadFile(this.file, res.url).subscribe(
           uploadRes => {
             // add the file to the list of uploaded files
-            console.log(res);
             this.files.push(window.location.origin + '/api/' + res.key);
             this.notifications.file_upload_successful = true;
           },

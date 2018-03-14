@@ -260,8 +260,14 @@ let db_mgmt_module = function () {
 
     /* Get a list of the user's writeup submissions */
     async function get_writeup_submissions(account_id) {
-        return await queryAsync('SELECT `key` FROM `writeup_submissions` WHERE `account_id` = ?',
+        return await queryAsync('SELECT `key`,`name` FROM `writeup_submissions` WHERE `account_id` = ?',
             account_id);
+    }
+
+    /* Get a specific writeup, given its key */
+    async function get_writeup(key) {
+        return await queryAsync('SELECT `name` FROM `writeup_submissions` WHERE `key` = ?',
+            key);
     }
 
     /* Get a list of the user's writeup submissions */
@@ -271,10 +277,11 @@ let db_mgmt_module = function () {
     }
 
     /* Records a writeup submission */
-    async function record_writeup_submission(account_id, key) {
+    async function record_writeup_submission(account_id, key, name) {
         const values = {
             account_id: account_id,
             key: key,
+            name: name,
         };
         return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
     }
@@ -301,13 +308,14 @@ let db_mgmt_module = function () {
         get_sign_ins: get_sign_ins,
         list_users: list_users,
         get_writeup_submissions: get_writeup_submissions,
+        get_writeup: get_writeup,
         record_writeup_submission: record_writeup_submission,
         record_file_upload: record_file_upload,
         get_file_uploads: get_file_uploads,
         add_tile: add_tile,
         delete_tile: delete_tile,
         custom_tiles: custom_tiles,
-        tile_click: tile_click
+        tile_click: tile_click,
     });
 };
 

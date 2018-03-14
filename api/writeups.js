@@ -14,7 +14,7 @@ routes.get('/writeups/submitted', async (req, res) => {
 });
 
 // returns a writeup
-routes.get('/writeups/get/:ctfName/:challengeName/:fileName', async (req, res) => {
+routes.get('/writeups/get/:key', async (req, res) => {
   // configure s3
   const s3 = new aws.S3({
     region: aws_credentials.region,
@@ -26,20 +26,19 @@ routes.get('/writeups/get/:ctfName/:challengeName/:fileName', async (req, res) =
   // configure the parameters
   const params = {
     Bucket: aws_credentials.s3Bucket,
-    Key: 'writeups/' + req.params.ctfName + '/' + req.params.challengeName
-          + '/' + req.params.fileName,
+    Key: decodeURIComponent(req.params.key),
   };
 
   // get the writeup
-  s3.getObject(params, (err, data) => {
+  s3.getObject(params, async (err, data) => {
     // if the writeup doesn't exist, send an error
     if (err) {
       res.status(500).send(err);
     // otherwise, return the writeup
     } else {
+      const dbEntry = await db_mgmt.get_writeup(req.params.key);
       res.status(200).json({
-        ctfName: req.params.ctfName,
-        challengeName: req.params.challengeName,
+        name: dbEntry[0].name,
         text: data.Body.toString()});
     }
   });

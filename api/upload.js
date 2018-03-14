@@ -18,12 +18,11 @@ routes.post('/upload/writeup', async (req, res) => {
     Bucket: aws_credentials.s3Bucket,
   });
 
+  const fileName = util.md5(req.body.writeupName) + '_' + req.session.account_id;
   // configure the parameters
   const params = {
     Bucket: aws_credentials.s3Bucket,
-    Key: 'writeups/' + req.body.ctfName + '/'
-          + req.body.challengeName + '/'
-          + req.session.account_id + '.md',
+    Key: 'writeups/' + fileName + '.md',
   };
 
   // check if the user is updating an old submission
@@ -34,13 +33,13 @@ routes.post('/upload/writeup', async (req, res) => {
       // and record the new submission in the database
       console.log(err);
       if (err.code === 'NoSuchKey') {
-        await db_mgmt.record_writeup_submission(req.session.account_id, params.Key);
+        await db_mgmt.record_writeup_submission(req.session.account_id, params.Key, req.body.writeupName);
         // TODO: award the user points
       } else {
         res.status(err.statusCode).send(err);
       }
     }
-    
+
     // add the file data to the params
     params.Body = req.body.data;
 

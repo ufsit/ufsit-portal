@@ -102,12 +102,11 @@ export class RestService {
     }
 
     // api call to upload a writeup
-    public uploadWriteup(data: string, ctfName: string, challengeName: string) {
+    public uploadWriteup(data: string, writeupName: string) {
         return this.post('/upload/writeup',
             {
                 data: data,
-                ctfName: ctfName,
-                challengeName: challengeName
+                writeupName: writeupName
             }
         );
     }
@@ -118,9 +117,8 @@ export class RestService {
     }
 
     // api call to get a writeup
-    public getWriteup(ctfName: string, challengeName: string, fileName: string) {
-        return this.get('/writeups/get/' + ctfName + '/' + challengeName + '/'
-            + fileName);
+    public getWriteup(key: string) {
+        return this.get('/writeups/get/' + encodeURIComponent(key));
     }
 
     // api call to upload a file directly
