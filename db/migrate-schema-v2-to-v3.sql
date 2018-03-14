@@ -1,6 +1,7 @@
 CREATE TABLE `writeup_submissions` (
 	`account_id` INT NOT NULL,
-	`key` varchar(255) NOT NULL
+	`key` varchar(255) NOT NULL,
+	`name` varchar(255) NOT NULL
 );
 
 CREATE TABLE `file_uploads` (
