@@ -12,8 +12,8 @@ import { RestService } from '../rest.service';
 
 export class HomeComponent implements OnInit {
 
-    private lecturePath;
-    private resumePath;
+    public lecturePath;
+    public resumePath;
     private customTiles;
 
     // import the ActivatedRoute so we can get the result of what was resolved

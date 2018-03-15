@@ -1,12 +1,11 @@
 'use strict';
 
 const routes = require('express').Router(); // eslint-disable-line new-cap
-const fs = require('fs');						// For filesystem I/O
+const util = require.main.require('./util');
 const aws = require('aws-sdk');
-const AWS_CREDENTIALS = process.env.AWS || 'aws.json';
-const aws_credentials = JSON.parse(fs.readFileSync(AWS_CREDENTIALS, 'utf8'));
+const aws_credentials = util.load_aws();
+
 const db_mgmt = require('./db/db_mgmt.js');
-const util = require('../util/index.js');
 
 // upload a writeup
 routes.post('/upload/writeup', async (req, res) => {

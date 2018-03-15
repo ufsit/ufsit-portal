@@ -2,10 +2,9 @@
 
 const routes = require('express').Router(); // eslint-disable-line new-cap
 const db_mgmt = require('./db/db_mgmt.js');
-const fs = require('fs');						// For filesystem I/O
+const util = require.main.require('./util');
 const aws = require('aws-sdk');
-const AWS_CREDENTIALS = process.env.AWS || 'aws.json';
-const aws_credentials = JSON.parse(fs.readFileSync(AWS_CREDENTIALS, 'utf8'));
+const aws_credentials = util.load_aws();
 
 // returns a list of writeups the user has submitted
 routes.get('/writeups/submitted', async (req, res) => {

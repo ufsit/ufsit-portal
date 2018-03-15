@@ -15,7 +15,7 @@ import { ProfileResolverService } from '../profile-resolver.service';
 export class EditProfileComponent implements OnInit {
     // profile holds the profile data we are currently viewing
     private profile;
-    private title = '';
+    public title = '';
 
     formData: FormGroup;
     private success_text: String;

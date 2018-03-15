@@ -11,12 +11,14 @@
     "mon": "type -P \"nodemon\" && nodemon app.js || echo \"Nodemon not installed.\"",
     "test": "ng test",
     "lint": "eslint",
-    "build": "ng build --prod"
+    "build": "ng build --aot --prod",
+    "postinstall": "npm run build"
   },
   "author": "Elan Rasabi",
   "license": "ISC",
   "dependencies": {
     "@angular/animations": "^5.2.0",
+    "@angular/cli": "1.6.5",
     "@angular/common": "^5.2.0",
     "@angular/compiler": "^5.2.0",
     "@angular/core": "^5.2.0",
@@ -52,7 +54,6 @@
     "node": ">= 7.6.0"
   },
   "devDependencies": {
-    "@angular/cli": "1.6.5",
     "@angular/compiler-cli": "^5.2.0",
     "@angular/language-service": "^5.2.0",
     "@types/jasmine": "~2.8.3",
