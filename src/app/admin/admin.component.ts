@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestService } from '../rest.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { NgForm, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { SessionService } from '../session.service';
 
 @Component({
   selector: 'app-admin',
@@ -13,12 +14,13 @@ import { NgForm, FormBuilder, FormGroup, Validators, FormArray, FormControl } fr
 export class AdminComponent implements OnInit {
   private users;
   public orderForm: FormGroup;
+  private cands = ['President', 'VP', 'Secretary', 'Treasurer'];
 
   notifications = {
     emptyField: false
   }
 
-  constructor(private requests: RestService, private modalService: NgbModal,
+  constructor(private sessionService: SessionService, private requests: RestService, private modalService: NgbModal,
               private formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -40,9 +42,6 @@ export class AdminComponent implements OnInit {
       });
     
       this.orderForm = this.formBuilder.group({
-        position: ['', [
-          Validators.required
-        ]],
         candidates: this.formBuilder.array([ this.createQuestion()])
       });
   }
@@ -57,34 +56,61 @@ export class AdminComponent implements OnInit {
     this.modalService.open(content);
   }
 
+  //Creates FormGroups that get added to the formArray
   createQuestion(): FormGroup {
     return this.formBuilder.group({
       candidate: ['', [
+        Validators.required
+      ]],
+      position: ['', [
         Validators.required
       ]]
     });
   }
 
+  //Adds formgroups to the formArray
   public addItem(): void {
     const control = <FormArray>this.orderForm.controls['candidates'];
     control.push(this.createQuestion());
   }
 
-  emptyForm(form: any) {
-    if (form.position === '') {
-      return true;
-    }
+  //Checks to make sure that there are no empty fields in the form
+  private emptyForm(form: any) {
     for (let x of form.candidates) {
       if (x.candidate === '') {
+        return true;
+      }
+      if (x.position.length === 0) {
         return true;
       }
     }
     return false;
   }
 
+  //Deals with FormGroup after submission
   public onSubmit(formValue: any) {
     if (this.emptyForm(formValue.value)) {
       this.notifications.emptyField = true;
+      return;
     }
+    this.sessionService.createPoll(this.orderForm).subscribe(
+      res => {
+
+      },
+      err => {
+
+      }
+    );
+  }
+
+  //Deletes elments from form after clicking "x" button
+  public deleteField(i) {
+    const control = <FormArray>this.orderForm.controls['candidates'];
+    control.removeAt(i);
+  }
+
+  //Encapsulation yo
+  public getCandidates() {
+    return this.cands;
   }
 }

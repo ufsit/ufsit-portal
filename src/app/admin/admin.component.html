@@ -1,24 +1,62 @@
-<div *ngIf="notifications.emptyField" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
-	<button type="button" class="close" (click)="notifications.emptyField = false">
-	<span aria-hidden="true">&times;</span></button>
-  <span class="notification_panel"><strong>Error</strong> Cannot have empty field</span>
+<div class="table-responsive full-height">
+  <table id="account-list" class="table table-striped">
+    <thead>
+      <tr>
+        <td>Full Name</td>
+        <td>Email</td>
+        <td>Graduation Year</td>
+        <td>Mailing List?</td>
+        <td>Registration Date</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of this.getUsers()">
+        <td><a routerLink="/profile/{{u.id}}">{{u.full_name}}</a></td>
+        <td>{{u.email}}</td>
+        <td>{{u.grad_date}}</td>
+        <td>{{u.mass_mail_optin}}</td>
+        <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Create new poll</button>
 </div>
 
-<div class="full-height">
-  <form [formGroup]="orderForm" (ngSubmit)="onSubmit(orderForm)">
-    <h3>Position</h3>
-    <input type="text" formControlName="position" placeholder="Position"/>
-    
-    <br><br>
 
-    <div formArrayName="candidates" *ngFor="let cand of orderForm.controls.candidates.controls; let i = index;">
-      <div [formGroupName]="i">
-        <h6>Candidate</h6>
-        <input type="textarea" formControlName="candidate" placeholder="To Be Voted on....."/>
+
+
+<!-- Modal Popup -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <!--Empty Field Notification -->
+  <div *ngIf="notifications.emptyField" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+    <button type="button" class="close" (click)="notifications.emptyField = false">
+    <span aria-hidden="true">&times;</span></button>
+    <span class="notification_panel"><strong>Error</strong> Cannot have empty field</span>
+  </div>
+  <!-- Header for modal -->
+  <div class="modal-header">
+    <h3 class="modal-title">Create Poll</h3>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit(orderForm)">
+      <div formArrayName="candidates" *ngFor="let cand of orderForm.controls.candidates.controls; let i = index;">
+        <div [formGroupName]="i">
+          <h6 class="modal-title">Candidate</h6>
+          <input type="textarea" formControlName="candidate" placeholder="Person"/>
+          <select multiple formControlName="position">
+            <option *ngFor="let cand of getCandidates()" [value]="cand">{{cand}}</option>
+          </select>
+          <button (click)="deleteField(i)">x</button>
+          <br><br>
+        </div>
       </div>
-    </div>
 
-    <button type="submit">Save</button>
-    <button type="button" (click)="addItem()">Add More</button>
-  </form>
-</div>
+      <button type="submit">Save</button>
+      <button type="button" (click)="addItem()">Add More</button>
+    </form>
+  </div>
+</ng-template>
