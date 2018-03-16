@@ -30,6 +30,7 @@ import { TimeAgoPipe } from './time-ago.pipe';
 import { EditProfileComponent } from './edit_profile/edit_profile.component';
 import { WriteupsComponent } from './writeups/writeups.component';
 import { ExternalFileService } from './external-file.service';
+import { CtfBoardComponent } from './ctf-board/ctf-board.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { ExternalFileService } from './external-file.service';
     FooterComponent,
     TimeAgoPipe,
     EditProfileComponent,
-    WriteupsComponent
+    WriteupsComponent,
+    CtfBoardComponent
   ],
   imports: [
     BrowserModule,
