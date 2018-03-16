@@ -16,19 +16,48 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let ct of this.getCustomTiles()">
+                    <tr *ngFor="let ct of this.getCustomTiles(); let i = index">
                         <td>{{ct.name}}</td>
                         <td>{{ct.description}}</td>
                         <td>{{ct.link}}</td>
-                        <button class="btn btn-danger" (click)="deleteTile(ct.id)">Delete</button>
+                        <button class="btn btn-danger" (click)="deleteTile(ct.id, i)">Delete</button>
                     </tr>
                 </tbody>
             </table>
+
+            <br/>
+
+            <div class="col m-0 p-0">
+                <h3>Users</h3>
+                <table id="account-list" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>Full Name</td>
+                            <td>Email</td>
+                            <td>Graduation Year</td>
+                            <td>Mailing List?</td>
+                            <td>Registration Date</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let u of this.getUsers()">
+                            <td>
+                                <a routerLink="/profile/{{u.id}}">{{u.full_name}}</a>
+                            </td>
+                            <td>{{u.email}}</td>
+                            <td>{{u.grad_date}}</td>
+                            <td>{{u.mass_mail_optin}}</td>
+                            <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
 
         <div class="col-md-4 m-0 p-0">
             <form (ngSubmit)="addTile(formData)" [formGroup]="formData">
-                <h5>New Tile</h5>
+                <h5>Create New Tile</h5>
                 <div class="form-group">
                     <input class="form-control" placeholder="Name" formControlName="name">
                 </div>
@@ -40,43 +69,21 @@
                 </div>
                 <div class="row m-0 p-0">
                     <div class="col m-0 p-0">
-                        <button class="btn btn-success">Add</button>
+                        <button class="btn btn-success">Add Tile</button>
                     </div>
                     <div class="col m-0 p-0">
-                        <p class="text-left font-italic"> - opens link preview </p>
+                        <p class="text-right font-italic"> - opens link preview </p>
                     </div>
                 </div>
             </form>
+
+            <br/>
+
+            <h5 class="mb-3">Create New Poll</h5>
+            <button class="btn btn-md btn-success" (click)="open(content)">Add Poll</button>
+
         </div>
 
-    </div>
-
-    <br/>
-
-    <div class="row m-1 center">
-        <h3>Users</h3>
-        <table id="account-list" class="table table-striped">
-            <thead>
-                <tr>
-                    <td>Full Name</td>
-                    <td>Email</td>
-                    <td>Graduation Year</td>
-                    <td>Mailing List?</td>
-                    <td>Registration Date</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let u of this.getUsers()">
-                    <td>
-                        <a routerLink="/profile/{{u.id}}">{{u.full_name}}</a>
-                    </td>
-                    <td>{{u.email}}</td>
-                    <td>{{u.grad_date}}</td>
-                    <td>{{u.mass_mail_optin}}</td>
-                    <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 
 </div>
