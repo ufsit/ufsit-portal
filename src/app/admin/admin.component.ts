@@ -23,6 +23,7 @@ export class AdminComponent implements OnInit {
         const fb: FormBuilder = new FormBuilder();
         this.formData = fb.group({ name: [], description: [], link: [] });
 
+        // get current home tiles from backend
         this.requests.customTiles().subscribe(
             success => { this.customTiles = success; },
             failure => { console.log(failure); }
@@ -43,10 +44,11 @@ export class AdminComponent implements OnInit {
 
     private isNotDuplicate(item) {
         let val = true;
+        // for every existing custom home tile
         this.customTiles.forEach(function (ct) {
-            if (ct.name === item.name
-                && ct.description === item.description
-                && ct.link === item.link) {
+            // check each field
+            if (ct.name === item.name && ct.link === item.link
+                && ct.description === item.description) {
                 val = false;
             }
         });
@@ -61,29 +63,25 @@ export class AdminComponent implements OnInit {
         return this.customTiles;
     }
 
+    // adds a new cutom tile to general home page
     public addTile(formData: FormGroup) {
         const item = formData.value;
+        // check if all fields are filled
         if (item.name !== null && item.description !== null && item.link !== null) {
+            // check item is already not an existing home tile
             if (this.isNotDuplicate(item)) {
-                this.requests.addTile(item);
+                this.requests.addTile(item); // backend add tile
                 window.open(item.link, '_blank');
-                this.formData.reset();
-                this.requests.customTiles().subscribe(
-                    success => { this.customTiles = success; },
-                    failure => { console.log(failure); }
-                );
-            } else {
-                // duplicate to current tile
+                this.formData.reset(); // reset entry fields
+                this.customTiles.push(item); // update custom tiles list
             }
         }
     }
 
-    public deleteTile(id) {
-        this.requests.deleteTile(id);
-        this.requests.customTiles().subscribe(
-            success => { this.customTiles = success; },
-            failure => { console.log(failure); }
-        );
+    // deletes a curent home tile
+    public deleteTile(id, index) {
+        this.requests.deleteTile(id); // backend delete (uniquely identified by id)
+        this.customTiles.splice(index, 1); // delete frontend element
     }
 
 }
