@@ -17,7 +17,8 @@ export class AdminComponent implements OnInit {
   private cands = ['President', 'VP', 'Secretary', 'Treasurer'];
 
   notifications = {
-    emptyField: false
+    emptyField: false,
+    existingPoll: false
   }
 
   constructor(private sessionService: SessionService, private requests: RestService, private modalService: NgbModal,
@@ -87,7 +88,7 @@ export class AdminComponent implements OnInit {
     return false;
   }
 
-  //Deals with FormGroup after submission
+  //Sends the formgroup to be turned into a post request
   public onSubmit(formValue: any) {
     if (this.emptyForm(formValue.value)) {
       this.notifications.emptyField = true;
@@ -95,10 +96,15 @@ export class AdminComponent implements OnInit {
     }
     this.sessionService.createPoll(this.orderForm).subscribe(
       res => {
-
+        if (res === 'Success') {
+          alert('Success!  The election has been created.  Navigate to the home page to vote!');
+        }
+        else {
+          this.notifications.existingPoll = true;
+        }
       },
       err => {
-
+        alert('Something went wrong.  Please contact the developers');
       }
     );
   }

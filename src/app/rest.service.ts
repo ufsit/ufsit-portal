@@ -65,8 +65,14 @@ export class RestService {
     return this.post('/user/register', formData, {responseType: 'text'});
   }
 
+  // api call to update a user's profile information
   public update(formData: FormGroup, url: string) {
     return this.post('/user/profile' + url, formData.value, {responseType: 'text'});
+  }
+
+  // api call by admin only to create a poll
+  public createPoll(formData: FormGroup) {
+    return this.post('/admin/poll', formData.value, {responseType: 'text'});
   }
 
   // api call to sign a user into an event

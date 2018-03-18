@@ -33,6 +33,13 @@
     <span aria-hidden="true">&times;</span></button>
     <span class="notification_panel"><strong>Error</strong> Cannot have empty field</span>
   </div>
+  <!--Existing Poll Notification -->
+  <div *ngIf="notifications.existingPoll" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+    <button type="button" class="close" (click)="notifications.existingPoll = false">
+    <span aria-hidden="true">&times;</span></button>
+    <span class="notification_panel"><strong>Error</strong> There appears to already be an existing election</span>
+  </div>
+
   <!-- Header for modal -->
   <div class="modal-header">
     <h3 class="modal-title">Create Poll</h3>

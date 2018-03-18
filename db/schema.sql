@@ -78,6 +78,50 @@ CREATE TABLE `image_uploads` (
 	`key` varchar(255) NOT NULL
 );
 
+CREATE TABLE `candidates` (
+	`person` varchar(255) NOT NULL,
+	`pres` bit NOT NULL,
+	`vp` bit NOT NULL,
+	`treas` bit NOT NULL,
+	`secr` bit NOT NULL
+);
+
+CREATE TABLE `pres` (
+	`first` varchar(255) NOT NULL,
+	`second` varchar(255) NOT NULL,
+	`third` varchar(255) NOT NULL,
+	`fourth` varchar(255) NOT NULL,
+	`fifth` varchar(255) NOT NULL
+);
+
+CREATE TABLE `vp` (
+	`first` varchar(255) NOT NULL,
+	`second` varchar(255) NOT NULL,
+	`third` varchar(255) NOT NULL,
+	`fourth` varchar(255) NOT NULL,
+	`fifth` varchar(255) NOT NULL
+);
+
+CREATE TABLE `treas` (
+	`first` varchar(255),
+	`second` varchar(255) NOT NULL,
+	`third` varchar(255) NOT NULL,
+	`fourth` varchar(255) NOT NULL,
+	`fifth` varchar(255) NOT NULL
+);
+
+CREATE TABLE `secr` (
+	`first` varchar(255) NOT NULL,
+	`second` varchar(255) NOT NULL,
+	`third` varchar(255) NOT NULL,
+	`fourth` varchar(255) NOT NULL,
+	`fifth` varchar(255) NOT NULL
+);
+
+CREATE TABLE `voters` (
+	`pers` varchar(255) NOT NULL
+);
+
 ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`rank`) REFERENCES `account_rank`(`id`);
 
 ALTER TABLE `event_signin` ADD CONSTRAINT `event_signin_fk0` FOREIGN KEY (`event_id`) REFERENCES `event`(`id`);

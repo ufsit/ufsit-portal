@@ -117,4 +117,16 @@ export class SessionService {
     return this.restService.update(formData, url);
   }
 
+  //Allows admins to make make polls for elections
+  public createPoll(formData: FormGroup): Observable<any> {
+    return this.restService.createPoll(formData).pipe(
+      map(res => {
+        return res;
+      }),
+      catchError(err => {
+        return of(err);
+      })
+    );
+  }
+
 }

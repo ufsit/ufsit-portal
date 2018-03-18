@@ -79,7 +79,7 @@ let db_mgmt_module = function() {
 
 	/* Create a new account */
 	async function create_account(new_record) {
-		/* Use the check_account_conflict function to check if an account with that
+		/* Use the account_exists function to check if an account with that
 		email address already exists. In the function, we either throw an
 		error if there was a conflict, or proceed creating
 		the account */
@@ -263,6 +263,40 @@ let db_mgmt_module = function() {
 		return await queryAsync('INSERT INTO `image_uploads` SET ?', values);
 	}
 
+	// Function to store election within the database
+	async function create_poll(election) {
+		if (await poll_exists()) {
+			throw new createError.Conflict('Cannot make a new poll when there is already one in process!');
+		}
+		else {
+			await add_candidates(election);
+		}
+
+		// Helper function that checks if there is currently an election running
+		async function poll_exists() {
+			let results = await queryAsync('SELECT * FROM `candidates`');
+			return results.length > 0;
+		}
+
+		// Helper function that stores candidates and their desired positions
+		async function add_candidates(election) {
+			election.forEach(function(element) {
+				let values = {
+					person: element.candidate,
+					pres: 0,
+					vp: 0,
+					treas: 0,
+					secr: 0
+				}
+				if (element.position.includes('President')) { values.pres = 1; }
+				if (element.position.includes('VP')) { values.vp = 1; }
+				if (element.position.includes('Treasurer')) { values.treas = 1; }
+				if (element.position.includes('Secretary')) { values.secr = 1; }
+				queryAsync('INSERT INTO `candidates` SET ?', values);
+			});
+		}
+	}
+
 	// Revealing module
 	return ({
 		create_account: create_account,
@@ -278,6 +312,7 @@ let db_mgmt_module = function() {
 		get_writeup_submissions: get_writeup_submissions,
 		record_writeup_submission: record_writeup_submission,
 		record_image_upload: record_image_upload,
+		create_poll: create_poll
 	});
 };
 
