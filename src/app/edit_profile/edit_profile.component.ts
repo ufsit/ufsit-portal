@@ -16,14 +16,14 @@ import { ProfileResolverService } from '../profile-resolver.service';
 export class EditProfileComponent implements OnInit {
   // profile holds the profile data we are currently viewing
   private profile;
-  private title = '';
+  public title = '';
 
   formData: FormGroup;
   private success_text: String;
   private error_text: String;
   private success_items: {};
 
-  // A notification is displayed when it's falue is switched to true
+  // A notification is displayed when it's value is switched to true
   notifications = {
     invalid_credentials: false,
     generic_error: false,
