@@ -266,7 +266,7 @@ let db_mgmt_module = function () {
 
     /* Get a specific writeup, given its key */
     async function get_writeup(key) {
-        return await queryAsync('SELECT `name` FROM `writeup_submissions` WHERE `key` = ?',
+        return await queryAsync('SELECT `name`,`full_name` FROM `writeup_submissions`,`account` WHERE account.id = writeup_submissions.account_id AND `key` = ?',
             key);
     }
 
