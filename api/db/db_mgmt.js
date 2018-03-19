@@ -273,7 +273,6 @@ let db_mgmt_module = function () {
     async function get_writeup(id) {
         return await queryAsync('SELECT `name` FROM `writeup_submissions` WHERE `id` = ?',
             id);
-    }
 
     /* Get a list of the user's writeup submissions */
     async function get_file_uploads(account_id) {
