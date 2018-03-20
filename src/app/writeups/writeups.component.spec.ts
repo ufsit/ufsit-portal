@@ -19,8 +19,7 @@ class MockExternalFileService {
 
   public getWriteup(ctfName: string, challengeName: string, fileName: string) {
     return of({
-      ctfName: 'CTF 1',
-      challengeName: 'Challenge A',
+      writeupName: 'writeup name',
       markdownInput: 'test'
     });
   }
@@ -40,8 +39,8 @@ class MockExternalFileService {
 class MockRestService {
   public getSubmittedWriteups() {
     return of([
-      {key: 'writeups/CTF 1/Challenge A/1.md'},
-      {key: 'writeups/CTF 1/Challenge B/3.md'}
+      {key: 'writeups/MD5Hash_1.md'},
+      {key: 'writeups/MD5Hash_3.md'}
     ]);
   }
 }
@@ -80,21 +79,16 @@ describe('WriteupsComponent', () => {
 
   describe('test form', () => {
     it('should fail when one or more fields are empty', () => {
-      testInvalidForm(component, fixture, element, '', '', '');
-      testInvalidForm(component, fixture, element, '', '', 'test');
-      testInvalidForm(component, fixture, element, '', 'CTF1', '');
-      testInvalidForm(component, fixture, element, '', 'CTF1', 'test');
-      testInvalidForm(component, fixture, element, 'ChallengeA', '', '');
-      testInvalidForm(component, fixture, element, 'ChallengeA', '', 'test');
-      testInvalidForm(component, fixture, element, 'ChallengeA', 'CTF1', '');
+      testInvalidForm(component, fixture, element, '', '');
+      testInvalidForm(component, fixture, element, '', 'test');
+      testInvalidForm(component, fixture, element, 'writeup name', '');
     });
   });
 
   describe('submitting a writeup', () => {
     it('should notify the user on success', () => {
       component.formData.setValue({
-        challengeName: 'Challenge A',
-        ctfName: 'CTF 1',
+        writeupName: 'name',
         markdownInput: 'success'
       });
       component.submitWriteup();
@@ -151,7 +145,7 @@ describe('WriteupsComponent', () => {
 
   describe('loading writeup', () => {
     it('should load submitted writeups', () => {
-      component.load('CTF 1', 'Challenge A', '3.md');
+      component.load('MD5Hash_3.md');
 
       fixture.detectChanges();
       fixture.whenStable().then(() => {
@@ -221,13 +215,11 @@ describe('WriteupsComponent', () => {
 function testInvalidForm(component: WriteupsComponent,
                         fixture: ComponentFixture<WriteupsComponent>,
                         element,
-                        challengeName: string,
-                        ctfName: string,
+                        writeupName: string,
                         markdownInput: string) {
   component.notifications.form_invalid = false;
   component.formData.setValue({
-    challengeName: challengeName,
-    ctfName: ctfName,
+    writeupName: writeupName,
     markdownInput: markdownInput
   });
   component.submitWriteup();
