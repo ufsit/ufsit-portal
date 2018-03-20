@@ -54,7 +54,7 @@
 					</div>
 				</div>
 				<!-- Voting Box -->
-				<div class="col-sm-4">
+				<div *ngIf="this.getSession().getElection()" class="col-sm-4">
 					<div class="card tile">
 						<img src="assets/voting.svg">
 						<div class="card-body">

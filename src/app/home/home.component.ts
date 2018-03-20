@@ -44,4 +44,9 @@ export class HomeComponent implements OnInit {
     this.router.navigate([path]);
   }
 
+    // public accessor for session
+  public getSession() {
+    return this.sessionService;
+  }
+
 }

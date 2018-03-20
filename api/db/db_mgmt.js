@@ -297,6 +297,12 @@ let db_mgmt_module = function() {
 		}
 	}
 
+	// Returns true if there is currently an election; otherwise it returns false
+	async function current_election() {
+		let results = await queryAsync('SELECT * FROM `candidates`');
+		return results.length > 0;
+	}
+
 	// Revealing module
 	return ({
 		create_account: create_account,
@@ -312,7 +318,8 @@ let db_mgmt_module = function() {
 		get_writeup_submissions: get_writeup_submissions,
 		record_writeup_submission: record_writeup_submission,
 		record_image_upload: record_image_upload,
-		create_poll: create_poll
+		create_poll: create_poll,
+		current_election: current_election
 	});
 };
 
