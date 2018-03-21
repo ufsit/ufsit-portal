@@ -54,7 +54,7 @@
         <div [formGroupName]="i">
           <h6 class="modal-title">Candidate</h6>
           <input type="textarea" formControlName="candidate" placeholder="Person"/>
-          <select formControlName="position">
+          <select multiple formControlName="position">
             <option *ngFor="let cand of getCandidates()" [value]="cand">{{cand}}</option>
           </select>
           <button class="btn btn-danger badge" (click)="deleteField(i)">x</button>
