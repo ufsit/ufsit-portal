@@ -126,17 +126,20 @@
       </div>
       
       <div class="row">
+        <span *ngIf="!hidden.write && this.formData.value.writeupId != 0">You are editing a previously uploaded writeup.</span>
+        <button *ngIf="!hidden.write && this.formData.value.writeupId != 0" class="btn btn-default btn-sm" (click)="this.formData.patchValue({writeupId: 0});">Clear</button>
         <textarea [hidden]="hidden.write" class="markdownInput fullWidth form-control" formControlName="markdownInput">
         </textarea>
         
         <showdown [hidden]="hidden.preview" class="minHeight markdown-body card fullWidth" [value]="setMarkdownInput" [options]="options"></showdown>    
         
         <div [hidden]="hidden.files" class="minHeight card fullWidth">
-          <div class="row">
-            <form (ngSubmit)="uploadFile()">
+          <div class=" in-card row">
+            <form class="col col-md-5" (ngSubmit)="uploadFile()">
                 <span class="btn btn-default btn-file">
                   <input type="file" (change)="handleFileChange($event.target.files)">
                 </span>
+                <!--<input id="file-upload-name" type="name" [value]="uploadedFileName" class="form-control" placeholder="File name (optional)">-->
               <button class="btn btn-success">Submit</button>
             </form>
           </div>
@@ -161,7 +164,7 @@
              <tr *ngFor="let entry of this.submittedWriteups">
               <td>{{entry.writeupName}}</td>
               <td><button type="button" class="btn btn-outline-primary" 
-                (click)="load(entry.key)">Load</button></td>
+                (click)="load(entry.id)">Load</button></td>
              </tr>
             </tbody>
           </table>

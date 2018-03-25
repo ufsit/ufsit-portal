@@ -13,7 +13,7 @@ routes.get('/writeups/submitted', async (req, res) => {
 });
 
 // returns a writeup
-routes.get('/writeups/get/:key', async (req, res) => {
+routes.get('/writeups/get/:id', async (req, res) => {
   // configure s3
   const s3 = new aws.S3({
     region: aws_credentials.region,
@@ -25,7 +25,7 @@ routes.get('/writeups/get/:key', async (req, res) => {
   // configure the parameters
   const params = {
     Bucket: aws_credentials.s3Bucket,
-    Key: decodeURIComponent(req.params.key),
+    Key: 'writeups/' + req.params.id + '.md',
   };
 
   // get the writeup
@@ -35,7 +35,7 @@ routes.get('/writeups/get/:key', async (req, res) => {
       res.status(500).send(err);
     // otherwise, return the writeup
     } else {
-      const dbEntry = await db_mgmt.get_writeup(req.params.key);
+      const dbEntry = await db_mgmt.get_writeup(req.params.id);
       res.status(200).json({
         name: dbEntry[0].name,
         text: data.Body.toString()});
@@ -45,7 +45,12 @@ routes.get('/writeups/get/:key', async (req, res) => {
 
 // returns a list of files the user has submitted
 routes.get('/writeups/files/uploaded', async (req, res) => {
+  let prefix = '/writeups/files/';
   const list = await db_mgmt.get_file_uploads(req.session.account_id);
+  list.map( (value, index) => {
+    let suffix = '.' + value.name.slice((value.name.lastIndexOf('.') - 1 >>> 0) + 2);
+    list[index] = {key: prefix + value.id + suffix};
+  });
   res.status(200).send(list);
 });
 
