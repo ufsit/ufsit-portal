@@ -84,18 +84,27 @@ routes.get('/upload/file', async (req, res) => {
   let result = await db_mgmt.record_file_upload(req.session.account_id, fileName);
   let id = result.insertId;
 
-  // configure s3
-  const s3 = new aws.S3({
-    region: aws_credentials.region,
-    accessKeyId: aws_credentials.accessKeyId,
-    secretAccessKey: aws_credentials.secretAccessKey,
-    Bucket: aws_credentials.s3Bucket,
-  });
-
   let url = getSignedUrl(prefix + id + fileExt, fileType);
   res.status(200).json({url: url, key: prefix + id + fileExt});
   // wait until we find an unused file name
   // await getUnusedName(req, res, s3, prefix, name, fileType, fileExt);
+});
+
+// upload a file
+routes.get('/upload/resume', async (req, res) => {
+  // get the file name, type, and extension
+  const fileName = req.query['file-name'];
+  const fileType = req.query['file-type'];
+  const fileExt = '.' + fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
+
+  let prefix = 'resumes/';
+  // hash the name
+  // let name = util.md5(fileName);
+  let key = prefix + req.session.account_id + fileExt;
+  await db_mgmt.record_resume_upload(req.session.account_id, key);
+
+  let url = getSignedUrl(key, fileType);
+  res.status(200).json({url: url, key: key});
 });
 
 // finds an unused file name and returns a signed url to upload to a file

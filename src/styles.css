@@ -12,6 +12,16 @@ body {
     min-height: 100%;
 }
 
+object {
+	height: 100vh;
+}
+
+iframe {
+	height: 100vh;
+  padding: 0;
+  border: 0;
+}
+
 .main_header {
     font-size: 32px;
     font-family: 'Share Tech Mono', monospace;
