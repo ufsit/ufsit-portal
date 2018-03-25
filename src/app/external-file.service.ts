@@ -29,4 +29,13 @@ export class ExternalFileService {
     return this.restService.uploadFile(file, url);
   }
 
+  public getResumeLink() {
+    return this.restService.getResumeLink();
+  }
+
+  // uploads a resume
+  public signResume(fileName: string, fileType: string) {
+    return this.restService.signResume(fileName, fileType);
+  }
+
 }

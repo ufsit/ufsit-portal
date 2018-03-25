@@ -14,6 +14,7 @@ import { ProfileResolverService } from './profile-resolver.service';
 import { HomeResolverService } from './home-resolver.service';
 import { AdminComponent } from './admin/admin.component';
 import { WriteupsComponent } from './writeups/writeups.component';
+import { ResumeComponent } from './resume/resume.component';
 
 const routes: Routes = [
   {
@@ -92,6 +93,11 @@ const routes: Routes = [
     path: 'writeups',
     canActivate: [AuthGuardService],
     component: WriteupsComponent
+  },
+  {
+    path: 'resume',
+    canActivate: [AuthGuardService],
+    component: ResumeComponent
   }
 ];
 

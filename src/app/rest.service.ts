@@ -134,9 +134,21 @@ export class RestService {
         });
     }
 
-  // api call to get a list of submitted writeups
-  public getUploadedFiles() {
-    return this.get('/writeups/files/uploaded');
-  }
+    // api call to get a list of submitted writeups
+    public getUploadedFiles() {
+        return this.get('/writeups/files/uploaded');
+    }
+
+    // api call to get the user's resume link
+    public getResumeLink() {
+        return this.get('/resume/link');
+    }
+
+    // api call to get a signed url for a file
+    public signResume(fileName: string, fileType: string) {
+        return this.get('/upload/resume', new HttpParams()
+            .set('file-name', fileName)
+            .set('file-type', fileType));
+    }
 
 }
