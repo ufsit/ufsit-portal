@@ -11,13 +11,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 class MockExternalFileService {
-  public uploadWriteup(data: string, ctfName: string, challengeName: string) {
+  public uploadWriteup(data: string, writeupName: string, writeupId: number) {
     if (data === 'success') {
       return of(null);
     }
   }
 
-  public getWriteup(ctfName: string, challengeName: string, fileName: string) {
+  public getWriteup(id: number) {
     return of({
       writeupName: 'writeup name',
       markdownInput: 'test'
@@ -39,8 +39,8 @@ class MockExternalFileService {
 class MockRestService {
   public getSubmittedWriteups() {
     return of([
-      {key: 'writeups/MD5Hash_1.md'},
-      {key: 'writeups/MD5Hash_3.md'}
+      {key: 'writeups/1.md'},
+      {key: 'writeups/2.md'}
     ]);
   }
 }
@@ -126,7 +126,7 @@ describe('WriteupsComponent', () => {
 
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        let rows = fixture.nativeElement.querySelectorAll('tbody tr');
+        const rows = fixture.nativeElement.querySelectorAll('tbody tr');
         expect(rows.length).toBe(2);
         expect(rows[0].html().indexOf('CTF 1')).not.toBe(-1);
         expect(rows[0].html().indexOf('Challenge A')).not.toBe(-1);
@@ -145,7 +145,7 @@ describe('WriteupsComponent', () => {
 
   describe('loading writeup', () => {
     it('should load submitted writeups', () => {
-      component.load('MD5Hash_3.md');
+      component.load(3);
 
       fixture.detectChanges();
       fixture.whenStable().then(() => {
