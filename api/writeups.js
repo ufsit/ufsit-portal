@@ -8,7 +8,13 @@ const aws_credentials = util.load_aws();
 
 // returns a list of writeups the user has submitted
 routes.get('/writeups/submitted', async (req, res) => {
-  const list = await db_mgmt.get_writeup_submissions(req.session.account_id);
+  const list = await db_mgmt.get_user_writeup_submissions(req.session.account_id);
+  res.status(200).send(list);
+});
+
+// returns a list of all submitted writeups
+routes.get('/writeups/all', async (req, res) => {
+  const list = await db_mgmt.get_all_writeup_submissions();
   res.status(200).send(list);
 });
 

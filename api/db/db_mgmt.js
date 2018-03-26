@@ -259,9 +259,14 @@ let db_mgmt_module = function () {
     }
 
     /* Get a list of the user's writeup submissions */
-    async function get_writeup_submissions(account_id) {
+    async function get_user_writeup_submissions(account_id) {
         return await queryAsync('SELECT `id`,`name` FROM `writeup_submissions` WHERE `account_id` = ?',
             account_id);
+    }
+
+    /* Get a list of the user's writeup submissions */
+    async function get_all_writeup_submissions() {
+        return await queryAsync('SELECT `writeup_submissions`.id,`name`,`time_updated`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id');
     }
 
     /* Get a specific writeup, given its id */
@@ -324,7 +329,8 @@ let db_mgmt_module = function () {
         sign_in: sign_in,
         get_sign_ins: get_sign_ins,
         list_users: list_users,
-        get_writeup_submissions: get_writeup_submissions,
+        get_user_writeup_submissions: get_user_writeup_submissions,
+        get_all_writeup_submissions: get_all_writeup_submissions,
         get_writeup: get_writeup,
         record_writeup_submission: record_writeup_submission,
         update_writeup_submission: update_writeup_submission,

@@ -112,9 +112,14 @@ export class RestService {
         );
     }
 
-    // api call to get a list of submitted writeups
+    // api call to get a list of the user's submitted writeups
     public getSubmittedWriteups() {
         return this.get('/writeups/submitted');
+    }
+
+    // api call to get a list of all submitted writeups
+    public getAllWriteups() {
+        return this.get('/writeups/all');
     }
 
     // api call to get a writeup
