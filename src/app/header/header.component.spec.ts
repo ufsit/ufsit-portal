@@ -14,6 +14,9 @@ class MockSessionService {
   public setCachedLoggedIn(newValue) {
     this.cachedLoggedIn = newValue;
   }
+  public getAdmin() {
+    return false;
+  }
 }
 
 describe('HeaderComponent', () => {
@@ -46,12 +49,9 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('only \'about\' and \'sponsors\' should be shown when user is logged out', () => {
-    expect(element.querySelector('#homeLink')).not.toBeTruthy();
-    expect(element.querySelector('#aboutLink')).toBeTruthy();
-    expect(element.querySelector('#sponsorsLink')).toBeTruthy();
+  it('should hide \'profile\' and \'logout\' when user is logged out', () => {
     expect(element.querySelector('#profileLink')).not.toBeTruthy();
-    expect(element.querySelector('#logOutButton')).not.toBeTruthy();
+    expect(element.querySelector('#logoutButton')).not.toBeTruthy();
   });
 
   it('log out button should be shown when logged in', () => {
@@ -59,11 +59,8 @@ describe('HeaderComponent', () => {
     sessionService.setCachedLoggedIn(true);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(element.querySelector('#homeLink')).toBeTruthy();
-      expect(element.querySelector('#aboutLink')).toBeTruthy();
-      expect(element.querySelector('#sponsorsLink')).toBeTruthy();
       expect(element.querySelector('#profileLink')).toBeTruthy();
-      expect(element.querySelector('#logOutButton')).toBeTruthy();
+      expect(element.querySelector('#logoutButton')).toBeTruthy();
     });
   });
 });

@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/Observable';
 class MockExternalFileService {
   public uploadWriteup(data: string, writeupName: string, writeupId: number) {
     if (data === 'success') {
-      return of(null);
+      return of(new Response());
     }
   }
 
@@ -87,7 +87,7 @@ describe('WriteupsComponent', () => {
 
   describe('submitting a writeup', () => {
     it('should notify the user on success', () => {
-      component.formData.setValue({
+      component.formData.patchValue({
         writeupName: 'name',
         markdownInput: 'success'
       });
@@ -218,7 +218,7 @@ function testInvalidForm(component: WriteupsComponent,
                         writeupName: string,
                         markdownInput: string) {
   component.notifications.form_invalid = false;
-  component.formData.setValue({
+  component.formData.patchValue({
     writeupName: writeupName,
     markdownInput: markdownInput
   });

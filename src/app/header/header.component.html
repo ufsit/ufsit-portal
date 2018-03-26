@@ -23,11 +23,11 @@
       </li>
     </ul>
     <ul *ngIf="this.getSession().getCachedLoggedIn()" class="navbar-nav ml-auto">
-      <li class="nav-item pr-3" [routerLinkActive]="['active']">
+      <li class="nav-item pr-3" [routerLinkActive]="['active']" id="profileLink">
         <a class="nav-link" [routerLink]="['/profile']" (click)="setNavbarCollapsed(true)">Profile</a>
       </li>
       <li class="nav-item pt-1 pr-5 d-md-none" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['/admin']" (click)="logout()">Log Out</a>
+        <a class="nav-link" [routerLink]="['/admin']" (click)="logout()" id="logoutButton">Log Out</a>
       </li>
       <li class="nav-item pt-1 pr-5 d-none d-md-block" [routerLinkActive]="['active']">
         <button type="button" class="btn btn-danger navbar-btn" data-toggle="collapse" data-target=".navbar-collapse.in" (click)="logout()">Log Out</button>

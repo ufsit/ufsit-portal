@@ -106,7 +106,7 @@ export class EditProfileComponent implements OnInit {
             // called if the account was created successfully
             res => {
                 if (res.status === undefined) {
-                    window.location.reload();
+                    //window.location.reload();
                     alert('Success!  You have changed:\n ' + res);
                 } else if (res.status === 409) {
                     this.notifications.bad_request = true;

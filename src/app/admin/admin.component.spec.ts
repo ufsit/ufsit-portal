@@ -11,6 +11,13 @@ import {MockBackend, MockConnection} from '@angular/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
 class MockRestService {
+  public customTiles() {
+    return of(JSON.parse('[]'));
+  }
+
+  public userList(relativeUrl: string) {
+    return of(JSON.parse('[]'));
+  }
 }
 
 describe('AdminComponent', () => {

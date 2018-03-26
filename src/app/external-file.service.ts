@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import { SessionService } from './session.service';
 
 @Injectable()
 export class ExternalFileService {
 
-  constructor(private restService: RestService,
-              private sessionService: SessionService) {
+  constructor(private restService: RestService) {
   }
 
   // gets a signed url to upload an file

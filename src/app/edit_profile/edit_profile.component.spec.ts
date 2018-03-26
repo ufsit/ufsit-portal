@@ -11,7 +11,7 @@ import { RestService } from '../rest.service';
 import { ActivatedRoute } from '@angular/router';
 
 class MockSessionService {
-  public profile;
+  public profile = {};
   update_profile(formData) {
     console.log(formData.value.email);
     if (formData.value.email === 'badrequest@email.com') {
@@ -23,10 +23,10 @@ class MockSessionService {
     }
     return of('Success');
   }
-  setProfile(newProfile) {
+  public setProfile(newProfile) {
     this.profile = newProfile;
   }
-  getProfile() {
+  public getProfile() {
     return this.profile;
   }
 }
