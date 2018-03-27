@@ -241,7 +241,7 @@ export class WriteupsComponent implements OnInit {
   }
 
   public isImage(filename) {
-    let fileExt = filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
+    let fileExt = filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2); // tslint:disable-line
     fileExt = fileExt.toLowerCase();
     if (fileExt === 'jpg' || fileExt === 'jpeg' || fileExt === 'exif'
       || fileExt === 'tiff' || fileExt === 'gif' || fileExt === 'bmp'
