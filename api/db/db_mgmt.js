@@ -90,7 +90,7 @@ let db_mgmt_module = function () {
 			);
 		} 
 
-		else if (await ufl_account_exists(new_record.ufl_email)) { //check ufl_email
+		else if (await account_exists(new_record.ufl_email)) { //check ufl_email
 			throw new createError.Conflict('Attempted to create duplicate account: '
 				+ new_record.ufl_email
 			);
