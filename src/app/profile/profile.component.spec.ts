@@ -41,6 +41,7 @@ describe('ProfileComponent', () => {
               {profile: {
                 full_name: 'Mock User',
                 email: 'mockuser@email.com',
+                ufl_email: 'mockuser@ufl.edu',
                 grad_date: 'Spring 2018',
                 mass_mail_optin: '0',
                 registration_date: date
@@ -70,12 +71,14 @@ describe('ProfileComponent', () => {
       const profile = {
         full_name: 'Mock User',
         email: 'mockuser@email.com',
+        ufl_email: 'mockuser@ufl.edu',
         grad_date: 'Spring 2018',
         mass_mail_optin: '0',
         registration_date: date
       };
       expect(sessionService.getProfile().full_name).toEqual(profile.full_name);
       expect(sessionService.getProfile().email).toEqual(profile.email);
+      expect(sessionService.getProfile().ufl_email).toEqual(profile.ufl_email);
       expect(sessionService.getProfile().grad_date).toEqual(profile.grad_date);
       expect(sessionService.getProfile().mass_mail_optin).toEqual(profile.mass_mail_optin);
       expect(sessionService.getProfile().registration_date).toEqual(profile.registration_date);
@@ -114,6 +117,7 @@ describe('ProfileComponent', () => {
             {profile: {
               full_name: 'Other mock user',
               email: 'othermockuser@email.com',
+              ufl_email: 'othermockuser@ufl.edu',
               grad_date: 'Spring 2017',
               mass_mail_optin: '1',
               registration_date: new Date()
@@ -126,6 +130,7 @@ describe('ProfileComponent', () => {
       fixture.whenStable().then( () => {
         expect(sessionService.getProfile().full_name != activatedRoute.profile.full_name).toBe(true);
         expect(sessionService.getProfile().email != activatedRoute.profile.email).toBe(true);
+        expect(sessionService.getProfile().ufl_email != activatedRoute.profile.ufl_email).toBe(true);
         expect(sessionService.getProfile().grad_date != activatedRoute.profile.grad_date).toBe(true);
         expect(sessionService.getProfile().mass_mail_optin != activatedRoute.profile.mass_mail_optin).toBe(true);
         expect(sessionService.getProfile().registration_date != activatedRoute.profile.registration_date).toBe(true);

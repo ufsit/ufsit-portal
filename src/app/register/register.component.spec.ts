@@ -54,49 +54,99 @@ describe('RegisterComponent', () => {
   describe('test form validation', () => {
     it('test name field', () => {
       testBadRegistration(component, fixture, element,
-                          '', 'mockuser@email.com', 'password', 'password',
+                          '', 'mockuser@email.com', 'mockuser@ufl.edu', 'password', 'password',
                           'Spring 2018', 'true');
     });
 
     it('test email field', () => {
       testBadRegistration(component, fixture, element,
-                          'Mock User', '', 'password', 'password',
+                          'Mock User', '', '', 'password', 'password',
                           'Spring 2018', 'true');
       testBadRegistration(component, fixture, element,
-                          'Mock User', 'mockuser', 'password', 'password',
+                          'Mock User', 'mockuser', '', 'password', 'password',
                           'Spring 2018', 'true');
       testBadRegistration(component, fixture, element,
-                          'Mock User', 'mockuser@', 'password', 'password',
+                          'Mock User', 'mockuser@', '', 'password', 'password',
                           'Spring 2018', 'true');
       testBadRegistration(component, fixture, element,
-                          'Mock User', 'mockuser@email', 'password', 'password',
+                          'Mock User', 'mockuser@email', '', 'password', 'password',
                           'Spring 2018', 'true');
       testBadRegistration(component, fixture, element,
-                          'Mock User', '@', 'password', 'password',
+                          'Mock User', '@', '', 'password', 'password',
                           'Spring 2018', 'true');
       testBadRegistration(component, fixture, element,
-                          'Mock User', '@email', 'password', 'password',
+                          'Mock User', '@email', '', 'password', 'password',
                           'Spring 2018', 'true');
       testBadRegistration(component, fixture, element,
-                          'Mock User', '@email.com', 'password', 'password',
+                          'Mock User', '@email.com', '', 'password', 'password',
                           'Spring 2018', 'true');
+    });
+
+    it('test ufl email field', () => {
+      testBadRegistration(component, fixture, element,
+                          'Mock User', '', '', 'password', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', '', 'mockuser', 'password', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', '', 'mockuser@', 'password', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', '', 'mockuser@ufl', 'password', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', '', '@', 'password', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', '', '@ufl', 'password', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', '', '@ufl.com', 'password', 'password',
+                          'Spring 2018', 'true');
+
+                          testBadRegistration(component, fixture, element,
+                          'Mock User', '', 'mockuser@email.com', 'password', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', '', 'mockuser@ufl.com', 'password', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', 'mockuser@email.com', 'mockuser@ufl.com', 'password', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', 'left_blank@ufl.edu', 'mockuser@ufl.edu', 'password', 'password',
+                          'Spring 2018', 'true');                          
+      testBadRegistration(component, fixture, element,
+                          'Mock User', 'mockuser@email.com', 'left_blank@ufl.edu', 'password', 'password',
+                          'Spring 2018', 'true');
+                        
     });
 
     it('test password fields', () => {
       testBadRegistration(component, fixture, element,
-                          'Mock User', 'mockuser@email.com', '', '',
+                          'Mock User', 'mockuser@email.com', '', '', '',
                           'Spring 2018', 'true');
       testBadRegistration(component, fixture, element,
-                          'Mock User', 'mockuser@email.com', 'password', '',
+                          'Mock User', 'mockuser@email.com', '', 'password', '',
                           'Spring 2018', 'true');
       testBadRegistration(component, fixture, element,
-                          'Mock User', 'mockuser@email.com', '', 'password',
+                          'Mock User', 'mockuser@email.com', '', '', 'password',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', 'mockuser@email.com', '', 'asdf', 'asdf',
+                          'Spring 2018', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', 'mockuser@email.com', '', 'a', 'a',
                           'Spring 2018', 'true');
     });
 
     it('test graduation date field', () => {
       testBadRegistration(component, fixture, element,
-                          'Mock User', 'mockuser@email.com', 'password', 'password',
+                          'Mock User', 'mockuser@email.com', '', 'password', 'password',
+                          '', 'true');
+      testBadRegistration(component, fixture, element,
+                          'Mock User', '', 'mockuser@ufl.edu', 'password', 'password',
                           '', 'true');
     });
   });
@@ -105,6 +155,7 @@ describe('RegisterComponent', () => {
     component.formData.setValue({
       name: 'Mock User',
       email: 'repeatedemail@email.com',
+      ufl_email: '',
       password: 'password',
       confirm_password: 'password',
       grad_date: 'Spring 2018',
@@ -129,6 +180,7 @@ describe('RegisterComponent', () => {
     component.formData.setValue({
       name: 'Mock User',
       email: 'badrequest@email.com',
+      ufl_email: '',
       password: 'password',
       confirm_password: 'password',
       grad_date: 'Spring 2018',
@@ -153,6 +205,7 @@ describe('RegisterComponent', () => {
     component.formData.setValue({
       name: 'Mock User',
       email: 'genericerror@email.com',
+      ufl_email: '',
       password: 'password',
       confirm_password: 'password',
       grad_date: 'Spring 2018',
@@ -176,13 +229,14 @@ describe('RegisterComponent', () => {
 
 function testBadRegistration(component: RegisterComponent,
                             fixture: ComponentFixture<RegisterComponent>,
-                            element, name: string, email: string,
+                            element, name: string, email: string, ufl_email: string,
                             password: string, confirm_password: string,
                             grad_date: string, subscribe: string) {
   component.notifications.invalid_credentials = false;
   component.formData.setValue({
     name: name,
     email: email,
+    ufl_email: ufl_email,
     password: password,
     confirm_password: confirm_password,
     grad_date: grad_date,

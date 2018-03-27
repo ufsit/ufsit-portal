@@ -78,11 +78,20 @@ export class EditProfileComponent implements OnInit {
         Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
       ]],  
 
-      old_password: ['', []],
+      old_password: ['', [
+        Validators.required,
+        Validators.minLength(5)
+      ]],
       
-      new_password: ['', []],
+      new_password: ['', [
+        Validators.required,
+        Validators.minLength(5)
+      ]],
 
-      confirm_password: ['', []],
+      confirm_password: ['', [
+        Validators.required,
+        Validators.minLength(5)
+      ]],
 
       grad_year: [this.sessionService.getProfile().grad_date, [
         Validators.required

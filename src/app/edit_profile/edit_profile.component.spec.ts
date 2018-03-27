@@ -53,10 +53,11 @@ describe('EditProfileComponent', () => {
             data: {
               profile: {
                 full_name: 'Cheyenne Doe',
-                email: 'cd@ufl.edu',
+                email: 'cd@email.com',
+                ufl_email: 'xs@ufl.edu',
                 old_password: 'password',
-                new_password: 'new',
-                confirm_password: 'new',
+                new_password: 'newww',
+                confirm_password: 'newww',
                 mass_mail_optin: '0',
                 registration_date: date
               }
@@ -82,24 +83,26 @@ describe('EditProfileComponent', () => {
   describe('test form validation', () => {
 
     it('test name field', () => {
-      testBadUpdate(component, fixture, element, '', 'cd@ufl.edu',
+      testBadUpdate(component, fixture, element, '', 'cd@email.com', 'xs@ufl.edu',
                     'password', 'password1', 'password1', 'Spring 2018', 'true');
     });
 
     it('test password field', () => {
-      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 'cd@ufl.edu',
+      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 'cd@email.com', 'xs@ufl.edu',
                    '', 'password', 'password', 'Spring 2018', 'true');
-      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 'invalid@email.com',
-                   'abc', 'password', 'password', 'Spring 2018', 'true');
-      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 'cd@ufl.edu',
-                   'password', '', 'new', 'Spring 2018', 'true');
-      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 'cd@ufl.edu',
-                    'password', 'new', '', 'Spring 2018', 'true');
+      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 'invalid@email.com', 'invalid@ufl.edu',
+                   'abcde', 'password', 'password', 'Spring 2018', 'true');
+      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 'cd@email.com', 'xs@ufl.edu',
+                   'password', '', 'newww', 'Spring 2018', 'true');
+      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 'cd@email.com', 'xs@ufl.edu',
+                    'password', 'newww', '', 'Spring 2018', 'true');
+      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 'cd@email.com', 'xs@ufl.edu',
+                    'newww', 'neww', 'neww', 'Spring 2018', 'true');
     });
 
     it('test graduation date field', () => {
       testBadUpdate(component, fixture, element, 'Cheyenne Doe', 
-                     'mockuser@email.com', 'password', 'newpassword', 'newpassword',
+                     'mockuser@email.com',  'xs@ufl.edu', 'password', 'newpassword', 'newpassword',
                     '', 'true');
     });
   });
@@ -108,9 +111,10 @@ describe('EditProfileComponent', () => {
     component.formData.setValue({
       name: 'Mock User',
       email: 'badrequest@email.com',
+      ufl_email: 'badrequest@ufl.edu',
       old_password: 'password',
-      new_password: 'new',
-      confirm_password: 'new',
+      new_password: 'newww',
+      confirm_password: 'newww',
       grad_year: 'Spring 2018',
       subscribe: 'true'
     });
@@ -131,9 +135,10 @@ describe('EditProfileComponent', () => {
     component.formData.setValue({
       name: 'Mock User',
       email: 'genericerror@email.com',
+      ufl_email: 'genericerror@ufl.edu',
       old_password: 'password',
-      new_password: 'new',
-      confirm_password: 'new',
+      new_password: 'newww',
+      confirm_password: 'newww',
       grad_year: 'Spring 2018',
       subscribe: 'true'
     });
@@ -154,12 +159,13 @@ describe('EditProfileComponent', () => {
 
 
 function testBadUpdate(component: EditProfileComponent, 
-                      fixture: ComponentFixture<EditProfileComponent>, element, name: string, email: string, old_password: string,
+                      fixture: ComponentFixture<EditProfileComponent>, element, name: string, email: string, ufl_email: string, old_password: string,
                       new_password: string, confirm_password: string, grad_date: string, subscribe: string) {
   component.notifications.invalid_credentials = false;
   component.formData.setValue({
     name: name,
     email: email,
+    ufl_email: ufl_email,
     old_password: old_password,
     new_password: new_password,
     confirm_password: confirm_password,

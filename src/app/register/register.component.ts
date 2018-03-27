@@ -70,7 +70,8 @@ export class RegisterComponent implements OnInit {
         this.formData.value.password !== this.formData.value.confirm_password ||
         this.formData.value.grad_date === 'Select a semester' ||
         this.formData.value.email === this.formData.value.ufl_email ||
-        (this.formData.value.email === '' && this.formData.value.ufl_email === '')
+        (this.formData.value.email === '' && this.formData.value.ufl_email === '') ||
+        (this.formData.value.email === 'left_blank@ufl.edu' || this.formData.value.ufl_email === 'left_blank@ufl.edu') 
       ) {
       this.notifications.invalid_credentials = true;
       return;
