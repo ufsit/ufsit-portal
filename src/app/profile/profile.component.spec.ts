@@ -128,12 +128,12 @@ describe('ProfileComponent', () => {
 
       fixture.detectChanges();
       fixture.whenStable().then( () => {
-        expect(sessionService.getProfile().full_name != activatedRoute.profile.full_name).toBe(true);
-        expect(sessionService.getProfile().email != activatedRoute.profile.email).toBe(true);
-        expect(sessionService.getProfile().ufl_email != activatedRoute.profile.ufl_email).toBe(true);
-        expect(sessionService.getProfile().grad_date != activatedRoute.profile.grad_date).toBe(true);
-        expect(sessionService.getProfile().mass_mail_optin != activatedRoute.profile.mass_mail_optin).toBe(true);
-        expect(sessionService.getProfile().registration_date != activatedRoute.profile.registration_date).toBe(true);
+        expect(sessionService.getProfile().full_name !== activatedRoute.profile.full_name).toBe(true);
+        expect(sessionService.getProfile().email !== activatedRoute.profile.email).toBe(true);
+        expect(sessionService.getProfile().ufl_email !== activatedRoute.profile.ufl_email).toBe(true);
+        expect(sessionService.getProfile().grad_date !== activatedRoute.profile.grad_date).toBe(true);
+        expect(sessionService.getProfile().mass_mail_optin !== activatedRoute.profile.mass_mail_optin).toBe(true);
+        expect(sessionService.getProfile().registration_date !== activatedRoute.profile.registration_date).toBe(true);
         expect(component.getTitle() === activatedRoute.profile.full_name + '\'s Profile').toBe(true);
         expect(component.getEditLink() === '/profile/' + activatedRoute.params.id + '/edit').toBe(true);
       });
