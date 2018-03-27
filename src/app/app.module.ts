@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { ShowdownModule } from 'ngx-showdown';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -22,10 +23,13 @@ import { RestService } from './rest.service';
 import { ProfileResolverService } from './profile-resolver.service';
 import { AdminComponent } from './admin/admin.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
+import { EventsComponent } from './events/events.component';
 import { AboutComponent } from './about/about.component';
 import { HomeResolverService } from './home-resolver.service';
 import { TimeAgoPipe } from './time-ago.pipe';
 import { EditProfileComponent } from './edit_profile/edit_profile.component';
+import { WriteupsComponent } from './writeups/writeups.component';
+import { ExternalFileService } from './external-file.service';
 
 
 @NgModule({
@@ -38,10 +42,12 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
     ProfileComponent,
     AdminComponent,
     SponsorsComponent,
+    EventsComponent,
     AboutComponent,
     FooterComponent,
     TimeAgoPipe,
-    EditProfileComponent
+    EditProfileComponent,
+    WriteupsComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +55,8 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    ShowdownModule
   ],
   providers: [
     AuthGuardService,
@@ -57,7 +64,8 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
     RestService,
     HttpClientModule,
     ProfileResolverService,
-    HomeResolverService
+    HomeResolverService,
+    ExternalFileService
   ],
   bootstrap: [AppComponent]
 })

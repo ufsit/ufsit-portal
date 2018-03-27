@@ -1,20 +1,32 @@
-.jumbotron {
-    margin-bottom: 0px;
-    min-height: 300px;
-    background: blue;
-    background-image: url(../../assets/sponsors/gator2.jpg);
-    /*background-position: 50% 50%;*/
-    background-position: center;
-    background-size: 40%;
-    background-repeat: no-repeat;
-    color: black;
-    text-align: center;
-    text-shadow:orangered 0.3em 0.3em 0.3em;
-    font-size: 30px;
-    border: 5px solid;
+.container-fluid {
+  max-width: 90%;
 }
 
-.vertical-center {
-    display: flex;
-    align-items: center;
+.img-thumbnail {
+  border: 8px solid !important;
+  max-width: 200px;
+  max-height: 200px;
+  width: 200px;
+  height: 200px;
+}
+
+.img-wide {
+    width: 300px;
+    max-width: 300px;
+}
+
+.b-gold {
+  border-color: #D99910 !important;
+}
+
+.b-silver {
+  border-color: #A8A8A8 !important;
+}
+
+.b-bronze {
+  border-color: #965A38 !important;
+}
+
+.b-plat {
+  border-color: #CCC2C2 !important;
 }

@@ -4,6 +4,7 @@ import { HeaderComponent } from './header/header.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SessionService } from './session.service';
+import { FooterComponent } from './footer/footer.component';
 
 class MockSessionService {
 
@@ -14,7 +15,8 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         AppComponent,
-        HeaderComponent
+        HeaderComponent,
+        FooterComponent
       ],
       imports: [
         RouterTestingModule,

@@ -8,8 +8,16 @@ import { Observable } from 'rxjs/Observable';
 import { HttpResponse, HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import {MockBackend, MockConnection} from '@angular/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 class MockRestService {
+  public customTiles() {
+    return of(JSON.parse('[]'));
+  }
+
+  public userList(relativeUrl: string) {
+    return of(JSON.parse('[]'));
+  }
 }
 
 describe('AdminComponent', () => {
@@ -19,11 +27,12 @@ describe('AdminComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ 
+      declarations: [
         TimeAgoPipe,
         AdminComponent ],
       imports: [
         RouterTestingModule,
+        ReactiveFormsModule
       ],
       providers: [
         {provide: RestService, useClass: MockRestService}

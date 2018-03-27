@@ -1,22 +1,27 @@
 <footer class="bottom foot foot-default">
   <div class="container-fluid">
-    <div class="row foot-nav pt-1" style="margin-top:-5px !important">
-      <ul class="col center text-center foot-nav mb-0">
-        <li class="fa fa-github-square col-2" [routerLinkActive]="['active']">
-          <a class="foot-text" href="//github.com/ufsit"> Github</a>
-        </li>
-        <li class="fa fa-facebook-square col-2" [routerLinkActive]="['active']">
-          <a class="foot-text" href="//facebook.com/groups/ufsit"> Facebook</a>
-        </li>
-        <li class="fa fa-twitter-square col-2" [routerLinkActive]="['active']">
-          <a class="foot-text" href="//twitter.com/ufsit"> Twitter</a>
-        </li>
-        <li class="fa fa-youtube-square col-2" [routerLinkActive]="['active']">
-          <a class="foot-text" href="//youtube.com/user/ufsit"> YouTube</a>
-        </li>
+    <div class="row foot-nav pt-1">
+      <ul class="col center text-center foot-nav mt-2 mb-4 d-md-none"> <!-- Mobile -->
+        <a class="col-2 fa fa-facebook-square" href="//facebook.com/groups/ufsit"></a>
+        <a class="col-2 fa fa-slack" href="//ufcise.slack.com/messages/C09KW9MP1"></a>
+        <a class="col-2 fa fa-twitter-square" href="//twitter.com/ufsit"></a>
+        <a class="col-2 fa fa-github-square" href="//github.com/ufsit"></a>
+        <a class="col-2 fa fa-youtube-square" href="//youtube.com/user/ufsit"></a>
+      </ul>
+      <ul class="col center text-center foot-nav mb-0 d-none d-md-block"> <!-- Desktop -->
+        <li class="fa fa-facebook-square col-2">
+          <a class="foot-text" href="//facebook.com/groups/ufsit"> Facebook</a></li>
+        <li class="fa fa-slack col-2">
+          <a class="foot-text" href="//ufcise.slack.com/messages/C09KW9MP1"> Slack</a></li>
+        <li class="fa fa-twitter-square col-2">
+          <a class="foot-text" href="//twitter.com/ufsit"> Twitter</a></li>
+        <li class="fa fa-github-square col-2">
+            <a class="foot-text" href="//github.com/ufsit"> Github</a></li>
+        <li class="fa fa-youtube-square col-2">
+          <a class="foot-text" href="//youtube.com/user/ufsit"> YouTube</a></li>
       </ul>
     </div>
-    <p class="col center text-center foot-fineprint mb-0" style="margin-top:-20px">
+    <p class="col center text-center foot-fineprint mb-0 d-none d-sm-block">
       All content by UFSIT and licensed under
       <a class="foot-hypertext" href="http://creativecommons.org/licenses/by-nc-sa/3.0/ie/">Creative Commons</a>. Code under
       <a class="foot-hypertext" href="https://opensource.org/licenses/MIT">MIT License</a>.

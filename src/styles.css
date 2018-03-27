@@ -9,14 +9,20 @@ html {
     height: 100%;
 }
 body {
-  min-height: 100%;
+    min-height: 100%;
 }
 
 .main_header {
-  font-size: 32px;
-  font-family: 'Share Tech Mono', monospace;
-  /*text-shadow: h-shadow v-shadow blur-radius color|none|initial|inherit;*/
-  text-shadow: 1px 1px 1px #0CE88B;
+    font-size: 32px;
+    font-family: 'Share Tech Mono', monospace;
+    /*text-shadow: h-shadow v-shadow blur-radius color|none|initial|inherit;*/
+    text-shadow: 1px 1px 1px #0CE88B;
+}
+
+.green_header {
+    font-family: 'Share Tech Mono', monospace;
+    /*text-shadow: h-shadow v-shadow blur-radius color|none|initial|inherit;*/
+    text-shadow: 1px 1px 1px #0CE88B;
 }
 
 .input-label{
@@ -28,7 +34,7 @@ body {
 	padding-left: 10px;
 	line-height: 75px;
 	color: white;
-  background-color: #007cbf;
+    background-color: #007cbf;
 	font-family: 'VT323', monospace;
 	font-size: 50px;
 	position: relative;
@@ -73,16 +79,16 @@ body {
 	cursor: hand;
 }
 .img {
-	 width: 150px;
-	 height: 150px
+	width: 150px;
+	height: 150px
 }
 
 table {
 	display: Block;
 	background-color: white;
-	padding: 50px;
+	/*padding: 50px;
 	margin: 50px 50px 10px 10px;
-	border: black 1px solid;
+	border: black 1px solid;*/
 }
 
 th {
@@ -119,14 +125,10 @@ th {
  	cursor: crosshair;
 }
 
-
-
 .head div{
 	display:inline-block;
 	vertical-align: middle;
 }
-
-
 
 div.h2-1 {
 	margin-top: 50px;

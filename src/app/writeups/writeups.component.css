@@ -1,0 +1,43 @@
+.fullWidth {
+  width: 100%;
+}
+.markdownInput, .minHeight {
+  min-height: 80vh;
+}
+
+.in-card {
+  display: contents;
+}
+
+table {
+  display: table;
+}
+
+ngb-tabset{
+  width: 100%;
+}
+
+.markdown-body {
+  width: 100%;
+}
+
+.markdown-body > pre {
+  overflow: auto;
+}
+
+.markdown-body table {
+  border: none;
+  padding: 0px;
+} 
+
+.btn {
+  margin: 0px;
+}
+
+.thumbnail {
+  max-height: 20rem;
+}
+
+#fileBank {
+  display: contents;
+}

@@ -2,18 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../session.service';
 import { RestService } from '../rest.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NgForm, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NgForm, FormGroup, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ProfileResolverService } from '../profile-resolver.service';
 
 @Component({
-  selector: 'app-edit_profile',
-  templateUrl: './edit_profile.component.html',
-  styleUrls: ['../app.component.css']
+    selector: 'app-edit_profile',
+    templateUrl: './edit_profile.component.html',
+    styleUrls: ['../app.component.css']
 })
 
 export class EditProfileComponent implements OnInit {
+
+  // profile holds the profile data we are currently viewing
+  private profile;
+  public title = '';
+
   formData: FormGroup;
   private success_text: String;
   private error_text: String;
@@ -38,7 +42,24 @@ export class EditProfileComponent implements OnInit {
   constructor(private sessionService: SessionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.sessionService.setProfile(this.route.snapshot.data.profile);
+
+    // get the id of the user we are viewing
+    const id = this.route.snapshot.params.id;
+
+    // set the profile data based on what the resolver returned to us
+    this.profile = this.route.snapshot.data.profile;
+
+    // if there is no id (the user is looking at their own profile)
+    // set the title and editLink accordingly
+    if (id === undefined) {
+        this.title = 'Your Profile';
+        // otherwise, the user is an admin looking at another user's profile
+        // set the title and edit link accordingly
+    } else {
+        this.title = this.profile.full_name + '\'s Profile';
+    }
+
+    //this.sessionService.setProfile(this.route.snapshot.data.profile);
 
     const fb: FormBuilder = new FormBuilder();
     this.formData = fb.group({
@@ -71,6 +92,10 @@ export class EditProfileComponent implements OnInit {
   }
 
   public update_profile() {
+    this.notifications.invalid_credentials = false;
+    this.notifications.bad_request = false;
+    this.notifications.generic_error = false;
+
     // Scrolls the user to the top of the page
     window.scrollTo(0, 0);
 
@@ -86,30 +111,27 @@ export class EditProfileComponent implements OnInit {
     // on whether it is a user or an admin viewing the account
     let endpoint = '';
     if (this.sessionService.getProfile().user_id) {
-      endpoint = this.sessionService.getProfile().user_id;
+        endpoint = this.sessionService.getProfile().user_id;
     }
 
     this.sessionService.update_profile(this.formData, endpoint).subscribe(
-      // called if the account was created successfully
-      res => {
-        if (res.status === undefined) {
-          window.location.reload();
-          alert('Success!  You have changed:\n ' + res);
+        // called if the account was created successfully
+        res => {
+            if (res.status === undefined) {
+                //window.location.reload();
+                alert('Success!  You have changed:\n ' + res);
+            } else if (res.status === 409) {
+                this.notifications.bad_request = true;
+            } else if (res.status === 400) {
+                this.notifications.invalid_credentials = true;
+            } else {
+                this.notifications.generic_error = true;
+            }
+        },
+        err => {
+            this.notifications.invalid_credentials = true;
+            window.scrollTo(0, 0);
         }
-        else if (res.status === 409) {
-          this.notifications.bad_request = true;
-        }
-        else if (res.status === 400) {
-          this.notifications.invalid_credentials = true;
-        }
-        else {
-          this.notifications.generic_error = true;
-        }
-      },
-      err => {
-        this.notifications.invalid_credentials = true;
-        window.scrollTo(0, 0);
-      }
     );
   }
 }

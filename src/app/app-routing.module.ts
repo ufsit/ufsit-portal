@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
+import { EventsComponent } from './events/events.component';
 import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -12,6 +13,7 @@ import { AuthGuardService } from './auth-guard.service';
 import { ProfileResolverService } from './profile-resolver.service';
 import { HomeResolverService } from './home-resolver.service';
 import { AdminComponent } from './admin/admin.component';
+import { WriteupsComponent } from './writeups/writeups.component';
 
 const routes: Routes = [
   {
@@ -28,17 +30,9 @@ const routes: Routes = [
     }
   },
   {
-    path: "admin",
+    path: 'admin',
     component: AdminComponent,
     canActivate: [AuthGuardService]
-  },
-  {
-    path: "edit_profile",
-    component: EditProfileComponent,
-    canActivate: [AuthGuardService],
-    resolve: {
-      profile: ProfileResolverService
-    }
   },
   {
     path: 'sponsors',
@@ -59,9 +53,21 @@ const routes: Routes = [
     component: RegisterComponent
   },
   {
+    path: 'events',
+    component: EventsComponent
+  },
+  {
     path: 'profile',
     canActivate: [AuthGuardService],
     component: ProfileComponent,
+    resolve: {
+      profile: ProfileResolverService
+    }
+  },
+  {
+    path: 'profile/edit',
+    component: EditProfileComponent,
+    canActivate: [AuthGuardService],
     resolve: {
       profile: ProfileResolverService
     }
@@ -73,6 +79,19 @@ const routes: Routes = [
     resolve: {
       profile: ProfileResolverService
     }
+  },
+  {
+    path: 'profile/:id/edit',
+    component: EditProfileComponent,
+    canActivate: [AuthGuardService],
+    resolve: {
+      profile: ProfileResolverService
+    }
+  },
+  {
+    path: 'writeups',
+    canActivate: [AuthGuardService],
+    component: WriteupsComponent
   }
 ];
 
