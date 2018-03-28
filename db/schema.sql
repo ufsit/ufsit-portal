@@ -69,14 +69,18 @@ CREATE TABLE `site_log` (
 );
 
 CREATE TABLE `writeup_submissions` (
+	`id` INT NOT NULL AUTO_INCREMENT,
 	`account_id` INT NOT NULL,
-	`key` varchar(255) NOT NULL,
-	`name` varchar(255) NOT NULL
+	`name` varchar(255) NOT NULL,
+	`time_created` DATETIME NOT NULL,
+	`time_updated` DATETIME NOT NULL,
 );
 
 CREATE TABLE `file_uploads` (
+	`id` INT NOT NULL AUTO_INCREMENT,
 	`account_id` INT NOT NULL,
-	`key` varchar(255) NOT NULL
+	`time_created` DATETIME NOT NULL,
+	`name` varchat(255) NOT NULL DEFAULT ''
 );
 
 CREATE TABLE `tiles` (

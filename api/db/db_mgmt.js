@@ -259,38 +259,60 @@ let db_mgmt_module = function () {
     }
 
     /* Get a list of the user's writeup submissions */
-    async function get_writeup_submissions(account_id) {
-        return await queryAsync('SELECT `key`,`name` FROM `writeup_submissions` WHERE `account_id` = ?',
+    async function get_user_writeup_submissions(account_id) {
+        return await queryAsync('SELECT `id`,`name` FROM `writeup_submissions` WHERE `account_id` = ?',
             account_id);
     }
 
-    /* Get a specific writeup, given its key */
-    async function get_writeup(key) {
-        return await queryAsync('SELECT `name` FROM `writeup_submissions` WHERE `key` = ?',
-            key);
+    /* Get a list of the user's writeup submissions */
+    async function get_all_writeup_submissions() {
+        return await queryAsync('SELECT `writeup_submissions`.id,`name`,`time_updated`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id');
+    }
+
+    /* Get a specific writeup, given its id */
+    async function get_writeup(id) {
+        return await queryAsync('SELECT `name` FROM `writeup_submissions` WHERE `id` = ?',
+            id);
     }
 
     /* Get a list of the user's writeup submissions */
     async function get_file_uploads(account_id) {
-        return await queryAsync('SELECT `key` FROM `file_uploads` WHERE `account_id` = ?',
+        return await queryAsync('SELECT `id`,`name` FROM `file_uploads` WHERE `account_id` = ?',
             account_id);
     }
 
     /* Records a writeup submission */
-    async function record_writeup_submission(account_id, key, name) {
+    async function record_writeup_submission(account_id, name) {
         const values = {
             account_id: account_id,
-            key: key,
             name: name,
+            time_created: new Date(),
+            time_updated: new Date(),
         };
         return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
+
+        return await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `name` = ?',
+                                [account_id, name]);
+    }
+
+    /* Records a writeup submission */
+    async function update_writeup_submission(account_id, name, id) {
+        let results = await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `id` = ?',
+                        [account_id, id]);
+        if (results.length === 0) {
+            throw new createError.BadRequest('Cannot update a different user\'s writeup');
+        }
+
+        return await queryAsync('UPDATE `writeup_submissions` SET `name` = ?, `time_updated` = ? WHERE `account_id` = ? AND `id` = ?',
+                                [name, new Date(), account_id, id]);
     }
 
     /* Records a file upload */
-    async function record_file_upload(account_id, key) {
+    async function record_file_upload(account_id, name) {
         const values = {
             account_id: account_id,
-            key: key,
+            time_created: new Date(),
+            name: name,
         };
         return await queryAsync('INSERT INTO `file_uploads` SET ?', values);
     }
@@ -307,9 +329,11 @@ let db_mgmt_module = function () {
         sign_in: sign_in,
         get_sign_ins: get_sign_ins,
         list_users: list_users,
-        get_writeup_submissions: get_writeup_submissions,
+        get_user_writeup_submissions: get_user_writeup_submissions,
+        get_all_writeup_submissions: get_all_writeup_submissions,
         get_writeup: get_writeup,
         record_writeup_submission: record_writeup_submission,
+        update_writeup_submission: update_writeup_submission,
         record_file_upload: record_file_upload,
         get_file_uploads: get_file_uploads,
         add_tile: add_tile,

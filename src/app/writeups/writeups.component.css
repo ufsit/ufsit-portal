@@ -5,6 +5,10 @@
   min-height: 80vh;
 }
 
+.in-card {
+  display: contents;
+}
+
 table {
   display: table;
 }

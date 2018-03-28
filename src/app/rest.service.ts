@@ -102,23 +102,29 @@ export class RestService {
     }
 
     // api call to upload a writeup
-    public uploadWriteup(data: string, writeupName: string) {
+    public uploadWriteup(data: string, writeupName: string, writeupId: number) {
         return this.post('/upload/writeup',
             {
                 data: data,
-                writeupName: writeupName
+                writeupName: writeupName,
+                writeupId: writeupId
             }
         );
     }
 
-    // api call to get a list of submitted writeups
+    // api call to get a list of the user's submitted writeups
     public getSubmittedWriteups() {
         return this.get('/writeups/submitted');
     }
 
+    // api call to get a list of all submitted writeups
+    public getAllWriteups() {
+        return this.get('/writeups/all');
+    }
+
     // api call to get a writeup
-    public getWriteup(key: string) {
-        return this.get('/writeups/get/' + encodeURIComponent(key));
+    public getWriteup(id: number) {
+        return this.get('/writeups/get/' + id);
     }
 
     // api call to upload a file directly

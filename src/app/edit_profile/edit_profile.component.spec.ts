@@ -11,7 +11,7 @@ import { RestService } from '../rest.service';
 import { ActivatedRoute } from '@angular/router';
 
 class MockSessionService {
-  public profile;
+  public profile = {};
   update_profile(formData) {
     console.log(formData.value.email);
     if (formData.value.email === 'badrequest@email.com') {
@@ -23,10 +23,10 @@ class MockSessionService {
     }
     return of('Success');
   }
-  setProfile(newProfile) {
+  public setProfile(newProfile) {
     this.profile = newProfile;
   }
-  getProfile() {
+  public getProfile() {
     return this.profile;
   }
 }
@@ -37,7 +37,7 @@ describe('EditProfileComponent', () => {
   let element;
 
   beforeEach(async(() => {
-    let date = new Date();
+    const date = new Date();
     TestBed.configureTestingModule({
       declarations: [ EditProfileComponent ],
       imports: [
@@ -98,7 +98,7 @@ describe('EditProfileComponent', () => {
     });
 
     it('test graduation date field', () => {
-      testBadUpdate(component, fixture, element, 'Cheyenne Doe', 
+      testBadUpdate(component, fixture, element, 'Cheyenne Doe',
                      'mockuser@email.com', 'password', 'newpassword', 'newpassword',
                     '', 'true');
     });
@@ -153,7 +153,7 @@ describe('EditProfileComponent', () => {
 });
 
 
-function testBadUpdate(component: EditProfileComponent, 
+function testBadUpdate(component: EditProfileComponent,
                       fixture: ComponentFixture<EditProfileComponent>, element, name: string, email: string, old_password: string,
                       new_password: string, confirm_password: string, grad_date: string, subscribe: string) {
   component.notifications.invalid_credentials = false;

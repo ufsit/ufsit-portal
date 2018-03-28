@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
-import { SessionService } from './session.service';
 
 @Injectable()
 export class ExternalFileService {
 
-  constructor(private restService: RestService,
-              private sessionService: SessionService) {
+  constructor(private restService: RestService) {
   }
 
   // gets a signed url to upload an file
@@ -15,13 +13,13 @@ export class ExternalFileService {
   }
 
   // uploads a writeup
-  public uploadWriteup(data: string, writeupName: string) {
-    return this.restService.uploadWriteup(data, writeupName);
+  public uploadWriteup(data: string, writeupName: string, writeupId: number) {
+    return this.restService.uploadWriteup(data, writeupName, writeupId);
   }
 
   // gets a writeup
-  public getWriteup(key: string) {
-    return this.restService.getWriteup(key);
+  public getWriteup(id: number) {
+    return this.restService.getWriteup(id);
   }
 
   // uploads an file

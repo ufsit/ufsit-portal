@@ -39,6 +39,8 @@ export class WriteupsComponent implements OnInit {
   submittedWriteups = [];
   // holds a list of uploaded files
   files = [];
+  // hold the name of the file to be uploaded
+  // uploadedFilename = '';
 
   // hides/displays tabs
   hidden = {
@@ -74,7 +76,8 @@ export class WriteupsComponent implements OnInit {
       ]],
       markdownInput: ['', [
         Validators.required
-      ]]
+      ]],
+      writeupId: [0, []]
     });
   }
 
@@ -124,10 +127,14 @@ export class WriteupsComponent implements OnInit {
       return;
     }
     this.externalFileService.uploadWriteup(this.formData.value.markdownInput,
-                                          this.formData.value.writeupName)
+                                          this.formData.value.writeupName,
+                                          this.formData.value.writeupId)
       .subscribe(
         res => {
           this.notifications.writeup_submit_successful = true;
+          this.formData.patchValue({
+            writeupId: (<any>res).writeupId
+          });
         },
         err => {
           this.notifications.writeup_submit_error = true;
@@ -152,7 +159,7 @@ export class WriteupsComponent implements OnInit {
             // challengeName: pieces[2],
             // fileName: pieces[3]
             writeupName: entry.name,
-            key: entry.key
+            id: entry.id
           });
         }
       },
@@ -164,14 +171,15 @@ export class WriteupsComponent implements OnInit {
   }
 
   // loads a previously submitted writeup
-  public load(key: string) {
+  public load(id: number) {
     // get the writeup
-    this.externalFileService.getWriteup(key).subscribe(
+    this.externalFileService.getWriteup(id).subscribe(
       res => {
         // update the form with the writeup information
         this.formData.patchValue({
           writeupName: res.name,
-          markdownInput: res.text
+          markdownInput: res.text,
+          writeupId: id
         });
         this.setMarkdownInput = res.text;
         this.notifications.writeup_load_successful = true;
@@ -222,7 +230,7 @@ export class WriteupsComponent implements OnInit {
         // iterate over each writeup entry
         for (const entry of res) {
           // add each entry to the list
-          this.files.push(window.location.origin + '/api/' + entry.key);
+          this.files.push(window.location.origin + '/api' + entry.key);
         }
       },
       err => {
@@ -233,11 +241,11 @@ export class WriteupsComponent implements OnInit {
   }
 
   public isImage(filename) {
-    let fileExt = filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
+    let fileExt = filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2); // tslint:disable-line
     fileExt = fileExt.toLowerCase();
     if (fileExt === 'jpg' || fileExt === 'jpeg' || fileExt === 'exif'
       || fileExt === 'tiff' || fileExt === 'gif' || fileExt === 'bmp'
-      || fileExt === 'png'){
+      || fileExt === 'png') {
         return true;
     }
     return false;
