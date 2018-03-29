@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { EditProfileComponent } from './edit_profile/edit_profile.component';
+import { CTFBoardComponent } from './ctf-board/ctf-board.component';
 
 import { AuthGuardService } from './auth-guard.service';
 import { ProfileResolverService } from './profile-resolver.service';
@@ -55,6 +56,11 @@ const routes: Routes = [
   {
     path: 'events',
     component: EventsComponent
+  },
+  {
+    path: 'ctf-board',
+    canActivate: [AuthGuardService],
+    component: CTFBoardComponent
   },
   {
     path: 'profile',

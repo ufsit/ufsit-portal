@@ -1,3 +1,36 @@
-<p>
-  ctf-board works!
-</p>
+<div class="container container-fluid full-height">
+
+    <div class="col m-0 p-0">
+
+        <br/>
+
+        <div class="row m-1 p-1">
+            <div class="col center text-center">
+                <h1 class="green_header">CTF Practice Board</h1>
+                <p>Challenge yourself for fun or train for upcoming events!</p>
+            </div>
+        </div>
+
+        <div class="row m-1 p-1">
+            <div class=col-md-4 *ngFor="let ctf of this.getCTFCards(); let i = index">
+                <div class="card tile border-secondary mt-3 mb-3">
+                    <div class="card-header text-center border-secondary" style="background-color:#D0D0D0">
+                        <h4 class="mb-0" style="color:#303030">{{ctf.title + ' ' + i}}</h4>
+                    </div>
+                    <div class="card-body border-secondary">
+                        <p class="card-text mt-0 mb-0"><strong>Date: </strong>{{ctf.date+i}}</p>
+                        <p class="card-text mt-0 mb-0 pb-1"><strong>Difficulty: </strong>{{ctf.difficulty+i}}</p>
+                        <p class="card-text"><strong>Description: </strong>{{ ctf.description | limitTo : 100 }}</p>
+                    </div>
+                    <div class="card-footer border-secondary" style="background-color:#D0D0D0">
+                        <button class="btn btn-secondary input-label" (click)="cardClick(ctf)">Continue Reading</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+
+    </div>
+
+</div>
