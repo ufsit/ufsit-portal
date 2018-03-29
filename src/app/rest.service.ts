@@ -119,4 +119,8 @@ export class RestService {
     })});
   }
 
+  // api call to get a list of the candidates in an election
+  public getCandidates() {
+    return this.get('/voting/candidates');
+  }
 }

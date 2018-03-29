@@ -265,7 +265,7 @@ let db_mgmt_module = function() {
 
 	// Function to store election within the database
 	async function create_poll(election) {
-		if (await poll_exists()) {
+		if (await election_exists()) {
 			throw new createError.Conflict('Cannot make a new poll when there is already one in process!');
 		}
 		else {
@@ -273,7 +273,7 @@ let db_mgmt_module = function() {
 		}
 
 		// Helper function that checks if there is currently an election running
-		async function poll_exists() {
+		async function election_exists() {
 			let results = await queryAsync('SELECT * FROM `candidates`');
 			return results.length > 0;
 		}
@@ -303,6 +303,22 @@ let db_mgmt_module = function() {
 		return results.length > 0;
 	}
 
+	// Grabs the candidates for each position and puts them into a JSON object to be returned to the voting component
+	// TODO: check to see if it is necessary to check for there being a current election
+	async function get_candidates() {
+		return {
+			'president': await queryAsync('SELECT `person` FROM `candidates` WHERE `pres` = 1'),
+			'vp': await queryAsync('SELECT `person` FROM `candidates` WHERE `vp` = 1'),
+			'treasurer': await queryAsync('SELECT `person` FROM `candidates` WHERE `treas` = 1',),
+			'secretary': await queryAsync('SELECT `person` FROM `candidates` WHERE `secr` = 1')
+		}
+	}
+
+	async function already_voted(email) {
+		let results = await queryAsync('SELECT * FROM `voters` WHERE `pers` = ?', email);
+		return results.length > 0;
+	}
+
 	// Revealing module
 	return ({
 		create_account: create_account,
@@ -319,7 +335,9 @@ let db_mgmt_module = function() {
 		record_writeup_submission: record_writeup_submission,
 		record_image_upload: record_image_upload,
 		create_poll: create_poll,
-		current_election: current_election
+		current_election: current_election,
+		get_candidates: get_candidates,
+		already_voted: already_voted
 	});
 };
 

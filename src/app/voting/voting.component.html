@@ -1,0 +1,23 @@
+<div class="full-height">
+  
+  <p>Presidential Candidates</p>
+  <div *ngFor="let pres of this.presidents">
+    {{pres.person}}
+  </div>
+  
+  <p>Vice Presidential Candidates</p>
+  <div *ngFor="let vp of this.vp">
+    {{vp.person}}
+  </div>
+
+  <p>Treasurer Candidates</p>
+  <div *ngFor="let treas of this.treasurers">
+    {{treas.person}}
+  </div>
+
+  <p>Secretary Candidates</p>
+  <div *ngFor="let secr of this.secretaries">
+    {{secr.person}}
+  </div>
+
+</div>
