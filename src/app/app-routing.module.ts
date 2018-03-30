@@ -104,6 +104,10 @@ const routes: Routes = [
     path: 'resume',
     canActivate: [AuthGuardService],
     component: ResumeComponent
+  },
+  {
+    path: '**',
+    redirectTo: 'home'
   }
 ];
 
