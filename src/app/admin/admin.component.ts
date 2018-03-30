@@ -55,13 +55,9 @@ export class AdminComponent implements OnInit {
         return val;
     }
 
-    public getUsers() {
-        return this.users;
-    }
+    public getUsers() { return this.users; }
 
-    public getCustomTiles() {
-        return this.customTiles;
-    }
+    public getCustomTiles() { return this.customTiles; }
 
     // adds a new cutom tile to general home page
     public addTile(formData: FormGroup) {
