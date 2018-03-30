@@ -311,12 +311,6 @@ let db_mgmt_module = function () {
             time_updated: new Date(),
         };
         return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
-<<<<<<< HEAD
-
-        return await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `name` = ?',
-            [account_id, name]);
-=======
->>>>>>> 5d215801a74d466f4b4f2cfce815bd82ebda043b
     }
 
     /* Records a writeup submission */
