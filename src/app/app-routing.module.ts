@@ -95,7 +95,7 @@ const routes: Routes = [
     component: WriteupsComponent
   },
   {
-    path: 'writeups/:key',
+    path: 'writeups/:id',
     canActivate: [AuthGuardService],
     component: WriteupViewComponent
   }

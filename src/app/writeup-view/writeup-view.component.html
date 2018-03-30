@@ -1,8 +1,9 @@
 <div class="container container-fluid full-height">
   <div class="row">
     <div class="col-md-5 col-md-offset-1">
-      <div id="profileTitle" class="main_header">{{getWriteupTitle()}}
+      <div id="writeupTitle" class="main_header">{{getWriteupTitle()}}
       </div>
+      <h5 id="writeupSubtitle">{{getWriteupSubtitle()}}</h5>
       <br>
     </div>
   </div>
@@ -21,7 +22,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div id="markdownText" class="row">
     <showdown class="minHeight markdown-body fullWidth" [value]="writeupText" [options]="options"></showdown>    
   </div>
 </div>

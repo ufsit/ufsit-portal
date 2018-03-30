@@ -34,6 +34,7 @@ export class WriteupViewComponent implements OnInit {
     };
 
   private writeupTitle = '';
+  private writeupSubtitle = '';
   private writeupText = '';
 
   constructor(private externalFileService: ExternalFileService,
@@ -41,10 +42,11 @@ export class WriteupViewComponent implements OnInit {
 
   ngOnInit() {
     this.externalFileService
-      .getWriteup(('writeups/' + this.route.snapshot.params.key)).subscribe(
+      .getWriteup((this.route.snapshot.params.id)).subscribe(
         res => {
           console.log(res);
-          this.setWriteupTitle(res.name, res.user_name);
+          this.setWriteupTitle(res.name);
+          this.setWriteupSubtitle(res.user_name);
           this.writeupText = res.text;
         }, err => {
           this.notifications.writeup_load_error = true;
@@ -52,12 +54,20 @@ export class WriteupViewComponent implements OnInit {
         });
   }
 
-  public setWriteupTitle(name: string, user: string) {
-    this.writeupTitle = name + ' by ' + user;
+  public setWriteupTitle(name: string) {
+    this.writeupTitle = name;
+  }
+
+  public setWriteupSubtitle(user: string) {
+    this.writeupSubtitle = 'by ' + user;
   }
 
   public getWriteupTitle() {
     return this.writeupTitle;
+  }
+
+  public getWriteupSubtitle() {
+    return this.writeupSubtitle;
   }
 
 }

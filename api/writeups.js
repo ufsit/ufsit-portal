@@ -41,7 +41,7 @@ routes.get('/writeups/get/:id', async (req, res) => {
       res.status(500).send(err);
     // otherwise, return the writeup
     } else {
-      const dbEntry = await db_mgmt.get_writeup(req.params.key);
+      const dbEntry = await db_mgmt.get_writeup(req.params.id);
       console.log(dbEntry);
       if (dbEntry == undefined) {
         res.status(200).json({
