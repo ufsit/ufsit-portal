@@ -189,7 +189,7 @@ let db_mgmt_module = function () {
     async function retrieve(email_addr) {
         /* Form a query to the 'accounts' table for entries with the given email */
         /* Execute the query using a connection from the connection pool */
-        const results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
+        let results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
             [['id', 'password', 'full_name'], email_addr]);
 
 		/* If the results array has any elements in it, call back with the 0th element
