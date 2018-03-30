@@ -27,14 +27,21 @@ export class CTFBoardComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // get ctf cards from db
+        // get ctf cards from db - get all writeups
+        /* id (link)
+           name (title)
+           time_updated
+           full_name * anonymous?
+           add: ***description
+           add: ***difficulty
+        */
     }
 
-    public redirect(path: string) { window.open(path, '_blank'); }
-    public routeTo(path: string) { this.router.navigate([path]); }
+    public routeTo(path: string) { this.router.navigate([path]); } //  route to /writeups/id
 
     public getCTFCards() { return this.ctfCards; }
 
-    public cardClick(ctf) { console.log(ctf); }
+    public cardClick(ctf) { console.log(ctf); } // add analytics
+    // new table : writeup_anallytics - writeupid, userid, timestamp & query for unique_clicks, total_clicks
 
 }
