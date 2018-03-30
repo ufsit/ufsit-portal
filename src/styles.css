@@ -41,6 +41,24 @@ body {
 	bottom: -6px;
 	right: 4px;
 }
+
+.fullWidth {
+  width: 100%;
+}
+table {
+  display: table;
+}
+.markdown-body {
+  width: 100%;
+}
+.markdown-body > pre {
+  overflow: auto;
+}
+.markdown-body table {
+  border: none;
+  padding: 0px;
+} 
+
 #email{
 	position: relative;
 	right: 13%;

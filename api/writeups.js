@@ -42,9 +42,18 @@ routes.get('/writeups/get/:id', async (req, res) => {
     // otherwise, return the writeup
     } else {
       const dbEntry = await db_mgmt.get_writeup(req.params.id);
+      console.log(dbEntry);
+      if (dbEntry == undefined) {
+        res.status(200).json({
+          name: '',
+          text: '',
+          user_name: '',
+        });
+      }
       res.status(200).json({
         name: dbEntry[0].name,
-        text: data.Body.toString()});
+        text: data.Body.toString(),
+        user_name: dbEntry[0].full_name});
     }
   });
 });
