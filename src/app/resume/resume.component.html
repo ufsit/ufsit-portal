@@ -54,11 +54,14 @@
         <input type="file" (change)="handleFileChange($event.target.files)">
       </span>
       <!--<input id="file-upload-name" type="name" [value]="uploadedFileName" class="form-control" placeholder="File name (optional)">-->
-      <button class="btn btn-success">Upload</button>
+      <button [disabled]="!isValidFileType()" class="btn btn-success">Upload</button>
     </form>
+    <br>
+    <p *ngIf="!isValidFileType()" class="red-text">Your resume must be a PDF</p>
+
   </div>
 
-  <div *ngIf="innerHtml" [innerHTML]="innerHtml" class="resume row">
+  <div id="resumeContainer" *ngIf="innerHtml" [innerHTML]="innerHtml" class="resume row">
 
   </div>
 </div>

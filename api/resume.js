@@ -29,7 +29,7 @@ routes.get('/resume', async (req, res) => {
   const result = await db_mgmt.get_resume_key(req.session.account_id);
   let key = '';
   if (result.length === 0 || result[0].resume === '') {
-    res.status(200).json('no resume');
+    res.status(200).send('');
   }
   key = result[0].resume;
   // configure the parameters

@@ -39,7 +39,6 @@ export class ResumeComponent implements OnInit {
   }
 
   getResumeLink() {
-    console.log('here');
     this.externalFileService.getResumeLink().subscribe(
       res => {
         if (res.resume !== '') {
@@ -50,7 +49,7 @@ export class ResumeComponent implements OnInit {
           );
         } else {
           this.innerHtml = this.domSanitizer.bypassSecurityTrustHtml(
-            '<p>You have not uploaded a resume yet.</p>'
+            '<h5>You have not uploaded a resume yet.</h5>'
           );
         }
       },
@@ -82,6 +81,18 @@ export class ResumeComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  public isValidFileType(): boolean {
+    if (this.file === undefined || this.file == null) {
+      return false;
+    }
+
+    const fileName = this.file.name;
+    const fileExt = fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
+    console.log(fileExt);
+
+    return fileExt.toLowerCase() === 'pdf';
   }
 
 }

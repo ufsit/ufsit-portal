@@ -31,6 +31,7 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
 import { WriteupsComponent } from './writeups/writeups.component';
 import { ExternalFileService } from './external-file.service';
 import { ResumeComponent } from './resume/resume.component';
+import { WriteupViewComponent } from './writeup-view/writeup-view.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { ResumeComponent } from './resume/resume.component';
     TimeAgoPipe,
     EditProfileComponent,
     WriteupsComponent,
-    ResumeComponent
+    ResumeComponent,
+    WriteupViewComponent
   ],
   imports: [
     BrowserModule,
