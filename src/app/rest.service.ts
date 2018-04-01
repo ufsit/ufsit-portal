@@ -121,6 +121,11 @@ export class RestService {
 
   // api call to get a list of the candidates in an election
   public getCandidates() {
-    return this.get('/voting/candidates');
+    return this.get('/voting/get_candidates');
+  }
+
+  // api call to store a person's vote
+  public vote(ballot) {
+    return this.post('/voting/send_vote', ballot);
   }
 }

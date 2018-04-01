@@ -119,7 +119,7 @@ CREATE TABLE `secr` (
 );
 
 CREATE TABLE `voters` (
-	`pers` varchar(255) NOT NULL
+	`person` INT NOT NULL
 );
 
 ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`rank`) REFERENCES `account_rank`(`id`);

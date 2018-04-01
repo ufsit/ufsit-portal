@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
+import { SortablejsModule } from 'angular-sortablejs';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ShowdownModule } from 'ngx-showdown';
@@ -57,7 +58,8 @@ import { VotingComponent } from './voting/voting.component';
     FormsModule,
     ReactiveFormsModule,
     NgbModule.forRoot(),
-    ShowdownModule
+    ShowdownModule,
+    SortablejsModule.forRoot({animation: 150})
   ],
   providers: [
     AuthGuardService,

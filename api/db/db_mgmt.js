@@ -304,7 +304,6 @@ let db_mgmt_module = function() {
 	}
 
 	// Grabs the candidates for each position and puts them into a JSON object to be returned to the voting component
-	// TODO: check to see if it is necessary to check for there being a current election
 	async function get_candidates() {
 		return {
 			'president': await queryAsync('SELECT `person` FROM `candidates` WHERE `pres` = 1'),
@@ -314,9 +313,85 @@ let db_mgmt_module = function() {
 		}
 	}
 
-	async function already_voted(email) {
-		let results = await queryAsync('SELECT * FROM `voters` WHERE `pers` = ?', email);
-		return results.length > 0;
+	// Returns true if a person has not voted yet
+	async function have_not_voted(user_id) {
+		let results = await queryAsync('SELECT * FROM `voters` WHERE `person` = ?', user_id);
+		return results.length < 1;
+	}
+
+	// Returns true if a person is elibible to vote
+	async function is_eligible() {
+		return true;
+		// TODO: ACTUAL CHECK OF THE DATABASE FOR ELIGIBILITY
+	}
+
+	// Validates and records a user's vote
+	async function record_vote(vote, user_id) {
+		if (await verify_valid_vote()) {
+			try {
+				await insert_votes('pres', vote.president);
+				await insert_votes('vp', vote.vp);
+				await insert_votes('treas', vote.treasurer);
+				await insert_votes('secr', vote.secretary);
+				return await record_that_user_voted();
+			} catch(error) {
+				throw new createError.BadRequest('There seems to be a problem with the db.  Please contact the developers');
+			}
+		}
+		else {
+			throw new createError.BadRequest('There is an error in the request');
+		}
+
+		// Adds a users email to the voters table so that they cannot vote again
+		async function record_that_user_voted() {
+			return await queryAsync('INSERT INTO `voters` SET ?', {person:user_id});
+		}
+
+		// Verifies that a vote is valid
+		async function verify_valid_vote() {
+			try {
+				// Verifies all president choices
+				for(var pres of vote.president) {
+					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `pres`=1', pres);
+					// If the person is not in the list of candidates for president return false
+					if (count.length < 1) { return false; }
+				}
+				vote.president.length = 5;
+				// Verifies all vp choices
+				for(var pres of vote.vp) {
+					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `vp`=1', pres);
+					if (count.length < 1) { return false; }
+				}
+				vote.vp.length = 5;
+				// Verifies all Treasurer choices
+				for(var pres of vote.treasurer) {
+					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `treas`=1', pres);
+					if (count.length < 1) { return false; }
+				}
+				vote.treasurer.length = 5;
+				// Verifies all Secretary choices
+				for(var pres of vote.secretary) {
+					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `secr`=1', pres);
+					if (count.length < 1) { return false; }
+				}
+				vote.secretary.length = 5;
+				return true;
+			} catch(error) {	// Only catches an error when you have tried to vote for a person not running
+				return false;
+			}
+		}
+
+		// Records a users vote after it has been thoroughly validated
+		async function insert_votes(position, candidate_array) {
+			let values = {
+				first: candidate_array[0],
+				second: candidate_array[1],
+				third: candidate_array[2],
+				fourth: candidate_array[3],
+				fifth: candidate_array[4]
+			}
+			await queryAsync('INSERT INTO `' + position + '` SET ?', values);
+		}
 	}
 
 	// Revealing module
@@ -337,7 +412,9 @@ let db_mgmt_module = function() {
 		create_poll: create_poll,
 		current_election: current_election,
 		get_candidates: get_candidates,
-		already_voted: already_voted
+		have_not_voted: have_not_voted,
+		is_eligible: is_eligible,
+		record_vote: record_vote
 	});
 };
 
