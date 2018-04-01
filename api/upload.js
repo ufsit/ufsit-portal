@@ -108,7 +108,7 @@ routes.get('/upload/resume', async (req, res, next) => {
   const fileType = req.query['file-type'];
   const fileExt = '.' + fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
 
-  if (fileExt.toLowerCase() !== '.pdf') {
+  if (fileType.toLowerCase() !== 'application/pdf') {
     res.status(415).send('Only PDFs are supported.');
     return;
   }

@@ -95,10 +95,7 @@ export class ResumeComponent implements OnInit {
       return false;
     }
 
-    const fileName = this.file.name;
-    const fileExt = fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
-
-    return fileExt.toLowerCase() === 'pdf';
+    return this.file.type === 'application/pdf';
   }
 
 }
