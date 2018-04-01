@@ -27,6 +27,14 @@
           <strong>Error</strong> There was an error while uploading your resume.
             Please contact the developers.</span>
       </div>
+
+      <div *ngIf="notifications.resume_invalid_filetype" id="resumeInvalidFiletypeAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.resume_invalid_filetype = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> Only PDFs are supported.</span>
+      </div>
   
       <div *ngIf="notifications.generic_error" id="genericErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" (click)="notifications.generic_error = false">
