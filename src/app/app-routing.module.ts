@@ -16,6 +16,7 @@ import { AdminComponent } from './admin/admin.component';
 import { WriteupsComponent } from './writeups/writeups.component';
 import { WriteupViewComponent } from './writeup-view/writeup-view.component';
 import { ResumeComponent } from './resume/resume.component';
+import { AdminGuardService } from './admin-guard.service';
 
 const routes: Routes = [
   {
@@ -34,7 +35,7 @@ const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService, AdminGuardService]
   },
   {
     path: 'sponsors',
