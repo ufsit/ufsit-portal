@@ -8,11 +8,13 @@ const account_mgmt = require('./db/account_mgmt.js');
 
 routes.get('/user/profile', function(req, res) {
 	let data = req.account;
-
+	console.log('such wow poop');
 	res.status(200).json(Object.assign(data, {profile_name: 'Your Profile'}));
 });
 
 routes.get('/user/profile/:user_id', async function(req, res, next) {
+	console.log('much poop');
+
 	// Just an alias for /user/profile
 	if (req.params.user_id === req.session.account_id) {
 		return res.status(200).json(Object.assign(req.account, {profile_name: 'Your Profile'}));
@@ -39,6 +41,7 @@ routes.get('/user/profile/:user_id', async function(req, res, next) {
 async function update_user_profile(account_id, req, res, next) {
 	// A user is editing their own profile
 
+
 	let admin_edit = false;
 	let target_account = {};
 
@@ -53,6 +56,7 @@ async function update_user_profile(account_id, req, res, next) {
 		try {
 			target_account = await account_mgmt.get_account_by_id(account_id);
 		} catch (error) {
+			console.log('search for account failed');
 			return next(error);
 		}
 
@@ -65,10 +69,10 @@ async function update_user_profile(account_id, req, res, next) {
 
 	// TODO: allow admin to edit email
 	// User should not be able to change email
-	if (req.body.email !== target_account.email) {
-		res.status(409).send('Email cannot be changed');
-		return;
-	}
+	//if (req.body.email !== target_account.email) {
+	//	res.status(409).send('Email cannot be changed');
+	//	return;
+	//}
 
 	if (req.body.name !== target_account.full_name) {
 		updated_items.push(['Name', 'full_name', 'name']);
@@ -81,21 +85,26 @@ async function update_user_profile(account_id, req, res, next) {
 	if (req.body.subscribe !== target_account.mass_mail_optin) {
 		updated_items.push(['Subscription to email updates', 'mass_mail_optin', 'subscribe']);
 	}
-
+	
+	console.log('Holy poop');
 	const password_change = req.body.old_password && req.body.new_password && req.body.confirm_password;
 	if (password_change) {
 		if (req.body.new_password !== req.body.confirm_password) {
+			console.log('New password does not match');
 			res.status(400).send('New password does not match');
 			return;
 		}
 
 		if (req.body.old_password === req.body.confirm_password) {
+			console.log('Old password cannot equal the new password');
 			res.status(400).send('Old password cannot equal the new password');
 			return;
 		}
+		console.log('Holy cow poop');
 
 		// if it is correct, change it to the new one
 		updated_items.push(['Password', 'password', 'new_password']);
+
 	}
 
 	let data = {};
@@ -105,6 +114,7 @@ async function update_user_profile(account_id, req, res, next) {
 	});
 
 	if (updated_items.length < 1) {
+		console.log('No changes to profile');
 		return res.status(400).send('No changes to profile');
 	}
 
@@ -112,8 +122,11 @@ async function update_user_profile(account_id, req, res, next) {
 	if (password_change && !admin_edit) {
 		// check to see if the old password is correct
 		try {
+			console.log('poop-2');
 			await account_mgmt.authenticate({email: target_account.email, password: req.body.old_password});
+			console.log('poop-3');
 		} catch (error) {
+			console.log('poop-1');
 			if (error.status < 500) {
 				return res.status(error.status).send('Invalid existing password');
 			} else {
@@ -123,7 +136,10 @@ async function update_user_profile(account_id, req, res, next) {
 	}
 
 	try {
+		console.log('poop0');
+
 		await account_mgmt.update_account(account_id, data);
+		console.log('poop1');
 
 		// Return the list of updated items (only the human readable note)
 		updated_items = updated_items.map(function(i) {
@@ -133,8 +149,11 @@ async function update_user_profile(account_id, req, res, next) {
 		return res.status(200).json(updated_items);
 	} catch (error) {
 		if (error.status < 500) {
+			console.log('poop2');
+
 			return res.status(error.status).send(error.message);
 		} else {
+			console.log('poop3');
 			return next(error);
 		}
 	}
