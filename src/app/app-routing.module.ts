@@ -13,6 +13,10 @@ import { AuthGuardService } from './auth-guard.service';
 import { ProfileResolverService } from './profile-resolver.service';
 import { HomeResolverService } from './home-resolver.service';
 import { AdminComponent } from './admin/admin.component';
+import { WriteupsComponent } from './writeups/writeups.component';
+import { WriteupViewComponent } from './writeup-view/writeup-view.component';
+import { ResumeComponent } from './resume/resume.component';
+import { AdminGuardService } from './admin-guard.service';
 
 const routes: Routes = [
   {
@@ -29,14 +33,9 @@ const routes: Routes = [
     }
   },
   {
-    path: "admin",
+    path: 'admin',
     component: AdminComponent,
-    canActivate: [AuthGuardService]
-  },
-  {
-    path: "edit_profile",
-    component: EditProfileComponent,
-    canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService, AdminGuardService]
   },
   {
     path: 'sponsors',
@@ -69,12 +68,47 @@ const routes: Routes = [
     }
   },
   {
+    path: 'profile/edit',
+    component: EditProfileComponent,
+    canActivate: [AuthGuardService],
+    resolve: {
+      profile: ProfileResolverService
+    }
+  },
+  {
     path: 'profile/:id',
     canActivate: [AuthGuardService],
     component: ProfileComponent,
     resolve: {
       profile: ProfileResolverService
     }
+  },
+  {
+    path: 'profile/:id/edit',
+    component: EditProfileComponent,
+    canActivate: [AuthGuardService],
+    resolve: {
+      profile: ProfileResolverService
+    }
+  },
+  {
+    path: 'writeups',
+    canActivate: [AuthGuardService],
+    component: WriteupsComponent
+  },
+  {
+    path: 'writeups/:id',
+    canActivate: [AuthGuardService],
+    component: WriteupViewComponent
+  },
+  {
+    path: 'resume',
+    canActivate: [AuthGuardService],
+    component: ResumeComponent
+  },
+  {
+    path: '**',
+    redirectTo: 'home'
   }
 ];
 

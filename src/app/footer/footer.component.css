@@ -9,6 +9,10 @@
   height: 73px;
 }
 
+.foot-nav {
+    margin-top: -4px;
+}
+
 .foot-default .foot-nav >li >a {
   color: white;
   margin: 0 auto;
@@ -17,12 +21,6 @@
 
 .foot, .foot a {
   line-height: 50px;
-}
-
-@media(max-width:767px) {
-  .foot, .foot a {
-    line-height: 20px;
-  }
 }
 
 .foot-text {
@@ -40,4 +38,28 @@
   font-size: .75em;
   color: white !important;
   height: 40px !important;
+  margin-top: -25px;
+}
+
+@media (max-width: 767px) {
+  .foot, .foot a {
+    line-height: 20px;
+  }
+  .fa, .fa a  {
+    font-size: 125%;
+    color: inherit;
+    text-decoration: inherit;
+  }
+  .foot-nav {
+      margin-top: 0px;
+  }
+  .foot-fineprint {
+    padding-top: .5em !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .foot-nav {
+    padding-top: .5em !important;
+  }
 }

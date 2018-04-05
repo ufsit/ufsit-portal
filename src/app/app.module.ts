@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { ShowdownModule } from 'ngx-showdown';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -27,6 +28,11 @@ import { AboutComponent } from './about/about.component';
 import { HomeResolverService } from './home-resolver.service';
 import { TimeAgoPipe } from './time-ago.pipe';
 import { EditProfileComponent } from './edit_profile/edit_profile.component';
+import { WriteupsComponent } from './writeups/writeups.component';
+import { ExternalFileService } from './external-file.service';
+import { ResumeComponent } from './resume/resume.component';
+import { WriteupViewComponent } from './writeup-view/writeup-view.component';
+import { AdminGuardService } from './admin-guard.service';
 
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,7 +52,10 @@ import { CalendarModule } from 'angular-calendar';
     AboutComponent,
     FooterComponent,
     TimeAgoPipe,
-    EditProfileComponent
+    EditProfileComponent,
+    WriteupsComponent,
+    ResumeComponent,
+    WriteupViewComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +74,9 @@ import { CalendarModule } from 'angular-calendar';
     RestService,
     HttpClientModule,
     ProfileResolverService,
-    HomeResolverService
+    HomeResolverService,
+    ExternalFileService,
+    AdminGuardService
   ],
   bootstrap: [AppComponent]
 })

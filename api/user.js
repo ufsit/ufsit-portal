@@ -66,7 +66,7 @@ async function update_user_profile(account_id, req, res, next) {
 	// TODO: allow admin to edit email
 	// User should not be able to change email
 	if (req.body.email !== target_account.email) {
-		res.status(400).send('Email cannot be changed');
+		res.status(409).send('Email cannot be changed');
 		return;
 	}
 

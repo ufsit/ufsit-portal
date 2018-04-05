@@ -9,20 +9,66 @@ html {
     height: 100%;
 }
 body {
-  min-height: 100%;
+    min-height: 100%;
+}
+
+object {
+	height: 100vh;
+}
+
+iframe {
+	height: 100vh;
+  padding: 0;
+  border: 0;
+}
+
+.main_header {
+    font-size: 32px;
+    font-family: 'Share Tech Mono', monospace;
+    /*text-shadow: h-shadow v-shadow blur-radius color|none|initial|inherit;*/
+    text-shadow: 1px 1px 1px #0CE88B;
+}
+
+.green_header {
+    font-family: 'Share Tech Mono', monospace;
+    /*text-shadow: h-shadow v-shadow blur-radius color|none|initial|inherit;*/
+    text-shadow: 1px 1px 1px #0CE88B;
+}
+
+.input-label{
+	font-size: 14px;
+	font-family: 'Share Tech Mono', monospace;
 }
 
 #h1-1 {
 	padding-left: 10px;
 	line-height: 75px;
 	color: white;
-  background-color: #007cbf;
+    background-color: #007cbf;
 	font-family: 'VT323', monospace;
 	font-size: 50px;
 	position: relative;
 	bottom: -6px;
 	right: 4px;
 }
+
+.fullWidth {
+  width: 100%;
+}
+table {
+  display: table;
+}
+.markdown-body {
+  width: 100%;
+}
+.markdown-body > pre {
+  overflow: auto;
+}
+.markdown-body table {
+  border: none;
+  padding: 0px;
+} 
+
 #email{
 	position: relative;
 	right: 13%;
@@ -61,16 +107,16 @@ body {
 	cursor: hand;
 }
 .img {
-	 width: 150px;
-	 height: 150px
+	width: 150px;
+	height: 150px
 }
 
 table {
 	display: Block;
 	background-color: white;
-	padding: 50px;
+	/*padding: 50px;
 	margin: 50px 50px 10px 10px;
-	border: black 1px solid;
+	border: black 1px solid;*/
 }
 
 th {
@@ -107,14 +153,10 @@ th {
  	cursor: crosshair;
 }
 
-
-
 .head div{
 	display:inline-block;
 	vertical-align: middle;
 }
-
-
 
 div.h2-1 {
 	margin-top: 50px;
