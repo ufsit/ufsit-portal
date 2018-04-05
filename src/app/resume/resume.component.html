@@ -16,7 +16,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
         <span class="notification_panel">
-          Resume uploaded</span>
+          Resume submitted</span>
       </div>
 
       <div *ngIf="notifications.resume_upload_error" id="resumeUploadErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
@@ -35,6 +35,15 @@
         <span class="notification_panel">
           <strong>Error</strong> Only PDFs are supported.</span>
       </div>
+
+      <div *ngIf="notifications.resume_get_error" id="resumeGetErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" (click)="notifications.resume_get_error = false">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <span class="notification_panel">
+            <strong>Error</strong> There was an error while getting your resume.
+              Please contact the developers.</span>
+        </div>
   
       <div *ngIf="notifications.generic_error" id="genericErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" (click)="notifications.generic_error = false">
@@ -57,12 +66,55 @@
   </div>
 
   <div class="row">
-    <form class="col col-md-5" (ngSubmit)="uploadResume()">
+    <form class="col col-md-5" (ngSubmit)="submitForm()" [formGroup]="form">
       <span class="btn btn-default btn-file">
         <input type="file" (change)="handleFileChange($event.target.files)">
       </span>
       <!--<input id="file-upload-name" type="name" [value]="uploadedFileName" class="form-control" placeholder="File name (optional)">-->
-      <button [disabled]="!isValidFileType()" class="btn btn-success">Upload</button>
+      <button [disabled]="!isValidFileType() || !this.form.valid" class="btn btn-success">Submit</button>
+
+      <h4>Additional Questions</h4>
+      Have you done research?
+      <input type="radio" value='true' formControlName="research" >Yes
+      <input type="radio" value='false' formControlName="research">No
+      
+      <br>
+
+      Have you interned before?
+      <input type="radio" value='true' formControlName="internship" >Yes
+      <input type="radio" value='false' formControlName="internship">No
+
+      <br>
+
+      <label>Major</label>
+      <select required aria-required="true" class="form-control" name="major" formControlName="major">
+          <option disabled hidden value="Select a major">Select a semester</option>
+          <option value="computer science">Computer Science</option>
+          <option value="computer engineering">Computer Engineering</option>
+          <option value="other">Other</option>
+      </select>
+
+      <label>Graduation Semester</label>
+      <select required aria-required="true" class="form-control" name="grad_date" formControlName="grad_date">
+          <option disabled hidden value="Select a semester">Select a semester</option>
+          <option value="Already Graduated">Already Graduated</option>
+          <option value="2018 (Spring)">2018 (Spring)</option>
+          <option value="2018 (Summer)">2018 (Summer)</option>
+          <option value="2018 (Fall)">2018 (Fall)</option>
+          <option value="2019 (Spring)">2019 (Spring)</option>
+          <option value="2019 (Summer)">2019 (Summer)</option>
+          <option value="2019 (Fall)">2019 (Fall)</option>
+          <option value="2020 (Spring)">2020 (Spring)</option>
+          <option value="2020 (Summer)">2020 (Summer)</option>
+          <option value="2020 (Fall)">2020 (Fall)</option>
+          <option value="2021 (Spring)">2021 (Spring)</option>
+          <option value="2021 (Summer)">2021 (Summer)</option>
+          <option value="2021 (Fall)">2021 (Fall)</option>
+          <option value="2022 (Spring)">2022 (Spring)</option>
+      </select>
+      
+      <label>GPA</label>
+      <input class="form-control" placeholder="GPA" formControlName="gpa">
     </form>
     <br>
     <p *ngIf="!isValidFileType()" class="red-text">Your resume must be a PDF</p>
@@ -72,5 +124,6 @@
   <div id="resumeContainer" *ngIf="innerHtml" [innerHTML]="innerHtml" class="resume row">
 
   </div>
+
 </div>
   

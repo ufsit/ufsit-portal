@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ExternalFileService } from '../external-file.service';
 import { RestService } from '../rest.service';
 import { DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import { FormGroup, FormBuilder, Validators, FormControl, ValidationErrors } from '@angular/forms';
+import { of } from 'rxjs/observable/of';
 
 @Component({
   selector: 'app-resume',
@@ -15,6 +17,7 @@ export class ResumeComponent implements OnInit {
     resume_upload_successful: false,
     resume_upload_error: false,
     resume_invalid_filetype: false,
+    resume_get_error: false,
     generic_error: false,
     bad_request: false
   };
@@ -22,16 +25,30 @@ export class ResumeComponent implements OnInit {
   // holds currently selected file
   file: File = null;
 
+  // holds the additional question answers
+  form: FormGroup;
+
   // hold the currently uploaded resume link
   resumeLink = window.location.origin + '/api/resume';
   innerHtml: SafeHtml;
 
   constructor(private externalFileService: ExternalFileService,
               private restService: RestService,
-              private domSanitizer: DomSanitizer) { }
+              private domSanitizer: DomSanitizer) {
+    const formBuilder = new FormBuilder();
+    this.form = formBuilder.group({
+      research: ['', Validators.required],
+      internship: ['', Validators.required],
+      major: ['', Validators.required],
+      grad_date: ['', Validators.required],
+      gpa: ['', Validators.required,
+                this.correctRange]
+    });
+  }
 
   ngOnInit() {
     this.getResumeLink();
+    this.getAdditionalQuestionAnswers();
   }
 
   // keeps the internal file variable up to date with the user's selection
@@ -58,6 +75,20 @@ export class ResumeComponent implements OnInit {
         this.innerHtml = this.domSanitizer.bypassSecurityTrustHtml(
           '<h5>You have not uploaded a resume yet.</h5>'
         );
+      }
+    );
+  }
+
+  public submitForm() {
+    if (this.file !== undefined && this.file != null) {
+      this.uploadResume();
+    }
+
+    this.restService.submitResumeQuestions(this.form.value).subscribe(
+      res => {
+        this.notifications.resume_upload_successful = true;
+      }, err => {
+        this.notifications.resume_upload_error = true;
       }
     );
   }
@@ -92,10 +123,35 @@ export class ResumeComponent implements OnInit {
 
   public isValidFileType(): boolean {
     if (this.file === undefined || this.file == null) {
-      return false;
+      return true;
     }
 
     return this.file.type === 'application/pdf';
+  }
+
+  public getAdditionalQuestionAnswers() {
+    this.restService.getResumeQuestions().subscribe(
+      res => {
+        this.form.setValue({
+          research: res.research ? 'true' : 'false',
+          internship: res.internship ? 'true' : 'false',
+          major: res.major,
+          grad_date: res.grad_date,
+          gpa: res.gpa
+        });
+      },
+      err => {
+        this.notifications.resume_get_error = true;
+      }
+    );
+  }
+
+  public correctRange(control: FormControl): ValidationErrors {
+    const value = control.value;
+    if (value >= 0 && value <= 4) {
+      return of(null);
+    }
+    return of({'incorrectGpaRange': true});
   }
 
 }

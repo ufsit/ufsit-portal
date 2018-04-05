@@ -156,4 +156,12 @@ export class RestService {
             .set('file-type', fileType));
     }
 
+    public getResumeQuestions() {
+        return this.get('/resume/questions');
+    }
+
+    public submitResumeQuestions(formData: {}) {
+        return this.post('/resume/questions', formData, { responseType: 'text' });
+    }
+
 }
