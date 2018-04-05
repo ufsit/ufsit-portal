@@ -14,6 +14,7 @@ import { RestService } from './rest.service';
 import { ProfileResolverService } from './profile-resolver.service';
 import { HomeResolverService } from './home-resolver.service';
 import { ExternalFileService } from './external-file.service';
+import { AdminGuardService } from './admin-guard.service';
 
 import { AdminComponent } from './admin/admin.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
@@ -29,12 +30,14 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FooterComponent } from './footer/footer.component';
-
-import { Routes } from '@angular/router';
-import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
+import { ResumeComponent } from './resume/resume.component';
+import { WriteupViewComponent } from './writeup-view/writeup-view.component';
 
 import { TimeAgoPipe } from './time-ago.pipe';
 import { LimitToPipe } from './limit-to.pipe';
+
+import { Routes } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
 
 @NgModule({
   declarations: [
@@ -53,7 +56,9 @@ import { LimitToPipe } from './limit-to.pipe';
     LimitToPipe,
     EditProfileComponent,
     WriteupsComponent,
-    CTFBoardComponent
+    CTFBoardComponent,
+    ResumeComponent,
+    WriteupViewComponent
   ],
   imports: [
     BrowserModule,
@@ -72,7 +77,8 @@ import { LimitToPipe } from './limit-to.pipe';
     HttpClientModule,
     ProfileResolverService,
     HomeResolverService,
-    ExternalFileService
+    ExternalFileService,
+    AdminGuardService
   ],
   bootstrap: [AppComponent]
 })

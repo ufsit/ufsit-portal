@@ -98,8 +98,8 @@ export class EditProfileComponent implements OnInit {
         // This block decides where to send the http get request based
         // on whether it is a user or an admin viewing the account
         let endpoint = '';
-        if (this.sessionService.getProfile().user_id) {
-            endpoint = this.sessionService.getProfile().user_id;
+        if (this.route.snapshot.params.id !== undefined) {
+            endpoint = '/' + this.route.snapshot.params.id;
         }
 
         this.sessionService.update_profile(this.formData, endpoint).subscribe(

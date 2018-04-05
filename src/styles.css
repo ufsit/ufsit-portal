@@ -12,6 +12,16 @@ body {
     min-height: 100%;
 }
 
+object {
+	height: 100vh;
+}
+
+iframe {
+	height: 100vh;
+  padding: 0;
+  border: 0;
+}
+
 .main_header {
     font-size: 32px;
     font-family: 'Share Tech Mono', monospace;
@@ -41,6 +51,24 @@ body {
 	bottom: -6px;
 	right: 4px;
 }
+
+.fullWidth {
+  width: 100%;
+}
+table {
+  display: table;
+}
+.markdown-body {
+  width: 100%;
+}
+.markdown-body > pre {
+  overflow: auto;
+}
+.markdown-body table {
+  border: none;
+  padding: 0px;
+} 
+
 #email{
 	position: relative;
 	right: 13%;

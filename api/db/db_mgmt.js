@@ -271,7 +271,7 @@ let db_mgmt_module = function () {
 
     /* Get a specific writeup, given its id */
     async function get_writeup(id) {
-        return await queryAsync('SELECT `name` FROM `writeup_submissions` WHERE `id` = ?',
+        return await queryAsync('SELECT `name`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id AND `writeup_submissions`.id = ?',
             id);
     }
 
@@ -290,9 +290,6 @@ let db_mgmt_module = function () {
             time_updated: new Date(),
         };
         return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
-
-        return await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `name` = ?',
-                                [account_id, name]);
     }
 
     /* Records a writeup submission */
@@ -315,6 +312,17 @@ let db_mgmt_module = function () {
             name: name,
         };
         return await queryAsync('INSERT INTO `file_uploads` SET ?', values);
+    }
+
+    /* Records a file upload */
+    async function get_resume_key(account_id) {
+        return await queryAsync('SELECT `resume` FROM `account` WHERE `id`=?', account_id);
+    }
+
+    /* Records a resume upload */
+    async function record_resume_upload(account_id, key) {
+        return await queryAsync('UPDATE `account` SET `resume`=? WHERE `id`=?',
+                                [key, account_id]);
     }
 
     // Revealing module
@@ -340,6 +348,8 @@ let db_mgmt_module = function () {
         delete_tile: delete_tile,
         custom_tiles: custom_tiles,
         tile_click: tile_click,
+        get_resume_key: get_resume_key,
+        record_resume_upload: record_resume_upload,
     });
 };
 

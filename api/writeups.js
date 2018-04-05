@@ -7,14 +7,24 @@ const aws = require('aws-sdk');
 const aws_credentials = util.load_aws();
 
 // returns a list of writeups the user has submitted
-routes.get('/writeups/submitted', async (req, res) => {
-  const list = await db_mgmt.get_user_writeup_submissions(req.session.account_id);
+routes.get('/writeups/submitted', async (req, res, next) => {
+  let list = [];
+  try {
+    list = await db_mgmt.get_user_writeup_submissions(req.session.account_id);
+  } catch (error) {
+    return next(error);
+  }
   res.status(200).send(list);
 });
 
 // returns a list of all submitted writeups
-routes.get('/writeups/all', async (req, res) => {
-  const list = await db_mgmt.get_all_writeup_submissions();
+routes.get('/writeups/all', async (req, res, next) => {
+  let list = [];
+  try {
+    list = await db_mgmt.get_all_writeup_submissions();
+  } catch (error) {
+    return next(error);
+  }
   res.status(200).send(list);
 });
 
@@ -35,28 +45,49 @@ routes.get('/writeups/get/:id', async (req, res) => {
   };
 
   // get the writeup
-  s3.getObject(params, async (err, data) => {
+  s3.getObject(params, async (err, data, next) => {
     // if the writeup doesn't exist, send an error
     if (err) {
-      res.status(500).send(err);
+      res.status(500).send('Error while getting writeup, please contact the developers.');
     // otherwise, return the writeup
     } else {
-      const dbEntry = await db_mgmt.get_writeup(req.params.id);
+      let dbEntry = undefined;
+      try {
+        dbEntry = await db_mgmt.get_writeup(req.params.id);
+      } catch (error) {
+        return next(error);
+      }
+
+      if (dbEntry == undefined) {
+        res.status(200).json({
+          name: '',
+          text: '',
+          user_name: '',
+        });
+      }
       res.status(200).json({
         name: dbEntry[0].name,
-        text: data.Body.toString()});
+        text: data.Body.toString(),
+        user_name: dbEntry[0].full_name});
     }
   });
 });
 
 // returns a list of files the user has submitted
-routes.get('/writeups/files/uploaded', async (req, res) => {
+routes.get('/writeups/files/uploaded', async (req, res, next) => {
   let prefix = '/writeups/files/';
-  const list = await db_mgmt.get_file_uploads(req.session.account_id);
+  let list = [];
+  try {
+    list = await db_mgmt.get_file_uploads(req.session.account_id);
+  } catch (error) {
+    next(error);
+  }
+
   list.map( (value, index) => {
     let suffix = '.' + value.name.slice((value.name.lastIndexOf('.') - 1 >>> 0) + 2);
     list[index] = {key: prefix + value.id + suffix};
   });
+
   res.status(200).send(list);
 });
 
