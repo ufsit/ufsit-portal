@@ -21,7 +21,9 @@
       "styles": [
         "assets/css/bootstrap.min.css",
         "assets/css/bootstrap-grid.min.css",
-        "styles.css"
+        "assets/css/github-markdown.css",
+        "styles.css",
+        "../node_modules/angular-calendar/css/angular-calendar.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

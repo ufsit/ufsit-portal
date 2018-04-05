@@ -29,6 +29,9 @@ import { TimeAgoPipe } from './time-ago.pipe';
 import { EditProfileComponent } from './edit_profile/edit_profile.component';
 
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CalendarModule } from 'angular-calendar';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +53,11 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    NgbModule.forRoot()
+    ReactiveFormsModule,
+    NgbModule.forRoot(),
+    ShowdownModule,
+    BrowserAnimationsModule,
+    CalendarModule.forRoot()
   ],
   providers: [
     AuthGuardService,
