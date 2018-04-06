@@ -63,12 +63,14 @@ routes.get('/writeups/get/:id', async (req, res) => {
           name: '',
           text: '',
           user_name: '',
+          description: ''
         });
       }
       res.status(200).json({
         name: dbEntry[0].name,
         text: data.Body.toString(),
-        user_name: dbEntry[0].full_name});
+        user_name: dbEntry[0].full_name,
+        description: dbEntry[0].description});
     }
   });
 });

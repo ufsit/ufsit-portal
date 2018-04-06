@@ -13,8 +13,8 @@ export class ExternalFileService {
   }
 
   // uploads a writeup
-  public uploadWriteup(data: string, writeupName: string, writeupId: number) {
-    return this.restService.uploadWriteup(data, writeupName, writeupId);
+  public uploadWriteup(data: string, writeupName: string, writeupDescription: string, writeupId: number) {
+    return this.restService.uploadWriteup(data, writeupName, writeupDescription, writeupId);
   }
 
   // gets a writeup

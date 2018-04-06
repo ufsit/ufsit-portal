@@ -271,7 +271,7 @@ let db_mgmt_module = function () {
 
     /* Get a specific writeup, given its id */
     async function get_writeup(id) {
-        return await queryAsync('SELECT `name`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id AND `writeup_submissions`.id = ?',
+        return await queryAsync('SELECT `name`,`full_name`,`description` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id AND `writeup_submissions`.id = ?',
             id);
     }
 
@@ -282,10 +282,11 @@ let db_mgmt_module = function () {
     }
 
     /* Records a writeup submission */
-    async function record_writeup_submission(account_id, name) {
+    async function record_writeup_submission(account_id, name, description) {
         const values = {
             account_id: account_id,
             name: name,
+            description: description,
             time_created: new Date(),
             time_updated: new Date(),
         };
@@ -293,15 +294,15 @@ let db_mgmt_module = function () {
     }
 
     /* Records a writeup submission */
-    async function update_writeup_submission(account_id, name, id) {
+    async function update_writeup_submission(account_id, name, description, id) {
         let results = await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `id` = ?',
                         [account_id, id]);
         if (results.length === 0) {
             throw new createError.BadRequest('Cannot update a different user\'s writeup');
         }
 
-        return await queryAsync('UPDATE `writeup_submissions` SET `name` = ?, `time_updated` = ? WHERE `account_id` = ? AND `id` = ?',
-                                [name, new Date(), account_id, id]);
+        return await queryAsync('UPDATE `writeup_submissions` SET `name` = ?, `time_updated` = ?, `description`=? WHERE `account_id` = ? AND `id` = ?',
+                                [name, new Date(), description, account_id, id]);
     }
 
     /* Records a file upload */

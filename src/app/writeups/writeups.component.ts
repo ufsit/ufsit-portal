@@ -74,6 +74,9 @@ export class WriteupsComponent implements OnInit {
       writeupName: ['', [
         Validators.required
       ]],
+      writeupDescription: ['', [
+        Validators.required, Validators.maxLength(255)
+      ]],
       markdownInput: ['', [
         Validators.required
       ]],
@@ -128,6 +131,7 @@ export class WriteupsComponent implements OnInit {
     }
     this.externalFileService.uploadWriteup(this.formData.value.markdownInput,
                                           this.formData.value.writeupName,
+                                          this.formData.value.writeupDescription,
                                           this.formData.value.writeupId)
       .subscribe(
         res => {
@@ -152,12 +156,8 @@ export class WriteupsComponent implements OnInit {
         this.submittedWriteups = [];
         // iterate over each writeup entry
         for (const entry of res) {
-          // let pieces = entry.key.split('/');
           // add the information from each entry to the list
           this.submittedWriteups.push({
-            // ctfName: pieces[1],
-            // challengeName: pieces[2],
-            // fileName: pieces[3]
             writeupName: entry.name,
             id: entry.id
           });
@@ -178,6 +178,7 @@ export class WriteupsComponent implements OnInit {
         // update the form with the writeup information
         this.formData.patchValue({
           writeupName: res.name,
+          writeupDescription: res.description,
           markdownInput: res.text,
           writeupId: id
         });
@@ -249,6 +250,14 @@ export class WriteupsComponent implements OnInit {
         return true;
     }
     return false;
+  }
+
+  public getDescriptionCharactersRemaining() {
+    return 255 - this.formData.value.writeupDescription.length;
+  }
+
+  public getDescriptionCharactersOver() {
+    return -this.getDescriptionCharactersRemaining();
   }
 
 }

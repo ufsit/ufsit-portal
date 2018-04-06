@@ -102,11 +102,12 @@ export class RestService {
     }
 
     // api call to upload a writeup
-    public uploadWriteup(data: string, writeupName: string, writeupId: number) {
+    public uploadWriteup(data: string, writeupName: string, writeupDescription: string, writeupId: number) {
         return this.post('/upload/writeup',
             {
                 data: data,
                 writeupName: writeupName,
+                writeupDescription: writeupDescription,
                 writeupId: writeupId
             }
         );
