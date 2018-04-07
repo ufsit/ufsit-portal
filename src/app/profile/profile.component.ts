@@ -59,6 +59,11 @@ export class ProfileComponent implements OnInit {
 
     // get profile
     public getProfile() {
-        return this.profile;
+        let profile = this.profile;
+        if (profile.email === 'left_blank@ufl.edu')
+            profile.email = '';
+        if (profile.ufl_email === 'left_blank@ufl.edu')
+            profile.ufl_email = '';
+        return profile;
     }
 }
