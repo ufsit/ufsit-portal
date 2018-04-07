@@ -8,13 +8,10 @@ const account_mgmt = require('./db/account_mgmt.js');
 
 routes.get('/user/profile', function(req, res) {
 	let data = req.account;
-	console.log('such wow poop');
 	res.status(200).json(Object.assign(data, {profile_name: 'Your Profile'}));
 });
 
 routes.get('/user/profile/:user_id', async function(req, res, next) {
-	console.log('much poop');
-
 	// Just an alias for /user/profile
 	if (req.params.user_id === req.session.account_id) {
 		return res.status(200).json(Object.assign(req.account, {profile_name: 'Your Profile'}));
@@ -29,7 +26,6 @@ routes.get('/user/profile/:user_id', async function(req, res, next) {
 	try {
 		const account = await account_mgmt.get_account_by_id(req.params.user_id);
 
-
 		// XXX: HACK
 		const first_name = account.full_name.split(' ')[0];
 		res.status(200).json(Object.assign(account, {profile_name: first_name + '\'s Profile'}));
@@ -39,9 +35,8 @@ routes.get('/user/profile/:user_id', async function(req, res, next) {
 });
 
 async function update_user_profile(account_id, req, res, next) {
+
 	// A user is editing their own profile
-
-
 	let admin_edit = false;
 	let target_account = {};
 
@@ -64,7 +59,6 @@ async function update_user_profile(account_id, req, res, next) {
 	}
 
 	let updated_items = [];
-
 	req.body.subscribe = req.body.subscribe ? 1 : 0;
 
 	// TODO: allow admin to edit email
@@ -86,7 +80,6 @@ async function update_user_profile(account_id, req, res, next) {
 		updated_items.push(['Subscription to email updates', 'mass_mail_optin', 'subscribe']);
 	}
 	
-	console.log('Holy poop');
 	const password_change = req.body.old_password && req.body.new_password && req.body.confirm_password;
 	if (password_change) {
 		if (req.body.new_password !== req.body.confirm_password) {
@@ -95,12 +88,13 @@ async function update_user_profile(account_id, req, res, next) {
 			return;
 		}
 
+/*
 		if (req.body.old_password === req.body.confirm_password) {
 			console.log('Old password cannot equal the new password');
 			res.status(400).send('Old password cannot equal the new password');
 			return;
 		}
-		console.log('Holy cow poop');
+*/
 
 		// if it is correct, change it to the new one
 		updated_items.push(['Password', 'password', 'new_password']);
@@ -108,7 +102,6 @@ async function update_user_profile(account_id, req, res, next) {
 	}
 
 	let data = {};
-
 	updated_items.forEach(function(i) {
 		data[i[1]] = req.body[i[2]];
 	});
@@ -122,11 +115,8 @@ async function update_user_profile(account_id, req, res, next) {
 	if (password_change && !admin_edit) {
 		// check to see if the old password is correct
 		try {
-			console.log('poop-2');
-			await account_mgmt.authenticate({email: target_account.email, password: req.body.old_password});
-			console.log('poop-3');
+			await account_mgmt.authenticate({email: target_account.email, ufl_email: target_account.ufl_email, password: req.body.old_password});
 		} catch (error) {
-			console.log('poop-1');
 			if (error.status < 500) {
 				return res.status(error.status).send('Invalid existing password');
 			} else {
@@ -136,10 +126,7 @@ async function update_user_profile(account_id, req, res, next) {
 	}
 
 	try {
-		console.log('poop0');
-
 		await account_mgmt.update_account(account_id, data);
-		console.log('poop1');
 
 		// Return the list of updated items (only the human readable note)
 		updated_items = updated_items.map(function(i) {
@@ -149,11 +136,8 @@ async function update_user_profile(account_id, req, res, next) {
 		return res.status(200).json(updated_items);
 	} catch (error) {
 		if (error.status < 500) {
-			console.log('poop2');
-
 			return res.status(error.status).send(error.message);
 		} else {
-			console.log('poop3');
 			return next(error);
 		}
 	}

@@ -78,11 +78,18 @@ let account_mgmt_module = (function () {
                 + login_data.email);
         } else {
             /* Otherwise, attempt to retrieve the account record from the database */
-            const result = await db_mgmt.retrieve(login_data.email);
-
+            let email = login_data.email;
+            if(email === 'left_blank@ufl.edu')
+                email = login_data.ufl_email;
+            
+            console.log('f8u13');
+            console.log(email);
+            
+            const result = await db_mgmt.retrieve(email);
+            
             /* If there was no error, verify the given credentials against those retrieved from the database */
             let authenticated = verify_credentials(login_data.password, result.salt, result.hash);
-
+            
             if (!authenticated) {
                 throw new createError.BadRequest('Attempted to authenticate an ' +
                     'account with the wrong credentials: ' + login_data.email);

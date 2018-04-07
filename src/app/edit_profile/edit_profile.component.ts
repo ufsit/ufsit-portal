@@ -61,14 +61,14 @@ export class EditProfileComponent implements OnInit {
 
         this.sessionService.setProfile(this.route.snapshot.data.profile);
 
-        /*
+        
         let email_display = this.sessionService.getProfile().email;
         if(email_display == 'left_blank@ufl.edu')
             email_display = '';
         let ufl_email_display = this.sessionService.getProfile().ufl_email;
         if(ufl_email_display == 'left_blank@ufl.edu')
             ufl_email_display = '';
-        */
+        
 
         const fb: FormBuilder = new FormBuilder();
         this.formData = fb.group({
@@ -77,14 +77,16 @@ export class EditProfileComponent implements OnInit {
                 Validators.required
             ]],
 
-            email: [this.sessionService.getProfile().email, [
-                // Validators.required,
+//            email: [this.sessionService.getProfile().email, [
+            email: [email_display, [
+                    // Validators.required,
                 // tslint:disable-next-line:max-line-length
                 //Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
             ]],
 
-            ufl_email: [this.sessionService.getProfile().ufl_email, [
-                // Validators.required,
+//            ufl_email: [this.sessionService.getProfile().ufl_email, [
+            ufl_email: [ufl_email_display, [
+                    // Validators.required,
                 // tslint:disable-next-line:max-line-length
                 //Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
             ]],
@@ -144,14 +146,12 @@ export class EditProfileComponent implements OnInit {
                 } else if (res.status === 409) {
                     this.notifications.bad_request = true;
                 } else if (res.status === 400) {
-                    console.log('Holy christian cow poop');
                     this.notifications.invalid_credentials = true;
                 } else {
                     this.notifications.generic_error = true;
                 }
             },
             err => {
-                console.log('Holy poley cow poop');
                 this.notifications.invalid_credentials = true;
                 window.scrollTo(0, 0);
             }

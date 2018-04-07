@@ -189,6 +189,11 @@ let db_mgmt_module = function () {
     async function retrieve(email_addr) {
         /* Form a query to the 'accounts' table for entries with the given email */
         /* Execute the query using a connection from the connection pool */
+        
+        if(email_addr === 'left_blank@ufl.edu'){
+            throw new createError.NotFound('No account with email address ' + email_addr);
+        }
+
         let results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
             [['id', 'password', 'full_name'], email_addr]);
 
