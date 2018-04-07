@@ -32,6 +32,7 @@ import { WriteupsComponent } from './writeups/writeups.component';
 import { ExternalFileService } from './external-file.service';
 import { ResumeComponent } from './resume/resume.component';
 import { WriteupViewComponent } from './writeup-view/writeup-view.component';
+import { AdminGuardService } from './admin-guard.service';
 
 
 @NgModule({
@@ -69,7 +70,8 @@ import { WriteupViewComponent } from './writeup-view/writeup-view.component';
     HttpClientModule,
     ProfileResolverService,
     HomeResolverService,
-    ExternalFileService
+    ExternalFileService,
+    AdminGuardService
   ],
   bootstrap: [AppComponent]
 })

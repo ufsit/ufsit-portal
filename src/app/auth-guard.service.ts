@@ -49,6 +49,6 @@ export class AuthGuardService implements CanActivate {
         // and is not logged in, so return true so the route will load
         return of(true);
       })
-    );;
+    );
   }
 }

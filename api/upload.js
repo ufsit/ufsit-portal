@@ -21,7 +21,12 @@ routes.post('/upload/writeup', async (req, res, next) => {
 
   // user uploaded a new writeup
   if (req.body.writeupId == 0) {
-    let result = await db_mgmt.record_writeup_submission(req.session.account_id, req.body.writeupName);
+    let result = '';
+    try {
+      result = await db_mgmt.record_writeup_submission(req.session.account_id, req.body.writeupName);
+    } catch (error) {
+      return next(error);
+    }
     fileName = result.insertId;
   // user is updating a previously uploaded writeup
   } else {
@@ -72,7 +77,7 @@ routes.post('/upload/writeup', async (req, res, next) => {
 });
 
 // upload a file
-routes.get('/upload/file', async (req, res) => {
+routes.get('/upload/file', async (req, res, next) => {
   // get the file name, type, and extension
   const fileName = req.query['file-name'];
   const fileType = req.query['file-type'];
@@ -81,7 +86,13 @@ routes.get('/upload/file', async (req, res) => {
   let prefix = 'writeups/files/';
   // hash the name
   // let name = util.md5(fileName);
-  let result = await db_mgmt.record_file_upload(req.session.account_id, fileName);
+  let result = '';
+  try {
+    result = await db_mgmt.record_file_upload(req.session.account_id, fileName);
+  } catch (error) {
+    return next(error);
+  }
+
   let id = result.insertId;
 
   let url = getSignedUrl(prefix + id + fileExt, fileType);
@@ -91,24 +102,33 @@ routes.get('/upload/file', async (req, res) => {
 });
 
 // upload a file
-routes.get('/upload/resume', async (req, res) => {
+routes.get('/upload/resume', async (req, res, next) => {
   // get the file name, type, and extension
   const fileName = req.query['file-name'];
   const fileType = req.query['file-type'];
   const fileExt = '.' + fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
 
+  if (fileType.toLowerCase() !== 'application/pdf') {
+    res.status(415).send('Only PDFs are supported.');
+    return;
+  }
+
   let prefix = 'resumes/';
   // hash the name
   // let name = util.md5(fileName);
   let key = prefix + req.session.account_id + fileExt;
-  await db_mgmt.record_resume_upload(req.session.account_id, key);
+  try {
+    await db_mgmt.record_resume_upload(req.session.account_id, key);
+  } catch (error) {
+    return next(error);
+  }
 
   let url = getSignedUrl(key, fileType);
   res.status(200).json({url: url, key: key});
 });
 
 // finds an unused file name and returns a signed url to upload to a file
-async function getUnusedName(req, res, s3, prefix, name, fileType, fileExt) {
+async function getUnusedName(req, res, next, s3, prefix, name, fileType, fileExt) {
   let key = prefix + name + fileExt;
   // check if the file name is already used
   s3.headObject({Bucket: aws_credentials.s3Bucket, Key: key}, async (err, data) => {
@@ -116,7 +136,11 @@ async function getUnusedName(req, res, s3, prefix, name, fileType, fileExt) {
       // if it is not, get a signed url and record the file upload
       if (err.code === 'NotFound') {
         let url = getSignedUrl(key, fileType);
-        await db_mgmt.record_file_upload(req.session.account_id, key);
+        try {
+          await db_mgmt.record_file_upload(req.session.account_id, key);
+        } catch (error) {
+          return next(error);
+        }
         res.status(200).json({url: url, key: key});
       // if some other error occurred, return the error
       } else {

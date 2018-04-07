@@ -14,6 +14,7 @@ export class ResumeComponent implements OnInit {
   notifications = {
     resume_upload_successful: false,
     resume_upload_error: false,
+    resume_invalid_filetype: false,
     generic_error: false,
     bad_request: false
   };
@@ -54,7 +55,9 @@ export class ResumeComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        this.innerHtml = this.domSanitizer.bypassSecurityTrustHtml(
+          '<h5>You have not uploaded a resume yet.</h5>'
+        );
       }
     );
   }
@@ -77,8 +80,12 @@ export class ResumeComponent implements OnInit {
         );
       },
       err => {
-        this.notifications.resume_upload_error = true;
-        console.log(err);
+        console.log(err.status);
+        if (err.status === 415) {
+          this.notifications.resume_invalid_filetype = true;
+        } else {
+          this.notifications.resume_upload_error = true;
+        }
       }
     );
   }
@@ -88,11 +95,7 @@ export class ResumeComponent implements OnInit {
       return false;
     }
 
-    const fileName = this.file.name;
-    const fileExt = fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
-    console.log(fileExt);
-
-    return fileExt.toLowerCase() === 'pdf';
+    return this.file.type === 'application/pdf';
   }
 
 }
