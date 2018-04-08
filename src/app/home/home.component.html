@@ -56,7 +56,7 @@
 				<!-- Voting Box -->
 				<div *ngIf="this.getSession().getElection()" class="col-sm-4">
 					<div (click)="routeTo('/voting')" class="card tile">
-						<img src="assets/voting.svg">
+						<img class='card-image' src="assets/voting.svg">
 						<div class="card-body">
 							<h3 class="card-title">Voting</h3>
 							<p class="card-text">Vote on Current Elections and Events</p>
