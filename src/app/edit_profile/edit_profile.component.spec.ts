@@ -13,7 +13,6 @@ import { ActivatedRoute } from '@angular/router';
 class MockSessionService {
     public profile = {};
     update_profile(formData) {
-        console.log(formData.value.email);
         if (formData.value.email === 'badrequest@email.com') {
             return of(new HttpErrorResponse({ status: 409, statusText: 'bad request' }));
         } else if (formData.value.email === 'genericerror@email.com') {
