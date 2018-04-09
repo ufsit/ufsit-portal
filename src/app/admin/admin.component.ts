@@ -142,7 +142,7 @@ export class AdminComponent implements OnInit {
         this.results = res;
       },
       err => {
-        console.log('YOU DID DONE FUCKED UP AND YOU PROBABLY HAVE NO CLUE WHERE YOU DUMB ASS.  AND YOU THINK THAT YOU COULD ACTUALLY COMPETE WITH CHRISTIAN IN A CODING COMPETITION ha');
+        console.log('uhoh thats not good');
       }
     );
   }
