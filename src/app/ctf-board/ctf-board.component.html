@@ -15,12 +15,15 @@
             <div class=col-md-4 *ngFor="let ctf of this.getCTFCards(); let i = index">
                 <div class="card tile border-secondary mt-3 mb-3">
                     <div class="card-header text-center border-secondary" style="background-color:#D0D0D0">
-                        <h4 class="mb-0" style="color:#303030">{{ctf.title + ' ' + i}}</h4>
+                        <h4 class="mb-0" style="color:#303030">{{ ctf.name }}</h4>
                     </div>
                     <div class="card-body border-secondary">
-                        <p class="card-text mt-0 mb-0"><strong>Date: </strong>{{ctf.date+i}}</p>
-                        <p class="card-text mt-0 mb-0 pb-1"><strong>Difficulty: </strong>{{ctf.difficulty+i}}</p>
-                        <p class="card-text"><strong>Description: </strong>{{ ctf.description | limitTo : 100 }}</p>
+                        <p class="card-text mt-0 mb-0">
+                            <strong>Date: </strong>{{ ctf.time_updated | limitTo : 10 : false }}</p>
+                        <p class="card-text mt-0 mb-0 pb-1">
+                            <strong>Difficulty: </strong>{{ ctf.difficulty }}</p>
+                        <p class="card-text">
+                            <strong>Description: </strong>{{ ctf.description | limitTo : 100 : true }}</p>
                     </div>
                     <div class="card-footer border-secondary" style="background-color:#D0D0D0">
                         <button class="btn btn-secondary input-label" (click)="cardClick(ctf)">Continue Reading</button>

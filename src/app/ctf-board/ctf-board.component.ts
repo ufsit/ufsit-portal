@@ -10,15 +10,7 @@ import { RestService } from '../rest.service';
 
 export class CTFBoardComponent implements OnInit {
 
-    private ctfCards = [
-        {'title': 'This is my Title', 'description': 'This is a description add more text add more text keyboard smash here it comes qpiufvqnpunqaiuofnfiwnqqvp3riuafnapiuuwrn1fpquanfipwncpn there it was', 'link': 'tile', 'date': '01/01/201', 'difficulty': '10'}, // tslint:disable-line:max-line-length
-        {'title': 'This is my Title', 'description': 'This is a description add more text add more text keyboard smash here it comes qpiufvqnpunqaiuofnfiwnqqvp3riuafnapiuuwrn1fpquanfipwncpn there it was', 'link': 'tile', 'date': '01/01/201', 'difficulty': '10'}, // tslint:disable-line:max-line-length
-        {'title': 'This is my Title', 'description': 'This is a dehere it comes qpiufvqnpunqaiuofnfiwnqqvp3riuafnapiuuwrn1fpquanfipwncpn there it was', 'link': 'tile', 'date': '01/01/201', 'difficulty': '10'}, // tslint:disable-line:max-line-length
-        {'title': 'This is my Title', 'description': 'This is a description add more text add more text keyboard smash here it comes qpiufvqnpunqaiuofnfiwnqqvp3riuafnapiuuwrn1fpquanfipwncpn there it was', 'link': 'tile', 'date': '01/01/201', 'difficulty': '10'}, // tslint:disable-line:max-line-length
-        {'title': 'This is my Title', 'description': 'This is a de add more text add more text keyboard smash here it comes qpiufvqnpunqaiuofnfiwnqqvp3riuafnapiuuwrn1fpquanfipwncpn there it was', 'link': 'tile', 'date': '01/01/201', 'difficulty': '10'}, // tslint:disable-line:max-line-length
-        {'title': 'This is my Title', 'description': 'This is a demore text keyboard smash here it comes qpiufvqnpunqaiuofnfiwnqqvp3riuafnapiuuwrn1fpquanfipwncpn there it was', 'link': 'tile', 'date': '01/01/201', 'difficulty': '10'}, // tslint:disable-line:max-line-length
-        {'title': 'This is my Title', 'description': 'This is a dencpn there it was', 'link': 'tile', 'date': '01/01/201', 'difficulty': '10'}, // tslint:disable-line:max-line-length
-    ];
+    private ctfCards;
 
     constructor(
         private route: ActivatedRoute,
@@ -27,21 +19,29 @@ export class CTFBoardComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // get ctf cards from db - get all writeups
-        /* id (link)
-           name (title)
-           time_updated
-           full_name * anonymous?
-           add: ***description
-           add: ***difficulty
-        */
+
+        // get ctf cards from backend
+        this.restService.getAllWriteups().subscribe(
+            success => { this.ctfCards = success; },
+            failure => { console.log(failure); }
+        );
+
     }
 
-    public routeTo(path: string) { this.router.navigate([path]); } //  route to /writeups/id
+    public routeTo(id: string) {
+        this.router.navigate(['/writeups/' + id]);
+    }
 
-    public getCTFCards() { return this.ctfCards; }
+    public getCTFCards() {
+        if (!this.ctfCards) { return null; }
+        return this.ctfCards.filter((x) => {
+            return (x.hidden === 0);
+        });
+    }
 
-    public cardClick(ctf) { console.log(ctf); } // add analytics
-    // new table : writeup_anallytics - writeupid, userid, timestamp & query for unique_clicks, total_clicks
+    public cardClick(ctf) {
+        this.restService.customCTFClick(ctf.id);
+        this.routeTo(ctf.id);
+    }
 
 }

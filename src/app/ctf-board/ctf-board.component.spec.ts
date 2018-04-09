@@ -11,14 +11,22 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { ActivatedRoute } from '@angular/router';
 
 class MockRestService {
-    public temp() {
-        return true;
+
+    public getAllWriteups() {
+        return of([
+            { name: 'name1', description: 'description1', link: 'https://google.com' },
+            { name: 'name2', description: 'description2', link: 'https://google.com' },
+        ]);
     }
+
+    public customCTFClick(id: number) { return id; }
+
 }
 
 describe('CTFBoardComponent', () => {
     let component: CTFBoardComponent;
     let fixture: ComponentFixture<CTFBoardComponent>;
+    let restService: RestService;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -50,15 +58,25 @@ describe('CTFBoardComponent', () => {
                 }
             ]
         }).compileComponents();
-}));
+    }));
 
-beforeEach(() => {
-    fixture = TestBed.createComponent(CTFBoardComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-});
+    beforeEach(() => {
+        fixture = TestBed.createComponent(CTFBoardComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        restService = TestBed.get(RestService);
+        spyOn(restService, 'getAllWriteups').and.callThrough();
+        spyOn(restService, 'customCTFClick').and.callThrough();
+    });
 
-it('should create', () => {
-    expect(component).toBeTruthy();
-});
+    describe('should create', () => {
+        it('builds component', () => {
+            expect(component).toBeTruthy();
+        });
+        it('subscribes to resources on init', () => {
+            component.ngOnInit();
+            expect(restService.getAllWriteups).toHaveBeenCalledTimes(1);
+        });
+    });
+
 });

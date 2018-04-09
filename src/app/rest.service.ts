@@ -49,6 +49,11 @@ export class RestService {
         }
     }
 
+    // analytics track user clicks
+    public customCTFClick(id) {
+        this.post('/app/ctf_click', { id }, { responseType: 'text' }).subscribe();
+    }
+
     // request list of custom admin-added tiles for home page
     public customTiles(): Observable<Response> {
         return this.get('/app/custom_tiles');

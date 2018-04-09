@@ -154,6 +154,11 @@ let db_mgmt_module = function () {
         }
     }
 
+    async function writeup_click(user_id, writeup_id) {
+        const values = { user_id, writeup_id };
+        return await queryAsync('INSERT INTO `writeup_clicks` SET ?', values);
+    }
+
     async function list_users() {
         return await queryAsync('SELECT ?? FROM `account`',
             [['id', 'email', 'full_name', 'mass_mail_optin', 'grad_date', 'registration_date']]);
@@ -264,15 +269,15 @@ let db_mgmt_module = function () {
             account_id);
     }
 
-    /* Get a list of the user's writeup submissions */
+    /* Get all writeup submissions */
     async function get_all_writeup_submissions() {
-        return await queryAsync('SELECT `writeup_submissions`.id,`name`,`time_updated`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id');
+        const attributes = '`writeup_submissions`.id,`name`,`time_updated`,`full_name`,`hidden`,`difficulty`,`description`';
+        return await queryAsync('SELECT ' + attributes + ' FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id');
     }
 
     /* Get a specific writeup, given its id */
     async function get_writeup(id) {
-        return await queryAsync('SELECT `name`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id AND `writeup_submissions`.id = ?',
-            id);
+        return await queryAsync('SELECT `name`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id AND `writeup_submissions`.id = ?', id);
     }
 
     /* Get a list of the user's writeup submissions */
@@ -295,13 +300,13 @@ let db_mgmt_module = function () {
     /* Records a writeup submission */
     async function update_writeup_submission(account_id, name, id) {
         let results = await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `id` = ?',
-                        [account_id, id]);
+            [account_id, id]);
         if (results.length === 0) {
             throw new createError.BadRequest('Cannot update a different user\'s writeup');
         }
 
         return await queryAsync('UPDATE `writeup_submissions` SET `name` = ?, `time_updated` = ? WHERE `account_id` = ? AND `id` = ?',
-                                [name, new Date(), account_id, id]);
+            [name, new Date(), account_id, id]);
     }
 
     /* Records a file upload */
@@ -322,7 +327,7 @@ let db_mgmt_module = function () {
     /* Records a resume upload */
     async function record_resume_upload(account_id, key) {
         return await queryAsync('UPDATE `account` SET `resume`=? WHERE `id`=?',
-                                [key, account_id]);
+            [key, account_id]);
     }
 
     // Revealing module
@@ -348,6 +353,7 @@ let db_mgmt_module = function () {
         delete_tile: delete_tile,
         custom_tiles: custom_tiles,
         tile_click: tile_click,
+        writeup_click: writeup_click,
         get_resume_key: get_resume_key,
         record_resume_upload: record_resume_upload,
     });
