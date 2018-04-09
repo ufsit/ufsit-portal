@@ -128,4 +128,12 @@ export class RestService {
   public vote(ballot) {
     return this.post('/voting/send_vote', ballot);
   }
+
+  public endElection() {
+    return this.post('/voting/end_election');
+  }
+
+  public getElectionResults() {
+    return this.get('/voting/get_election_results');
+  }
 }

@@ -87,35 +87,35 @@ CREATE TABLE `candidates` (
 );
 
 CREATE TABLE `pres` (
-	`first` varchar(255) NOT NULL,
-	`second` varchar(255) NOT NULL,
-	`third` varchar(255) NOT NULL,
-	`fourth` varchar(255) NOT NULL,
-	`fifth` varchar(255) NOT NULL
+	`first` varchar(255),
+	`second` varchar(255),
+	`third` varchar(255),
+	`fourth` varchar(255),
+	`fifth` varchar(255)
 );
 
 CREATE TABLE `vp` (
-	`first` varchar(255) NOT NULL,
-	`second` varchar(255) NOT NULL,
-	`third` varchar(255) NOT NULL,
-	`fourth` varchar(255) NOT NULL,
-	`fifth` varchar(255) NOT NULL
+	`first` varchar(255),
+	`second` varchar(255),
+	`third` varchar(255),
+	`fourth` varchar(255),
+	`fifth` varchar(255)
 );
 
 CREATE TABLE `treas` (
 	`first` varchar(255),
-	`second` varchar(255) NOT NULL,
-	`third` varchar(255) NOT NULL,
-	`fourth` varchar(255) NOT NULL,
-	`fifth` varchar(255) NOT NULL
+	`second` varchar(255),
+	`third` varchar(255),
+	`fourth` varchar(255),
+	`fifth` varchar(255)
 );
 
 CREATE TABLE `secr` (
-	`first` varchar(255) NOT NULL,
-	`second` varchar(255) NOT NULL,
-	`third` varchar(255) NOT NULL,
-	`fourth` varchar(255) NOT NULL,
-	`fifth` varchar(255) NOT NULL
+	`first` varchar(255),
+	`second` varchar(255)L,
+	`third` varchar(255),
+	`fourth` varchar(255),
+	`fifth` varchar(255)
 );
 
 CREATE TABLE `voters` (

@@ -12,13 +12,15 @@ import { SessionService } from '../session.service';
 
 
 export class AdminComponent implements OnInit {
+  private results;
   private users;
   public orderForm: FormGroup;
   private cands = ['President', 'VP', 'Secretary', 'Treasurer'];
 
   notifications = {
     emptyField: false,
-    existingPoll: false
+    existingPoll: false,
+    electionResults: false
   }
 
   constructor(private sessionService: SessionService, private requests: RestService, private modalService: NgbModal,
@@ -45,6 +47,8 @@ export class AdminComponent implements OnInit {
       this.orderForm = this.formBuilder.group({
         candidates: this.formBuilder.array([ this.createQuestion()])
       });
+
+      this.getResults();
   }
 
   // Returns an array of all the accounts that gets diplayed in the webpage
@@ -104,7 +108,7 @@ export class AdminComponent implements OnInit {
         }
       },
       err => {
-        alert('Something went wrong.  Please contact the developers');
+        console.log(err);
       }
     );
   }
@@ -115,8 +119,35 @@ export class AdminComponent implements OnInit {
     control.removeAt(i);
   }
 
-  //Encapsulation yo
+  // Encapsulation yo
   public getCandidates() {
     return this.cands;
+  }
+
+  // Ends the election
+  public endElection() {
+    this.requests.endElection().subscribe();
+  }
+
+  // Gets the users session
+  public getSession() {
+    return this.sessionService;
+  }
+
+  // Gets the results of an election
+  public getResults() {
+    return this.requests.getElectionResults().subscribe(
+      res => {
+        this.notifications.electionResults = true;
+        this.results = res;
+      },
+      err => {
+        console.log('YOU DID DONE FUCKED UP AND YOU PROBABLY HAVE NO CLUE WHERE YOU DUMB ASS.  AND YOU THINK THAT YOU COULD ACTUALLY COMPETE WITH CHRISTIAN IN A CODING COMPETITION ha');
+      }
+    );
+  }
+
+  public getElectionResults() {
+    return JSON.stringify(this.results);
   }
 }

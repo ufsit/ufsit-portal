@@ -326,13 +326,14 @@ let db_mgmt_module = function() {
 	}
 
 	// Validates and records a user's vote
+	// TODO: CATCH NULL VOTE
 	async function record_vote(vote, user_id) {
 		if (await verify_valid_vote()) {
 			try {
-				await insert_votes('pres', vote.president);
+				await insert_votes('president', vote.president);
 				await insert_votes('vp', vote.vp);
-				await insert_votes('treas', vote.treasurer);
-				await insert_votes('secr', vote.secretary);
+				await insert_votes('treasurer', vote.treasurer);
+				await insert_votes('secretary', vote.secretary);
 				return await record_that_user_voted();
 			} catch(error) {
 				throw new createError.BadRequest('There seems to be a problem with the db.  Please contact the developers');
@@ -356,25 +357,25 @@ let db_mgmt_module = function() {
 					// If the person is not in the list of candidates for president return false
 					if (count.length < 1) { return false; }
 				}
-				vote.president.length = 5;
+				//vote.president.length = 30;
 				// Verifies all vp choices
 				for(var pres of vote.vp) {
 					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `vp`=1', pres);
 					if (count.length < 1) { return false; }
 				}
-				vote.vp.length = 5;
+				//vote.vp.length = 30;
 				// Verifies all Treasurer choices
 				for(var pres of vote.treasurer) {
 					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `treas`=1', pres);
 					if (count.length < 1) { return false; }
 				}
-				vote.treasurer.length = 5;
+				//vote.treasurer.length = 30;
 				// Verifies all Secretary choices
 				for(var pres of vote.secretary) {
 					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `secr`=1', pres);
 					if (count.length < 1) { return false; }
 				}
-				vote.secretary.length = 5;
+				//vote.secretary.length = 30;
 				return true;
 			} catch(error) {	// Only catches an error when you have tried to vote for a person not running
 				return false;
@@ -383,15 +384,37 @@ let db_mgmt_module = function() {
 
 		// Records a users vote after it has been thoroughly validated
 		async function insert_votes(position, candidate_array) {
-			let values = {
-				first: candidate_array[0],
-				second: candidate_array[1],
-				third: candidate_array[2],
-				fourth: candidate_array[3],
-				fifth: candidate_array[4]
+			let values = {}
+			for (const [index, value] of candidate_array.entries()) {
+				values[(index + 1).toString() + 'th'] = value; 
 			}
 			await queryAsync('INSERT INTO `' + position + '` SET ?', values);
 		}
+	}
+
+	async function end_election() {
+		if (await current_election()) {
+			await queryAsync('DELETE FROM `candidates`');
+		}
+		else {
+			throw new createError.BadRequest('There was an error trying to delete from the database');
+		}
+	}
+
+	// Grabs all the ranking of every position and returns those inside of a promise
+	async function get_election_results() {
+		try {
+			const results = {
+				president: await queryAsync('SELECT * FROM `president`'),
+				vp: await queryAsync('SELECT * FROM `vp`'),
+				treasurer: await queryAsync('SELECT * FROM `treasurer`'),
+				secretary: await queryAsync('SELECT * FROM `secretary`')
+			}
+			return results;
+		} catch(error) {
+			throw new createError.BadRequest('There was an error trying to query the results of the election');
+		}
+		
 	}
 
 	// Revealing module
@@ -414,7 +437,9 @@ let db_mgmt_module = function() {
 		get_candidates: get_candidates,
 		have_not_voted: have_not_voted,
 		is_eligible: is_eligible,
-		record_vote: record_vote
+		record_vote: record_vote,
+		end_election: end_election,
+		get_election_results: get_election_results
 	});
 };
 
