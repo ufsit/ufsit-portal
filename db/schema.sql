@@ -112,7 +112,7 @@ CREATE TABLE `treas` (
 
 CREATE TABLE `secr` (
 	`first` varchar(255),
-	`second` varchar(255)L,
+	`second` varchar(255),
 	`third` varchar(255),
 	`fourth` varchar(255),
 	`fifth` varchar(255)
@@ -121,6 +121,11 @@ CREATE TABLE `secr` (
 CREATE TABLE `voters` (
 	`person` INT NOT NULL
 );
+
+CREATE TABLE `results` {
+	`position`varchar(255),
+	`json` varchar(255)
+}
 
 ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`rank`) REFERENCES `account_rank`(`id`);
 

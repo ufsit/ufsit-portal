@@ -20,10 +20,22 @@
     </tbody>
   </table>
   <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Create new poll</button>
+ 
+  
   <button *ngIf="this.getSession().getElection()" class="btn btn-outline-primary" (click)="endElection()">End Election</button>
 
+
   <div *ngIf="notifications.electionResults">
-    {{this.getElectionResults()}}
+    <br> <p>President:</p>
+    {{getPresidentResults()}}
+    <br> <p>VP:</p>
+    {{getVpResults()}}
+    <br> <p>Treasurer:</p>
+    {{getTreasurerResults()}}
+    <br> <p>Secretary:</p>
+    {{getSecretaryResults()}}
+    <br>
+    <button class="btn btn-outline-primary">Delete all election results</button>
   </div>
   <!-- This is where I am going to put the get results stuff -->
 </div>

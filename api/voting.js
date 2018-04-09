@@ -69,13 +69,15 @@ async function arrayify(position_array, candidates) {
     }
 }
 
+// Deletes the stored candidates and calls helper function to calculate and store results of election
 routes.post('/voting/end_election', async (req, res) => {
     if (util.account_has_admin(req.account)) {
         try {
             await db_mgmt.end_election();
+            await store_results();
             return res.status(200).end();
         } catch (error) {
-            res.status(400).send('There was an error trying to delete from the database');
+            res.status(400).send('There was an error in accessing the database.  Please contact the devlopers');
         }
     }
     else {
@@ -84,31 +86,25 @@ routes.post('/voting/end_election', async (req, res) => {
 });
 
 // Retrieves the results of the election from the database and then calculates the results here
-routes.get('/voting/get_election_results', async (req, res) => {
-    if (util.account_has_admin(req.account)) {
-        try {
-            let results = await db_mgmt.get_election_results();
-            let president_array = await map_to_array(results.president);
-            let vp_array = await map_to_array(results.vp);
-            let treasurer_array = await map_to_array(results.treasurer);
-            let secretary_array = await map_to_array(results.secretary);
-            console.log(await runoff(president_array, {}));
-            let winners = {
-                president: await runoff(president_array, {}),
-                vp: await runoff(vp_array, {}),
-                treasurer: await runoff(treasurer_array, {}),
-                secretary: await runoff(secretary_array, {})
-            }
-            res.status(200).json(winners);
-        } catch(error) {
-            res.status(400).send('There was an error querying the database.  Contact the developers immediately\
-            because you have likely destroyed your database');
+async function store_results() {
+    try {
+        let results = await db_mgmt.get_votes();
+        let president_array = await map_to_array(results.president);
+        let vp_array = await map_to_array(results.vp);
+        let treasurer_array = await map_to_array(results.treasurer);
+        let secretary_array = await map_to_array(results.secretary);
+        let winners = {
+            president: await runoff(president_array, {}),
+            vp: await runoff(vp_array, {}),
+            treasurer: await runoff(treasurer_array, {}),
+            secretary: await runoff(secretary_array, {})
         }
+        await db_mgmt.store_results(winners);
+    } catch(error) {
+        res.status(400).send('There was an error querying the database.  Contact the developers immediately\
+        because you have likely destroyed your database');
     }
-    else {
-        res.status(403).send('Access denied');
-    }
-});
+}
 
 // Helper function to map jsons into arrays
 // TODO: SIMPLIFY TO ARRAY USING PROPERTIES OF JSON OBJECT. (you're stupid spencer, you should have seen that before)
@@ -125,6 +121,7 @@ async function map_to_array(old_array) {
 
 
 // The *Algorithm* that calculates the winner of an election using ranked choice voting
+// Using a JSON as a map (rather than an array).  1. Maps are O(1) for insertions.  2. For the array I would get duplicate entries
 async function runoff(voters, results) {
     // This terminates the recursive calls
     if (!voters.length || !voters[0].length) return
@@ -156,6 +153,25 @@ async function runoff(voters, results) {
         return counts[person] > min;
     })), results);
   }
+
+// Retrieves the stored election results and returns them.  Also checks to make sure there are results stored
+routes.get('/voting/get_election_results', async (req, res) => {
+    if (util.account_has_admin(req.account)) {
+        if (await db_mgmt.there_are_results()) {
+            try {
+                return res.status(200).json(await db_mgmt.get_election_results());
+            } catch (error) {
+                res.status(400).send('There was an error retrieving the results.  But, they should still be stored in the database');
+            }
+        }
+        else {
+            res.status(405).send('There doesn\'t seem to be any stored election results');
+        }
+    }
+    else {
+        res.status(403).send('Access denied');
+    }
+});
 
 //TODO: MOVE FUNCTION FROM ADMIN API FILE
 

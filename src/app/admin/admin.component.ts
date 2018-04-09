@@ -48,7 +48,9 @@ export class AdminComponent implements OnInit {
         candidates: this.formBuilder.array([ this.createQuestion()])
       });
 
-      this.getResults();
+      if (!this.sessionService.getElection()) {
+        this.getResults();
+      }
   }
 
   // Returns an array of all the accounts that gets diplayed in the webpage
@@ -126,7 +128,14 @@ export class AdminComponent implements OnInit {
 
   // Ends the election
   public endElection() {
-    this.requests.endElection().subscribe();
+    this.requests.endElection().subscribe(
+      res => { 
+        window.location.reload();
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   // Gets the users session
@@ -140,14 +149,38 @@ export class AdminComponent implements OnInit {
       res => {
         this.notifications.electionResults = true;
         this.results = res;
+        console.log(res.president);
       },
       err => {
-        console.log('uhoh thats not good');
-      }
-    );
+        if (err.status === 405) {
+        }
+        if (err.status === 400) {
+          //generic error accessing database
+        }
+      });
   }
 
-  public getElectionResults() {
-    return JSON.stringify(this.results);
+  public getPresidentResults() {
+    if (JSON.stringify(this.results.president) === 'null') {
+      return 'Tie for First place'; }
+    return JSON.stringify(this.results.president);
+  }
+
+  public getVpResults() {
+    if (JSON.stringify(this.results.vp) === 'null') {
+      return 'Tie for First place'; }
+    return JSON.stringify(this.results.vp);
+  }
+
+  public getTreasurerResults() {
+    if (JSON.stringify(this.results.treasurer) === 'null') {
+      return 'Tie for First place'; }
+    return JSON.stringify(this.results.treasurer);
+  }
+
+  public getSecretaryResults() {
+    if (JSON.stringify(this.results.secretary) === 'null') {
+      return 'Tie for First place'; }
+    return JSON.stringify(this.results.secretary);
   }
 }

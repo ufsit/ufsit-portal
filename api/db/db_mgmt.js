@@ -402,7 +402,7 @@ let db_mgmt_module = function() {
 	}
 
 	// Grabs all the ranking of every position and returns those inside of a promise
-	async function get_election_results() {
+	async function get_votes() {
 		try {
 			const results = {
 				president: await queryAsync('SELECT * FROM `president`'),
@@ -413,8 +413,52 @@ let db_mgmt_module = function() {
 			return results;
 		} catch(error) {
 			throw new createError.BadRequest('There was an error trying to query the results of the election');
+		}	
+	}
+
+	// Stores the results of an election
+	async function store_results(results) {
+		// Everything get converted to a string and the results are stored
+		try {
+			await queryAsync('INSERT INTO `results` SET ?', {position:'president', json: JSON.stringify(results.president)});
+			await queryAsync('INSERT INTO `results` SET ?', {position:'vp', json: JSON.stringify(results.vp)});
+			await queryAsync('INSERT INTO `results` SET ?', {position:'treasurer', json: JSON.stringify(results.treasurer)});
+			await queryAsync('INSERT INTO `results` SET ?', {position:'secretary', json: JSON.stringify(results.secretary)});
+		} catch (error) {
+			throw new createError.BadRequest('There was an error trying to store the results of the election');
 		}
-		
+	}
+
+	// Deletes everything having to do with voting (except candidates running because that was already deleted)
+	async function clear_database() {
+		try {
+			await queryAsync('DELETE FROM `president`');
+			await queryAsync('DELETE FROM `vp`');
+			await queryAsync('DELETE FROM `treasurer`');
+			await queryAsync('DELETE FROM `secretary`');
+			await queryAsync('DELETE FROM `results`');
+		} catch (error) {
+			throw new createError.BadRequest('There was an error deleting data from the database');
+		}
+	}
+
+	async function get_election_results() {
+		let results = {
+			president: await queryAsync('SELECT `json` FROM `results` WHERE position="president"'),
+			vp: await queryAsync('SELECT `json` FROM `results` WHERE position = "vp"'),
+			treasurer: await queryAsync('SELECT `json` FROM `results` WHERE position = "treasurer"'),
+			secretary: await queryAsync('SELECT `json` FROM `results` WHERE position = "secretary"')
+		}
+		results.president = JSON.parse(results.president[0].json);
+		results.vp = JSON.parse(results.vp[0].json);
+		results.treasurer = JSON.parse(results.treasurer[0].json);
+		results.secretary = JSON.parse(results.secretary[0].json);
+		return results;
+	}
+
+	async function there_are_results() {
+		let result = await queryAsync('SELECT * FROM `results`');
+		return result.length > 0;
 	}
 
 	// Revealing module
@@ -439,6 +483,9 @@ let db_mgmt_module = function() {
 		is_eligible: is_eligible,
 		record_vote: record_vote,
 		end_election: end_election,
+		get_votes: get_votes,
+		store_results: store_results,
+		there_are_results: there_are_results,
 		get_election_results: get_election_results
 	});
 };
