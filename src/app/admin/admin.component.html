@@ -20,30 +20,21 @@
     </tbody>
   </table>
   <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Create new poll</button>
+  <button *ngIf="notifications.electionResults" class="btn btn-secondary" (click)="open(content2)">View Results of election</button>
  
-  
-  <button *ngIf="this.getSession().getElection()" class="btn btn-outline-primary" (click)="endElection()">End Election</button>
-
-
-  <div *ngIf="notifications.electionResults">
-    <br> <p>President:</p>
-    {{getPresidentResults()}}
-    <br> <p>VP:</p>
-    {{getVpResults()}}
-    <br> <p>Treasurer:</p>
-    {{getTreasurerResults()}}
-    <br> <p>Secretary:</p>
-    {{getSecretaryResults()}}
-    <br>
-    <button class="btn btn-outline-primary">Delete all election results</button>
+          <!-- Warning before submitting poll -->
+  <div *ngIf="notifications.endingElection" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+    <span aria-hidden="true"></span>
+    <span class="notification_panel"><strong>Warning</strong> You are about to end the current elections.  This will effect EVERY USER
+    and cannot be undone.  To proceed, click end election again</span>
   </div>
-  <!-- This is where I am going to put the get results stuff -->
+  <button *ngIf="this.getSession().getElection()" class="btn btn-outline-primary" (click)="endElection()">End Election</button>
 </div>
 
 
 
 
-<!-- Modal Popup -->
+<!-- Modal Popup for creating elections -->
 <ng-template #content let-c="close" let-d="dismiss">
   <!--Empty Field Notification -->
   <div *ngIf="notifications.emptyField" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
@@ -60,8 +51,8 @@
 
   <!-- Header for modal -->
   <div class="modal-header">
-    <h3 class="modal-title">Create Poll</h3>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+    <h3 class="modal-title">Create Election</h3>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click'); notifications.createElectionWarning = false">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -80,8 +71,61 @@
         </div>
       </div>
 
+        <!-- Warning before submitting poll -->
+      <div *ngIf="notifications.createElectionWarning" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+        <span aria-hidden="true"></span>
+        <span class="notification_panel"><strong>Warning</strong> You are about to create an election that will be visible to *all*
+        users.  If you want to proceed, press submit again</span>
+      </div>
+
       <button type="submit">Save</button>
-      <button type="button" (click)="addItem()">Add More</button>
+      <button type="button" (click)="addItem(); notifications.createElectionWarning = false">Add More</button>
     </form>
   </div>
+</ng-template>
+
+<!-- Modal for displaying the election results -->
+<ng-template #content2 let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h3 class="modal-title">Results from Election</h3>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click');">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Position</th>
+          <th scope="col">Candidate</th>
+          <th scope="col">Number of Votes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-primary" *ngFor="let item of getPresidentResults()">
+          <td>President</td>
+          <td>{{item}}</td>
+          <td>{{results.president[item]}}</td>
+        </tr>
+        <tr class="table-secondary" *ngFor="let item of getVpResults()">
+          <td>VP</td>
+          <td>{{item}}</td>
+          <td>{{results.vp[item]}}</td>
+        </tr>
+        <tr class="table-success" *ngFor="let item of getTreasurerResults()">
+          <td>Treasurer</td>
+          <td>{{item}}</td>
+          <td>{{results.treasurer[item]}}</td>
+        </tr>
+        <tr class="table-warning" *ngFor="let item of getSecretaryResults()">
+          <td>Secretary</td>
+          <td>{{item}}</td>
+          <td>{{results.secretary[item]}}</td>
+        </tr>         
+      </tbody><br>
+    </table>
+    <button class="btn btn-outline-primary">Delete all election results</button>
+  </div>
+
 </ng-template>

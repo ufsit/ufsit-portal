@@ -20,7 +20,9 @@ export class AdminComponent implements OnInit {
   notifications = {
     emptyField: false,
     existingPoll: false,
-    electionResults: false
+    electionResults: false,
+    createElectionWarning: false,
+    endingElection: false
   }
 
   constructor(private sessionService: SessionService, private requests: RestService, private modalService: NgbModal,
@@ -96,6 +98,10 @@ export class AdminComponent implements OnInit {
 
   //Sends the formgroup to be turned into a post request
   public onSubmit(formValue: any) {
+    if (!this.notifications.createElectionWarning) {
+      this.notifications.createElectionWarning = true;
+      return;
+    }
     if (this.emptyForm(formValue.value)) {
       this.notifications.emptyField = true;
       return;
@@ -128,6 +134,10 @@ export class AdminComponent implements OnInit {
 
   // Ends the election
   public endElection() {
+    if (!this.notifications.endingElection) {
+      this.notifications.endingElection = true;
+      return;
+    }
     this.requests.endElection().subscribe(
       res => { 
         window.location.reload();
@@ -149,7 +159,6 @@ export class AdminComponent implements OnInit {
       res => {
         this.notifications.electionResults = true;
         this.results = res;
-        console.log(res.president);
       },
       err => {
         if (err.status === 405) {
@@ -161,26 +170,26 @@ export class AdminComponent implements OnInit {
   }
 
   public getPresidentResults() {
-    if (JSON.stringify(this.results.president) === 'null') {
-      return 'Tie for First place'; }
-    return JSON.stringify(this.results.president);
+    let arr = [];
+    for (let item in this.results.president) {arr.push(item);}
+    return arr;
   }
 
   public getVpResults() {
-    if (JSON.stringify(this.results.vp) === 'null') {
-      return 'Tie for First place'; }
-    return JSON.stringify(this.results.vp);
+    let arr = [];
+    for (let item in this.results.vp) {arr.push(item);}
+    return arr;
   }
 
   public getTreasurerResults() {
-    if (JSON.stringify(this.results.treasurer) === 'null') {
-      return 'Tie for First place'; }
-    return JSON.stringify(this.results.treasurer);
+    let arr = [];
+    for (let item in this.results.treasurer) {arr.push(item);}
+    return arr;
   }
 
   public getSecretaryResults() {
-    if (JSON.stringify(this.results.secretary) === 'null') {
-      return 'Tie for First place'; }
-    return JSON.stringify(this.results.secretary);
+    let arr = [];
+    for (let item in this.results.secretary) {arr.push(item);}
+    return arr;
   }
 }
