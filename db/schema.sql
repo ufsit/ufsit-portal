@@ -2,6 +2,7 @@ CREATE TABLE `account` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`full_name` varchar(100) NOT NULL,
 	`email` varchar(254) NOT NULL,
+	`ufl_email` varchar(254) NOT NULL,
 	`verification_level` INT NOT NULL DEFAULT '0',
 	`permissions` TEXT NOT NULL,
 	`password` varchar(200) NOT NULL,

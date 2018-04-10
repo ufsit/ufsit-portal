@@ -84,11 +84,19 @@ let db_mgmt_module = function () {
 		error if there was a conflict, or proceed creating
 		the account */
 
-        if (await account_exists(new_record.email)) {
+        if (await account_exists(new_record.email)) { //check email
             throw new createError.Conflict('Attempted to create duplicate account: '
                 + new_record.email
             );
-        } else {
+        }
+
+        if (await account_exists(new_record.ufl_email)) { //check ufl_email
+            throw new createError.Conflict('Attempted to create duplicate account: '
+                + new_record.ufl_email
+            );
+        }
+
+        else {
             await insert_new_account(new_record);
 
             return;
@@ -96,10 +104,16 @@ let db_mgmt_module = function () {
 
         /* Helper function: Check if an account with the given email already exists.*/
         async function account_exists(email) {
-            /* Form a query to the 'accounts' table for entries with the given email */
-            let results = await queryAsync('SELECT `id` FROM `account` WHERE email = ?', email);
-
-            return results.length > 0;
+            if (email !== 'left_blank@ufl.edu') //check if placeholder email used
+            {
+                /* Form a query to the 'accounts' table for entries with the given email */
+                let results = await queryAsync('SELECT `id` FROM `account` WHERE email = ?', email);
+                if (results.length <= 0)
+                    results = await queryAsync('SELECT `id` FROM `account` WHERE ufl_email = ?', email);
+                return results.length > 0;
+            }
+            console.log("ERROR: Tried to lookup account by placeholder email left_blank@ufl.edu");
+            return false;
         }
 
 		/* Helper function: Inserts a new account element into the database with the
@@ -108,6 +122,7 @@ let db_mgmt_module = function () {
             let values = {
                 full_name: new_account.full_name,
                 email: new_account.email,
+                ufl_email: new_account.ufl_email,
                 permissions: '',
                 password: new_account.password.salt + '$' + new_account.password.hash,
                 registration_ip: new_account.registration_ip,
@@ -139,6 +154,8 @@ let db_mgmt_module = function () {
             throw new createError.BadRequest('Cannot update profile with zero fields');
         }
 
+        // console.log("Updating account", account_id, "with", account_data);
+
         return await sql_pool.query('UPDATE `account` SET ? WHERE id = ?', [account_data, account_id]);
     }
 
@@ -156,7 +173,7 @@ let db_mgmt_module = function () {
 
     async function list_users() {
         return await queryAsync('SELECT ?? FROM `account`',
-            [['id', 'email', 'full_name', 'mass_mail_optin', 'grad_date', 'registration_date']]);
+            [['id', 'email', 'ufl_email', 'full_name', 'mass_mail_optin', 'grad_date', 'registration_date']]);
     }
 
     async function add_tile(name, description, link) {
@@ -172,13 +189,22 @@ let db_mgmt_module = function () {
     async function retrieve(email_addr) {
         /* Form a query to the 'accounts' table for entries with the given email */
         /* Execute the query using a connection from the connection pool */
-        const results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
+        
+        if(email_addr === 'left_blank@ufl.edu'){
+            throw new createError.NotFound('No account with email address ' + email_addr);
+        }
+
+        let results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
             [['id', 'password', 'full_name'], email_addr]);
 
-        /* If the results array has any elements in it, call back with the 0th element
-        (entries are unique) */
+		/* If the results array has any elements in it, call back with the 0th element
+		(entries are unique) */
         if (results.length <= 0) {
-            throw new createError.NotFound('No account with email address ' + email_addr);
+            results = await queryAsync('SELECT ?? FROM `account` WHERE ufl_email = ?',
+                [['id', 'password', 'full_name'], email_addr]);
+            if (results.length <= 0) {
+                throw new createError.NotFound('No account with email address ' + email_addr);
+            }
         }
 
         let pwparts = results[0].password.split('$');
@@ -224,8 +250,8 @@ let db_mgmt_module = function () {
         return await queryAsync('INSERT INTO `session` SET ?', values);
     }
 
-    /* Confirms whether the token corresponds to an active session. If it does, calls back
-        with the email associated with it.*/
+	/* Confirms whether the token corresponds to an active session. If it does, calls back
+		with the email associated with it.*/
     async function get_session(session_token) {
         const results = await queryAsync('SELECT * FROM `session` WHERE ?', { id: session_token });
 
@@ -295,13 +321,13 @@ let db_mgmt_module = function () {
     /* Records a writeup submission */
     async function update_writeup_submission(account_id, name, id) {
         let results = await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `id` = ?',
-                        [account_id, id]);
+            [account_id, id]);
         if (results.length === 0) {
             throw new createError.BadRequest('Cannot update a different user\'s writeup');
         }
 
         return await queryAsync('UPDATE `writeup_submissions` SET `name` = ?, `time_updated` = ? WHERE `account_id` = ? AND `id` = ?',
-                                [name, new Date(), account_id, id]);
+            [name, new Date(), account_id, id]);
     }
 
     /* Records a file upload */
