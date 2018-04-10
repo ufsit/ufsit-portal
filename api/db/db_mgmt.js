@@ -330,10 +330,10 @@ let db_mgmt_module = function() {
 	async function record_vote(vote, user_id) {
 		if (await verify_valid_vote()) {
 			try {
-				await insert_votes('president', vote.president);
-				await insert_votes('vp', vote.vp);
-				await insert_votes('treasurer', vote.treasurer);
-				await insert_votes('secretary', vote.secretary);
+				if (vote.president.length) await insert_votes('president', vote.president);
+				if (vote.vp.length) await insert_votes('vp', vote.vp);
+				if (vote.treasurer.length) await insert_votes('treasurer', vote.treasurer);
+				if (vote.secretary.length) await insert_votes('secretary', vote.secretary);
 				return await record_that_user_voted();
 			} catch(error) {
 				throw new createError.BadRequest('There seems to be a problem with the db.  Please contact the developers');
