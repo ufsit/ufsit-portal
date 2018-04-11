@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { RestService } from '../rest.service';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { SessionService } from '../session.service';
+import { IMultiSelectOption, IMultiSelectSettings, IMultiSelectTexts } from 'angular-2-dropdown-multiselect';
 
 @Component({
   selector: 'app-admin',
@@ -16,6 +17,17 @@ export class AdminComponent implements OnInit {
   private users;
   public orderForm: FormGroup;
   private cands = ['President', 'VP', 'Secretary', 'Treasurer'];
+  private myOptions: IMultiSelectOption[];
+  private optionsModel: number[];
+
+  // Settings configuration for the dropdown checkbox
+  mySettings: IMultiSelectSettings = {
+    enableSearch: false,
+    checkedStyle: 'fontawesome',
+    buttonClasses: 'btn btn-default',
+    dynamicTitleMaxItems: 0,
+    displayAllSelectedText: false,
+  };
 
   notifications = {
     emptyField: false,
@@ -27,9 +39,12 @@ export class AdminComponent implements OnInit {
   }
 
   constructor(private sessionService: SessionService, private requests: RestService, private modalService: NgbModal,
-              private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.myOptions = [{ id: 'President', name: 'President' }, { id: 'VP', name: 'VP' },
+    { id: 'Treasurer', name: 'Treasurer' }, { id: 'Secretary', name: "Secretary" }];
+
     // Uses the RestService to make an http request for a list of users
     this.requests.user_list('/list_users').subscribe(
       // This portion of code is run if the list is properly returned
@@ -46,14 +61,14 @@ export class AdminComponent implements OnInit {
       error => {    // This portion of code is run when there was an error retrieving the user list
         console.log(error);
       });
-    
-      this.orderForm = this.formBuilder.group({
-        candidates: this.formBuilder.array([ this.createQuestion()])
-      });
 
-      if (!this.sessionService.getElection()) {
-        this.getResults();
-      }
+    this.orderForm = this.formBuilder.group({
+      candidates: this.formBuilder.array([this.createQuestion()])
+    });
+
+    if (!this.sessionService.getElection()) {
+      this.getResults();
+    }
   }
 
   // Returns an array of all the accounts that gets diplayed in the webpage
@@ -72,7 +87,7 @@ export class AdminComponent implements OnInit {
       candidate: ['', [
         Validators.required
       ]],
-      position: ['', [
+      position: [, [
         Validators.required
       ]]
     });
@@ -82,10 +97,14 @@ export class AdminComponent implements OnInit {
   public addItem(): void {
     const control = <FormArray>this.orderForm.controls['candidates'];
     control.push(this.createQuestion());
+    console.log(control);
   }
 
   //Checks to make sure that there are no empty fields in the form
   private emptyForm(form: any) {
+    if (form.candidates.length === 0) {
+      return true;
+    }
     for (let x of form.candidates) {
       if (x.candidate === '') {
         return true;
@@ -107,6 +126,7 @@ export class AdminComponent implements OnInit {
       this.notifications.createElectionWarning = true;
       return;
     }
+
     this.sessionService.createPoll(this.orderForm).subscribe(
       res => {
         if (res === 'Success') {
@@ -140,7 +160,7 @@ export class AdminComponent implements OnInit {
       return;
     }
     this.requests.endElection().subscribe(
-      res => { 
+      res => {
         window.location.reload();
       },
       err => {
@@ -165,32 +185,32 @@ export class AdminComponent implements OnInit {
         if (err.status === 405) {
         }
         if (err.status === 400) {
-          //generic error accessing database
+          // TODO: generic error accessing database
         }
       });
   }
 
   public getPresidentResults() {
     let arr = [];
-    for (let item in this.results.president) {arr.push(item);}
+    for (let item in this.results.president) { arr.push(item); }
     return arr;
   }
 
   public getVpResults() {
     let arr = [];
-    for (let item in this.results.vp) {arr.push(item);}
+    for (let item in this.results.vp) { arr.push(item); }
     return arr;
   }
 
   public getTreasurerResults() {
     let arr = [];
-    for (let item in this.results.treasurer) {arr.push(item);}
+    for (let item in this.results.treasurer) { arr.push(item); }
     return arr;
   }
 
   public getSecretaryResults() {
     let arr = [];
-    for (let item in this.results.secretary) {arr.push(item);}
+    for (let item in this.results.secretary) { arr.push(item); }
     return arr;
   }
 

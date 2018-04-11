@@ -11,7 +11,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let u of this.getUsers()">
-        <td><a routerLink="/profile/{{u.id}}">{{u.full_name}}</a></td>
+        <td>
+          <a routerLink="/profile/{{u.id}}">{{u.full_name}}</a>
+        </td>
         <td>{{u.email}}</td>
         <td>{{u.grad_date}}</td>
         <td>{{u.mass_mail_optin}}</td>
@@ -21,12 +23,13 @@
   </table>
   <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Create new poll</button>
   <button *ngIf="notifications.electionResults" class="btn btn-secondary" (click)="open(content2)">View Results of election</button>
- 
+
   <!-- Warning before submitting poll -->
   <div *ngIf="notifications.endingElection" class="alert alert-danger alert-dismissible" role="alert">
     <span aria-hidden="true"></span>
-    <span class="notification_panel"><strong>Warning</strong> You are about to end the current elections.  This will effect EVERY USER
-    and cannot be undone.  To proceed, click end election again</span>
+    <span class="notification_panel">
+      <strong>Warning</strong> You are about to end the current elections. This will effect EVERY USER and cannot be undone. To proceed,
+      click end election again</span>
   </div>
   <button *ngIf="this.getSession().getElection()" class="btn btn-outline-primary" (click)="endElection()">End Election</button>
 </div>
@@ -34,19 +37,23 @@
 
 
 
-<!-- Modal Popup for creating elections -->
+<!-- Election modal (popup) -->
 <ng-template #content let-c="close" let-d="dismiss">
   <!--Empty Field Notification -->
   <div *ngIf="notifications.emptyField" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
     <button type="button" class="close" (click)="notifications.emptyField = false">
-    <span aria-hidden="true">&times;</span></button>
-    <span class="notification_panel"><strong>Error</strong> Cannot have empty field</span>
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="notification_panel">
+      <strong>Error</strong> Cannot have empty field</span>
   </div>
   <!--Existing Poll Notification -->
   <div *ngIf="notifications.existingPoll" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
     <button type="button" class="close" (click)="notifications.existingPoll = false">
-    <span aria-hidden="true">&times;</span></button>
-    <span class="notification_panel"><strong>Error</strong> There appears to already be an existing election</span>
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="notification_panel">
+      <strong>Error</strong> There appears to already be an existing election</span>
   </div>
 
   <!-- Header for modal -->
@@ -62,20 +69,21 @@
       <div formArrayName="candidates" *ngFor="let cand of orderForm.controls.candidates.controls; let i = index;">
         <div [formGroupName]="i">
           <h6 class="modal-title">Candidate</h6>
-          <input type="textarea" formControlName="candidate" placeholder="Person"/>
-          <select multiple formControlName="position">
-            <option *ngFor="let cand of getCandidates()" [value]="cand">{{cand}}</option>
-          </select>
-          <button class="btn btn-danger badge" (click)="deleteField(i)">x</button>
-          <br><br>
+          <div class="row p-1 m-1">
+            <input class="p-0 m-0 mr-2" type="textarea" formControlName="candidate" placeholder="Person">
+            <ss-multiselect-dropdown class="m-0 ml-1 mr-1" [options]="myOptions" formControlName="position" [settings]="mySettings">
+            </ss-multiselect-dropdown>
+            <button class="btn btn-danger p-1 m-0 ml-2" (click)="deleteField(i)"> Delete </button>
+          </div>
         </div>
       </div>
 
-        <!-- Warning before submitting poll -->
+      <!-- Warning before submitting poll -->
       <div *ngIf="notifications.createElectionWarning" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
         <span aria-hidden="true"></span>
-        <span class="notification_panel"><strong>Warning</strong> You are about to create an election that will be visible to *all*
-        users.  If you want to proceed, press submit again</span>
+        <span class="notification_panel">
+          <strong>Warning</strong> You are about to create an election that will be visible to *all* users. If you want to proceed,
+          press submit again</span>
       </div>
 
       <button type="submit">Save</button>
@@ -122,14 +130,15 @@
           <td>Secretary</td>
           <td>{{item}}</td>
           <td>{{results.secretary[item]}}</td>
-        </tr>         
-      </tbody><br>
+        </tr>
+      </tbody>
+      <br>
     </table>
 
     <!-- Deleting election results warning -->
     <div *ngIf="notifications.deletingResults" class="alert alert-danger">
-      <strong>Warning</strong> You are about to permanately delete the results of the election from the database.
-      Neither admins nor users will ever be able to see them again.  Click delete again if you wish to proceed.
+      <strong>Warning</strong> You are about to permanately delete the results of the election from the database. Neither admins
+      nor users will ever be able to see them again. Click delete again if you wish to proceed.
     </div>
 
     <button (click)="deleteResults()" class="btn btn-primary btn-lg btn-block">Delete all election results</button>

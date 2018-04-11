@@ -7,6 +7,7 @@ import { SortablejsModule } from 'angular-sortablejs';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ShowdownModule } from 'ngx-showdown';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -59,7 +60,8 @@ import { VotingComponent } from './voting/voting.component';
     ReactiveFormsModule,
     NgbModule.forRoot(),
     ShowdownModule,
-    SortablejsModule.forRoot({animation: 150})
+    SortablejsModule.forRoot({animation: 150}),
+    MultiselectDropdownModule
   ],
   providers: [
     AuthGuardService,
