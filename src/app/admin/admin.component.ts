@@ -194,7 +194,7 @@ export class AdminComponent implements OnInit {
     return arr;
   }
 
-  // deletes all votes and calculated results from the database
+  // Deletes all votes and calculated results from the database
   public deleteResults() {
     if (!this.notifications.deletingResults) {
       this.notifications.deletingResults = true;
@@ -205,7 +205,7 @@ export class AdminComponent implements OnInit {
         window.location.reload();
       },
       err => {
-        console.log(err);   // This should be turned into an error message that displays on the screen
+        console.log(err);   // TODO: This should be turned into an error message that displays on the screen
       }
     );
   }
