@@ -22,8 +22,8 @@
   <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Create new poll</button>
   <button *ngIf="notifications.electionResults" class="btn btn-secondary" (click)="open(content2)">View Results of election</button>
  
-          <!-- Warning before submitting poll -->
-  <div *ngIf="notifications.endingElection" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+  <!-- Warning before submitting poll -->
+  <div *ngIf="notifications.endingElection" class="alert alert-danger alert-dismissible" role="alert">
     <span aria-hidden="true"></span>
     <span class="notification_panel"><strong>Warning</strong> You are about to end the current elections.  This will effect EVERY USER
     and cannot be undone.  To proceed, click end election again</span>
@@ -88,7 +88,7 @@
 <ng-template #content2 let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h3 class="modal-title">Results from Election</h3>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click');">
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click'); notifications.deletingResults = false">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -125,7 +125,14 @@
         </tr>         
       </tbody><br>
     </table>
-    <button class="btn btn-outline-primary">Delete all election results</button>
+
+    <!-- Deleting election results warning -->
+    <div *ngIf="notifications.deletingResults" class="alert alert-danger">
+      <strong>Warning</strong> You are about to permanately delete the results of the election from the database.
+      Neither admins nor users will ever be able to see them again.  Click delete again if you wish to proceed.
+    </div>
+
+    <button (click)="deleteResults()" class="btn btn-primary btn-lg btn-block">Delete all election results</button>
   </div>
 
 </ng-template>

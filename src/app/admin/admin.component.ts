@@ -22,7 +22,8 @@ export class AdminComponent implements OnInit {
     existingPoll: false,
     electionResults: false,
     createElectionWarning: false,
-    endingElection: false
+    endingElection: false,
+    deletingResults: false
   }
 
   constructor(private sessionService: SessionService, private requests: RestService, private modalService: NgbModal,
@@ -98,12 +99,12 @@ export class AdminComponent implements OnInit {
 
   //Sends the formgroup to be turned into a post request
   public onSubmit(formValue: any) {
-    if (!this.notifications.createElectionWarning) {
-      this.notifications.createElectionWarning = true;
-      return;
-    }
     if (this.emptyForm(formValue.value)) {
       this.notifications.emptyField = true;
+      return;
+    }
+    if (!this.notifications.createElectionWarning) {
+      this.notifications.createElectionWarning = true;
       return;
     }
     this.sessionService.createPoll(this.orderForm).subscribe(
@@ -155,7 +156,7 @@ export class AdminComponent implements OnInit {
 
   // Gets the results of an election
   public getResults() {
-    return this.requests.getElectionResults().subscribe(
+    this.requests.getElectionResults().subscribe(
       res => {
         this.notifications.electionResults = true;
         this.results = res;
@@ -191,5 +192,21 @@ export class AdminComponent implements OnInit {
     let arr = [];
     for (let item in this.results.secretary) {arr.push(item);}
     return arr;
+  }
+
+  // deletes all votes and calculated results from the database
+  public deleteResults() {
+    if (!this.notifications.deletingResults) {
+      this.notifications.deletingResults = true;
+      return;
+    }
+    this.requests.deleteElectionResults().subscribe(
+      res => {
+        window.location.reload();
+      },
+      err => {
+        console.log(err);   // This should be turned into an error message that displays on the screen
+      }
+    );
   }
 }

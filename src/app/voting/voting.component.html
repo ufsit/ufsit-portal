@@ -98,8 +98,13 @@
           </div>
         </div>
       </div>
-
     </div>
+
+    <div *ngIf="notifications.submittingVote" class="alert alert-danger alert-dismissible" role="alert">
+      <span class="notification_panel"><strong>Warning</strong> You are about to submit your vote.  Once you submit you cannot edit it,
+      so look back and make sure everything is correct.  Then, hit submit again to vote</span>
+    </div>
+
     <input type="submit" class="btn btn-info" value="Submit" (click)="onSubmit()">
   </div>
 </div>

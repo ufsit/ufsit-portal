@@ -19,7 +19,8 @@ export class VotingComponent implements OnInit {
     alreadyVoted: false,
     notEligible: false,
     requestError: false,
-    someError: true    //will be true if ANY other error is true
+    someError: true,    //will be true if ANY other error is true
+    submittingVote: false
   };
 
   constructor(private session: SessionService, private restService: RestService) { }
@@ -51,6 +52,10 @@ export class VotingComponent implements OnInit {
 
   // Submits the ordered arrays to the api to store inside of the db
   public onSubmit() {
+    if (!this.notifications.submittingVote) {
+      this.notifications.submittingVote = true;
+      return;
+    }
     this.restService.vote({
       presidents: this.presidents,
       vp: this.vp,

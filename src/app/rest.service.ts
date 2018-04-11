@@ -129,11 +129,17 @@ export class RestService {
     return this.post('/voting/send_vote', ballot);
   }
 
+  // api call to delete the candidates in an election, thus ending the election
   public endElection() {
     return this.post('/voting/end_election');
   }
 
+  // api call to get the results of an election
   public getElectionResults() {
     return this.get('/voting/get_election_results');
+  }
+
+  public deleteElectionResults() {
+    return this.post('/voting/delete_results');
   }
 }

@@ -173,6 +173,27 @@ routes.get('/voting/get_election_results', async (req, res) => {
     }
 });
 
+// Deletes the results of an election (inluding all the votes) from the database
+routes.post('/voting/delete_results', async (req, res) => {
+    if (util.account_has_admin(req.account)) {
+        if (await db_mgmt.there_are_results()) {
+            try {
+                await db_mgmt.clear_database();
+                res.status(200).end();
+            } catch (error) {
+                res.status(400).send('There was an error deleting previous results from the database.\
+                Please contact the developers');
+            }
+        }
+        else {
+            res.status(405).send('It appears there are no results to delete');
+        }
+    }
+    else {
+        res.status(403).send('Access denied');
+    }
+});
+
 //TODO: MOVE FUNCTION FROM ADMIN API FILE
 
 module.exports = routes;

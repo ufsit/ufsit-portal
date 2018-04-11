@@ -432,11 +432,14 @@ let db_mgmt_module = function() {
 	// Deletes everything having to do with voting (except candidates running because that was already deleted)
 	async function clear_database() {
 		try {
+			console.log('made it hereeeee');
 			await queryAsync('DELETE FROM `president`');
 			await queryAsync('DELETE FROM `vp`');
 			await queryAsync('DELETE FROM `treasurer`');
 			await queryAsync('DELETE FROM `secretary`');
 			await queryAsync('DELETE FROM `results`');
+			await queryAsync('DELETE FROM `voters`');
+			console.log('AND I ALSO MADE IT HERE!');
 		} catch (error) {
 			throw new createError.BadRequest('There was an error deleting data from the database');
 		}
@@ -486,7 +489,8 @@ let db_mgmt_module = function() {
 		get_votes: get_votes,
 		store_results: store_results,
 		there_are_results: there_are_results,
-		get_election_results: get_election_results
+		get_election_results: get_election_results,
+		clear_database: clear_database
 	});
 };
 
