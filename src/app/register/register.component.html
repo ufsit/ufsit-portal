@@ -93,6 +93,11 @@
 									<input type="checkbox" formControlName="subscribe"> Subscribe to SIT email updates
 								</label>
 							</div>
+							<div class="checkbox">
+								<label class="input-label">
+									<input type="checkbox" id="waiverCheckbox" class="nav-item nav-item nav-link" (change)="signWaiver($event)"> I have read and agree to the <a id="waiverLink" href="/liability-waiver">terms and conditions</a>
+								</label>
+							</div>
 							<button [disabled]="!this.formData.valid" class="btn btn-success">Submit</button>
 						</form>
 					</div>

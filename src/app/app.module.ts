@@ -33,6 +33,7 @@ import { ExternalFileService } from './external-file.service';
 import { ResumeComponent } from './resume/resume.component';
 import { WriteupViewComponent } from './writeup-view/writeup-view.component';
 import { AdminGuardService } from './admin-guard.service';
+import { LiabilityFormComponent } from './liability-form/liability-form.component';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { AdminGuardService } from './admin-guard.service';
     EditProfileComponent,
     WriteupsComponent,
     ResumeComponent,
-    WriteupViewComponent
+    WriteupViewComponent,
+    LiabilityFormComponent
   ],
   imports: [
     BrowserModule,

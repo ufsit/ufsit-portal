@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 export class RegisterComponent implements OnInit {
   // the html form will be bound to these class attributes
   formData: FormGroup;
+  private checkedWaiver = false;
 
   // flags which control which notifications are displayed
   // a notification is displayed when its flag is set to true
@@ -22,7 +23,8 @@ export class RegisterComponent implements OnInit {
     invalid_credentials: false,
     generic_error: false,
     bad_request: false,
-    email_conflict: false
+    email_conflict: false,
+    unsigned_waiver: false
   };
 
   // import the SessionService and router so we can use them later
@@ -53,6 +55,15 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  signWaiver(event) {
+    if (event.target.checked) {
+      this.checkedWaiver = true;
+    }
+    else {
+      this.checkedWaiver = false;
+    }
+  }
+
   // function is called when the user clicks the submit button
   submitRegistration() {
     // if the form is invalid, the password and confirm password don't match,
@@ -61,6 +72,11 @@ export class RegisterComponent implements OnInit {
         this.formData.value.password !== this.formData.value.confirm_password ||
         this.formData.value.grad_date === 'Select a semester') {
       this.notifications.invalid_credentials = true;
+      return;
+    }
+
+    if (this.checkedWaiver === false) {
+      alert('Please acknowledge that you have read and agreed to the terms and conditions.');
       return;
     }
 
