@@ -79,7 +79,7 @@
 
       <br/>
 
-      <h5 class="mb-3">Create New Poll</h5>
+      <h5 class="mb-3">Elections</h5>
       <button class="btn btn-md btn-success" (click)="open(content)">Create new Poll</button>
       <button *ngIf="notifications.electionResults" class="btn btn-md btn-success" (click)="open(content2)">View Results of election</button>
 
@@ -89,8 +89,9 @@
         <span class="notification_panel">
           <strong>Warning</strong> You are about to end the current elections. This will effect EVERY USER and cannot be undone.
           To proceed, click end election again</span>
+        <br>
       </div>
-      <button *ngIf="this.getSession().getElection()" class="btn btn-outline-primary" (click)="endElection()">End Election</button>
+      <button *ngIf="this.getElection()" class="btn btn-md btn-success" (click)="endElection()">End Election</button>
 
     </div>
 
