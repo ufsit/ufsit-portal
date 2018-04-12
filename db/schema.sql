@@ -74,7 +74,7 @@ CREATE TABLE `writeup_submissions` (
 	`name` varchar(255) NOT NULL,
 	`time_created` DATETIME NOT NULL,
 	`time_updated` DATETIME NOT NULL,
-	PRIMARY KEY (`id`);
+	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `file_uploads` (
@@ -82,7 +82,7 @@ CREATE TABLE `file_uploads` (
 	`account_id` INT NOT NULL,
 	`time_created` DATETIME NOT NULL,
 	`name` varchar(255) NOT NULL DEFAULT '',
-	PRIMARY KEY (`id`);
+	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `tiles` (
