@@ -136,7 +136,6 @@ export class AdminComponent implements OnInit {
   public addItem(): void {
     const control = <FormArray>this.orderForm.controls['candidates'];
     control.push(this.createQuestion());
-    console.log(control);
   }
 
   //Checks to make sure that there are no empty fields in the form
