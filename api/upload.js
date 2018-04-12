@@ -1,15 +1,14 @@
 'use strict';
 
 const routes = require('express').Router(); // eslint-disable-line new-cap
-const fs = require('fs');						// For filesystem I/O
+const util = require.main.require('./util');
 const aws = require('aws-sdk');
-const AWS_CREDENTIALS = process.env.aws || 'aws.json';
-const aws_credentials = JSON.parse(fs.readFileSync(AWS_CREDENTIALS, 'utf8'));
+const aws_credentials = util.load_aws();
+
 const db_mgmt = require('./db/db_mgmt.js');
-const util = require('../util/index.js');
 
 // upload a writeup
-routes.post('/upload/writeup', async (req, res) => {
+routes.post('/upload/writeup', async (req, res, next) => {
   // configure s3
   const s3 = new aws.S3({
     region: aws_credentials.region,
@@ -18,29 +17,51 @@ routes.post('/upload/writeup', async (req, res) => {
     Bucket: aws_credentials.s3Bucket,
   });
 
+  let fileName = 0;
+
+  // user uploaded a new writeup
+  if (req.body.writeupId == 0) {
+    let result = '';
+    try {
+      result = await db_mgmt.record_writeup_submission(req.session.account_id, req.body.writeupName);
+    } catch (error) {
+      return next(error);
+    }
+    fileName = result.insertId;
+  // user is updating a previously uploaded writeup
+  } else {
+    try {
+      await db_mgmt.update_writeup_submission(req.session.account_id, req.body.writeupName,
+                                              req.body.writeupId);
+    } catch (error) {
+      return next(error);
+    }
+
+    fileName = req.body.writeupId;
+  }
+
+  // const fileName = util.md5(req.body.writeupName) + '_' + req.session.account_id;
   // configure the parameters
   const params = {
     Bucket: aws_credentials.s3Bucket,
-    Key: 'writeups/' + req.body.ctfName + '/'
-          + req.body.challengeName + '/'
-          + req.session.account_id + '.md',
+    Key: 'writeups/' + fileName + '.md',
   };
 
   // check if the user is updating an old submission
-  s3.getObject(params, async (err, data) => {
+  /* s3.getObject(params, async (err, data) => {
     if (err) {
       // if the file does not exist, then the writeup is a new submission
       // we need to award the user points accordingly
       // and record the new submission in the database
       console.log(err);
       if (err.code === 'NoSuchKey') {
-        await db_mgmt.record_writeup_submission(req.session.account_id, params.Key);
+        await db_mgmt.record_writeup_submission(req.session.account_id, params.Key, req.body.writeupName);
         // TODO: award the user points
       } else {
         res.status(err.statusCode).send(err);
       }
-    }
-    
+    }*/
+
     // add the file data to the params
     params.Body = req.body.data;
 
@@ -50,44 +71,76 @@ routes.post('/upload/writeup', async (req, res) => {
         // if an error occurred, return the error
         res.status(err.statusCode).send(err);
       }
-      res.status(200).end();
+      res.status(200).json({writeupId: fileName});
     });
-  });
+  // });
 });
 
-// upload an image
-routes.get('/upload/image', async (req, res) => {
+// upload a file
+routes.get('/upload/file', async (req, res, next) => {
   // get the file name, type, and extension
   const fileName = req.query['file-name'];
   const fileType = req.query['file-type'];
   const fileExt = '.' + fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
 
-  let prefix = 'writeups/images/';
+  let prefix = 'writeups/files/';
   // hash the name
-  let name = util.md5(fileName);
+  // let name = util.md5(fileName);
+  let result = '';
+  try {
+    result = await db_mgmt.record_file_upload(req.session.account_id, fileName);
+  } catch (error) {
+    return next(error);
+  }
 
-  // configure s3
-  const s3 = new aws.S3({
-    region: aws_credentials.region,
-    accessKeyId: aws_credentials.accessKeyId,
-    secretAccessKey: aws_credentials.secretAccessKey,
-    Bucket: aws_credentials.s3Bucket,
-  });
+  let id = result.insertId;
 
+  let url = getSignedUrl(prefix + id + fileExt, fileType);
+  res.status(200).json({url: url, key: prefix + id + fileExt});
   // wait until we find an unused file name
-  await getUnusedName(req, res, s3, prefix, name, fileType, fileExt);
+  // await getUnusedName(req, res, s3, prefix, name, fileType, fileExt);
+});
+
+// upload a file
+routes.get('/upload/resume', async (req, res, next) => {
+  // get the file name, type, and extension
+  const fileName = req.query['file-name'];
+  const fileType = req.query['file-type'];
+  const fileExt = '.' + fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
+
+  if (fileType.toLowerCase() !== 'application/pdf') {
+    res.status(415).send('Only PDFs are supported.');
+    return;
+  }
+
+  let prefix = 'resumes/';
+  // hash the name
+  // let name = util.md5(fileName);
+  let key = prefix + req.session.account_id + fileExt;
+  try {
+    await db_mgmt.record_resume_upload(req.session.account_id, key);
+  } catch (error) {
+    return next(error);
+  }
+
+  let url = getSignedUrl(key, fileType);
+  res.status(200).json({url: url, key: key});
 });
 
 // finds an unused file name and returns a signed url to upload to a file
-async function getUnusedName(req, res, s3, prefix, name, fileType, fileExt) {
+async function getUnusedName(req, res, next, s3, prefix, name, fileType, fileExt) {
   let key = prefix + name + fileExt;
   // check if the file name is already used
   s3.headObject({Bucket: aws_credentials.s3Bucket, Key: key}, async (err, data) => {
     if (err) {
-      // if it is not, get a signed url and record the image upload
+      // if it is not, get a signed url and record the file upload
       if (err.code === 'NotFound') {
         let url = getSignedUrl(key, fileType);
-        await db_mgmt.record_image_upload(req.session.account_id, key);
+        try {
+          await db_mgmt.record_file_upload(req.session.account_id, key);
+        } catch (error) {
+          return next(error);
+        }
         res.status(200).json({url: url, key: key});
       // if some other error occurred, return the error
       } else {

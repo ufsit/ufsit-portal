@@ -74,13 +74,13 @@ describe('ProfileComponent', () => {
         mass_mail_optin: '0',
         registration_date: date
       };
-      expect(sessionService.getProfile().full_name === profile.full_name).toBe(true);
-      expect(sessionService.getProfile().email === profile.email).toBe(true);
-      expect(sessionService.getProfile().grad_date === profile.grad_date).toBe(true);
-      expect(sessionService.getProfile().mass_mail_optin === profile.mass_mail_optin).toBe(true);
-      expect(sessionService.getProfile().registration_date === profile.registration_date).toBe(true);
-      expect(component.getTitle() === 'Your Profile').toBe(true);
-      expect(component.getEditLink() === '/edit_profile').toBe(true);
+      expect(sessionService.getProfile().full_name).toEqual(profile.full_name);
+      expect(sessionService.getProfile().email).toEqual(profile.email);
+      expect(sessionService.getProfile().grad_date).toEqual(profile.grad_date);
+      expect(sessionService.getProfile().mass_mail_optin).toEqual(profile.mass_mail_optin);
+      expect(sessionService.getProfile().registration_date).toEqual(profile.registration_date);
+      expect(component.getTitle()).toEqual('Your Profile');
+      expect(component.getEditLink()).toEqual('/profile/edit');
     });
 
     it('should not update the SessionService\'s profile data when route data is null', () => {
@@ -96,9 +96,9 @@ describe('ProfileComponent', () => {
 
       fixture.detectChanges();
       fixture.whenStable().then( () => {
-        expect(sessionService.getProfile() != null).toBe(true);
-        expect(component.getTitle() === 'Your Profile').toBe(true);
-        expect(component.getEditLink() === '/edit_profile').toBe(true);
+        // expect(sessionService.getProfile()).toEqual(null);
+        expect(component.getTitle()).toEqual('Your Profile');
+        expect(component.getEditLink()).toEqual('/profile/edit');
       });
     });
   });

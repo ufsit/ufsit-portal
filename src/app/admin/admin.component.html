@@ -1,37 +1,101 @@
-<div class="table-responsive full-height">
-  <table id="account-list" class="table table-striped">
-    <thead>
-      <tr>
-        <td>Full Name</td>
-        <td>Email</td>
-        <td>Graduation Year</td>
-        <td>Mailing List?</td>
-        <td>Registration Date</td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let u of this.getUsers()">
-        <td>
-          <a routerLink="/profile/{{u.id}}">{{u.full_name}}</a>
-        </td>
-        <td>{{u.email}}</td>
-        <td>{{u.grad_date}}</td>
-        <td>{{u.mass_mail_optin}}</td>
-        <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
-      </tr>
-    </tbody>
-  </table>
-  <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Create new poll</button>
-  <button *ngIf="notifications.electionResults" class="btn btn-secondary" (click)="open(content2)">View Results of election</button>
+<div class="container container-fluid full-height">
 
-  <!-- Warning before submitting poll -->
-  <div *ngIf="notifications.endingElection" class="alert alert-danger alert-dismissible" role="alert">
-    <span aria-hidden="true"></span>
-    <span class="notification_panel">
-      <strong>Warning</strong> You are about to end the current elections. This will effect EVERY USER and cannot be undone. To proceed,
-      click end election again</span>
+  <br/>
+
+  <div class="row m-1 center">
+
+    <div class="col m-0 p-0">
+      <h3>Custom Tiles</h3>
+      <table id="tile-list" class="table table-striped center">
+        <thead>
+          <tr>
+            <td>Name</td>
+            <td>Description</td>
+            <td>Link</td>
+            <td>Delete</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ct of this.getCustomTiles(); let i = index">
+            <td>{{ct.name}}</td>
+            <td>{{ct.description}}</td>
+            <td>{{ct.link}}</td>
+            <button class="btn btn-danger" (click)="deleteTile(ct.id, i)">Delete</button>
+          </tr>
+        </tbody>
+      </table>
+
+      <br/>
+
+      <div class="col m-0 p-0">
+        <h3>Users</h3>
+        <table id="account-list" class="table table-striped">
+          <thead>
+            <tr>
+              <td>Full Name</td>
+              <td>Email</td>
+              <td>Graduation Year</td>
+              <td>Mailing List?</td>
+              <td>Registration Date</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of this.getUsers()">
+              <td>
+                <a routerLink="/profile/{{u.id}}">{{u.full_name}}</a>
+              </td>
+              <td>{{u.email}}</td>
+              <td>{{u.grad_date}}</td>
+              <td>{{u.mass_mail_optin}}</td>
+              <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="col-md-4 m-0 p-0">
+      <form (ngSubmit)="addTile(formData)" [formGroup]="formData">
+        <h5>Create New Tile</h5>
+        <div class="form-group">
+          <input class="form-control" placeholder="Name" formControlName="name">
+        </div>
+        <div class="form-group">
+          <input class="form-control" placeholder="Description" formControlName="description">
+        </div>
+        <div class="form-group">
+          <input class="form-control" placeholder="Link (full url)" formControlName="link">
+        </div>
+        <div class="row m-0 p-0">
+          <div class="col m-0 p-0">
+            <button class="btn btn-success">Add Tile</button>
+          </div>
+          <div class="col m-0 p-0">
+            <p class="text-right font-italic"> - opens link preview </p>
+          </div>
+        </div>
+      </form>
+
+      <br/>
+
+      <h5 class="mb-3">Create New Poll</h5>
+      <button class="btn btn-md btn-success" (click)="open(content)">Create new Poll</button>
+      <button *ngIf="notifications.electionResults" class="btn btn-md btn-success" (click)="open(content2)">View Results of election</button>
+
+      <!-- Warning before submitting poll -->
+      <div *ngIf="notifications.endingElection" class="alert alert-danger alert-dismissible" role="alert">
+        <span aria-hidden="true"></span>
+        <span class="notification_panel">
+          <strong>Warning</strong> You are about to end the current elections. This will effect EVERY USER and cannot be undone.
+          To proceed, click end election again</span>
+      </div>
+      <button *ngIf="this.getSession().getElection()" class="btn btn-outline-primary" (click)="endElection()">End Election</button>
+
+    </div>
+
   </div>
-  <button *ngIf="this.getSession().getElection()" class="btn btn-outline-primary" (click)="endElection()">End Election</button>
+
 </div>
 
 
@@ -140,7 +204,6 @@
       <strong>Warning</strong> You are about to permanately delete the results of the election from the database. Neither admins
       nor users will ever be able to see them again. Click delete again if you wish to proceed.
     </div>
-
     <button (click)="deleteResults()" class="btn btn-primary btn-lg btn-block">Delete all election results</button>
   </div>
 

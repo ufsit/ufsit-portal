@@ -9,15 +9,3 @@ table thead tr {
 table thead td {
   font-style: italic;
 }
-
-#account-list {
-  padding: 0px;
-  border: 0px;
-  margin: 0px auto;
-}
-
-@media (min-width: 768px) {
-  #account-list {
-    width: 50%;
-  }
-}

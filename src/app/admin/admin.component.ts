@@ -11,7 +11,6 @@ import { IMultiSelectOption, IMultiSelectSettings, IMultiSelectTexts } from 'ang
   styleUrls: ['./admin.component.css']
 })
 
-
 export class AdminComponent implements OnInit {
   private results;
   private users;
@@ -19,6 +18,8 @@ export class AdminComponent implements OnInit {
   private cands = ['President', 'VP', 'Secretary', 'Treasurer'];
   private myOptions: IMultiSelectOption[];
   private optionsModel: number[];
+  formData: FormGroup;
+  private customTiles;
 
   // Settings configuration for the dropdown checkbox
   mySettings: IMultiSelectSettings = {
@@ -45,22 +46,24 @@ export class AdminComponent implements OnInit {
     this.myOptions = [{ id: 'President', name: 'President' }, { id: 'VP', name: 'VP' },
     { id: 'Treasurer', name: 'Treasurer' }, { id: 'Secretary', name: "Secretary" }];
 
-    // Uses the RestService to make an http request for a list of users
-    this.requests.user_list('/list_users').subscribe(
-      // This portion of code is run if the list is properly returned
-      res => {
-        // TODO: FIX JANKINESS
-        let i = 0;
-        while (res[i] != undefined) {
-          let user = res[i];
+    this.formData = this.formBuilder.group({ name: [], description: [], link: [] });
+
+    // get current home tiles from backend
+    this.requests.customTiles().subscribe(
+      success => { this.customTiles = success; },
+      failure => { console.log(failure); }
+    );
+
+    this.requests.userList('/list_users').subscribe(
+      success => {
+        for (let i = 0; success[i] !== undefined; i++) {
+          const user = success[i];
           user['mass_mail_optin'] = (user['mass_mail_optin'] === 1) ? 'Yes' : 'No';
-          ++i;
         }
-        this.users = res;
+        this.users = success;
       },
-      error => {    // This portion of code is run when there was an error retrieving the user list
-        console.log(error);
-      });
+      failure => { console.log(failure); }
+    );
 
     this.orderForm = this.formBuilder.group({
       candidates: this.formBuilder.array([this.createQuestion()])
@@ -74,6 +77,42 @@ export class AdminComponent implements OnInit {
   // Returns an array of all the accounts that gets diplayed in the webpage
   public getUsers() {
     return this.users;
+  }
+
+  private isNotDuplicate(item) {
+    let val = true;
+    // for every existing custom home tile
+    this.customTiles.forEach(function (ct) {
+      // check each field
+      if (ct.name === item.name && ct.link === item.link
+        && ct.description === item.description) {
+        val = false;
+      }
+    });
+    return val;
+  }
+
+  public getCustomTiles() { return this.customTiles; }
+
+  // adds a new cutom tile to general home page
+  public addTile(formData: FormGroup) {
+    const item = formData.value;
+    // check if all fields are filled
+    if (item.name !== null && item.description !== null && item.link !== null) {
+      // check item is already not an existing home tile
+      if (this.isNotDuplicate(item)) {
+        this.requests.addTile(item); // backend add tile
+        window.open(item.link, '_blank');
+        this.formData.reset(); // reset entry fields
+        this.customTiles.push(item); // update custom tiles list
+      }
+    }
+  }
+
+  // deletes a curent home tile
+  public deleteTile(id, index) {
+    this.requests.deleteTile(id); // backend delete (uniquely identified by id)
+    this.customTiles.splice(index, 1); // delete frontend element
   }
 
   // Opens the popup window for the admin to use
@@ -109,7 +148,7 @@ export class AdminComponent implements OnInit {
       if (x.candidate === '') {
         return true;
       }
-      if (x.position.length === 0) {
+      if (!x.position || x.position.length === 0) {
         return true;
       }
     }

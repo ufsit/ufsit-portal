@@ -36,20 +36,20 @@
           <strong>Error</strong> One or more of the fields in the form is invalid.</span>
       </div>
 
-      <div *ngIf="notifications.image_upload_successful" id="imageUploadSuccessfulAlert" class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" (click)="notifications.image_upload_successful = false">
+      <div *ngIf="notifications.file_upload_successful" id="fileUploadSuccessfulAlert" class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.file_upload_successful = false">
           <span aria-hidden="true">&times;</span>
         </button>
         <span class="notification_panel">
-          Image uploaded</span>
+          File uploaded</span>
       </div>
 
-      <div *ngIf="notifications.image_upload_error" id="imageUploadErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
-        <button type="button" class="close" (click)="notifications.image_upload_error = false">
+      <div *ngIf="notifications.file_upload_error" id="fileUploadErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.file_upload_error = false">
           <span aria-hidden="true">&times;</span>
         </button>
         <span class="notification_panel">
-          <strong>Error</strong> There was an error while uploading your image.
+          <strong>Error</strong> There was an error while uploading your file.
            Please save your work and contact the developers.</span>
       </div>
 
@@ -102,14 +102,9 @@
   <div class="row">
     <form class="fullWidth" (ngSubmit)="submitWriteup()" [formGroup]="formData">
       <div class="row">
-        <div class="form-group col-md-6">
-          <label class="input-label">Challenge Name</label>
-          <input type="name" class="form-control" placeholder="Callenge Name" formControlName="challengeName">
-        </div>
-      
-        <div class="form-group col-md-6">
-          <label class="input-label">CTF Name</label>
-          <input type="email" class="form-control" placeholder="CTF Name" formControlName="ctfName">
+        <div class="form-group col-md-12">
+          <label class="input-label">Writeup Name</label>
+          <input type="name" class="form-control" placeholder="Name" formControlName="writeupName">
         </div>
       </div>
 
@@ -121,8 +116,8 @@
           <li class="nav-item" (click)="switchToPreview()">
             <a id="previewTab" class="nav-link">Preview</a>
           </li>
-          <li class="nav-item" (click)="switchToImages()">
-            <a id="imagesTab" class="nav-link">Images</a>
+          <li class="nav-item" (click)="switchToFiles()">
+            <a id="filesTab" class="nav-link">Files</a>
           </li>
           <li class="nav-item" (click)="switchToUpdate()">
             <a id="updateTab" class="nav-link">Update</a>
@@ -131,25 +126,29 @@
       </div>
       
       <div class="row">
+        <span *ngIf="!hidden.write && this.formData.value.writeupId != 0">You are editing a previously uploaded writeup.</span>
+        <button *ngIf="!hidden.write && this.formData.value.writeupId != 0" class="btn btn-default btn-sm" (click)="this.formData.patchValue({writeupId: 0});">Clear</button>
         <textarea [hidden]="hidden.write" class="markdownInput fullWidth form-control" formControlName="markdownInput">
         </textarea>
         
         <showdown [hidden]="hidden.preview" class="minHeight markdown-body card fullWidth" [value]="setMarkdownInput" [options]="options"></showdown>    
         
-        <div [hidden]="hidden.images" class="minHeight card fullWidth">
-          <div class="row">
-            <form (ngSubmit)="uploadImage()">
+        <div [hidden]="hidden.files" class="minHeight card fullWidth">
+          <div class=" in-card row">
+            <form class="col col-md-5" (ngSubmit)="uploadFile()">
                 <span class="btn btn-default btn-file">
                   <input type="file" (change)="handleFileChange($event.target.files)">
                 </span>
+                <!--<input id="file-upload-name" type="name" [value]="uploadedFileName" class="form-control" placeholder="File name (optional)">-->
               <button class="btn btn-success">Submit</button>
             </form>
           </div>
-          <div id="imageBank" class="row">
-            <div *ngFor="let img of images">
-              <img src={{img}} class="thumbnail img-thumbnail">
-              <a href={{img}}>{{img}}</a>
+          <div id="fileBank" class="row">
+            <div *ngFor="let file of files">
+              <img *ngIf="isImage(file)" src={{file}} class="thumbnail img-thumbnail">
+              <a href={{file}}>{{file}}</a>
             </div>
+            <br>
           </div>
         </div>
 
@@ -157,17 +156,15 @@
           <table *ngIf="this.submittedWriteups.length !== 0" id="account-list" class="table table-striped fullWidth">
             <thead class="fullWidth">
              <tr>
-              <td>CTF Name</td>
-              <td>Challenge Name</td>
+              <td>Writeup Name</td>
               <td></td>
              </tr>
             </thead>
             <tbody class="fullWidth">
              <tr *ngFor="let entry of this.submittedWriteups">
-              <td>{{entry.ctfName}}</td>
-              <td>{{entry.challengeName}}</td>
+              <td>{{entry.writeupName}}</td>
               <td><button type="button" class="btn btn-outline-primary" 
-                (click)="load(entry.ctfName, entry.challengeName, entry.fileName)">Load</button></td>
+                (click)="load(entry.id)">Load</button></td>
              </tr>
             </tbody>
           </table>

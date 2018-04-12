@@ -33,6 +33,10 @@ import { EditProfileComponent } from './edit_profile/edit_profile.component';
 import { WriteupsComponent } from './writeups/writeups.component';
 import { ExternalFileService } from './external-file.service';
 import { VotingComponent } from './voting/voting.component';
+import { ResumeComponent } from './resume/resume.component';
+import { WriteupViewComponent } from './writeup-view/writeup-view.component';
+import { AdminGuardService } from './admin-guard.service';
+
 
 @NgModule({
   declarations: [
@@ -50,7 +54,9 @@ import { VotingComponent } from './voting/voting.component';
     TimeAgoPipe,
     EditProfileComponent,
     WriteupsComponent,
-    VotingComponent
+    VotingComponent,
+    ResumeComponent,
+    WriteupViewComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +76,8 @@ import { VotingComponent } from './voting/voting.component';
     HttpClientModule,
     ProfileResolverService,
     HomeResolverService,
-    ExternalFileService
+    ExternalFileService,
+    AdminGuardService
   ],
   bootstrap: [AppComponent]
 })

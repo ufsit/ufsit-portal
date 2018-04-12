@@ -69,13 +69,34 @@ CREATE TABLE `site_log` (
 );
 
 CREATE TABLE `writeup_submissions` (
+	`id` INT NOT NULL AUTO_INCREMENT,
 	`account_id` INT NOT NULL,
-	`key` varchar(255) NOT NULL
+	`name` varchar(255) NOT NULL,
+	`time_created` DATETIME NOT NULL,
+	`time_updated` DATETIME NOT NULL,
+	PRIMARY KEY (`id`);
 );
 
-CREATE TABLE `image_uploads` (
+CREATE TABLE `file_uploads` (
+	`id` INT NOT NULL AUTO_INCREMENT,
 	`account_id` INT NOT NULL,
-	`key` varchar(255) NOT NULL
+	`time_created` DATETIME NOT NULL,
+	`name` varchar(255) NOT NULL DEFAULT '',
+	PRIMARY KEY (`id`);
+);
+
+CREATE TABLE `tiles` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`name` varchar(127) NOT NULL,
+	`description` varchar(255) NOT NULL,
+	`link` varchar(255) NOT NULL,
+	`deleted` BOOLEAN NOT NULL DEFAULT '0',
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `event_sign_ins_old` (
+	`email` varchar(100),
+	`timestamp` varchar(100)
 );
 
 CREATE TABLE `candidates` (
@@ -141,4 +162,4 @@ ALTER TABLE `site_log` ADD CONSTRAINT `site_log_fk0` FOREIGN KEY (`account_id`) 
 
 ALTER TABLE `writeup_submissions` ADD CONSTRAINT `writeup_submissions_fk0` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`); 
 
-ALTER TABLE `image_uploads` ADD CONSTRAINT `image_uploads_fk0` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`); 
+ALTER TABLE `file_uploads` ADD CONSTRAINT `file_uploads_fk0` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`); 

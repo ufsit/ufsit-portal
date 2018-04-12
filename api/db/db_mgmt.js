@@ -1,7 +1,7 @@
 'use strict';
 
-const fs = require('fs');						// For filesystem I/O
-const mysql = require('mysql');		// For mySQL interaction
+const fs = require('fs');  // For filesystem I/O
+const mysql = require('mysql');  // For mySQL interaction
 const util = require.main.require('./util');
 const createError = require('http-errors');
 const CREDENTIALS = process.env.CREDENTIALS || 'credentials.json';
@@ -23,15 +23,15 @@ try {
 	});
 
 	console.log('[INFO] Booted MySQL pool @ \''
-			+ credentials.db.host + '\' with credentials from file \''
-			+ CREDENTIALS + '\'');
+		+ credentials.db.host + '\' with credentials from file \''
+		+ CREDENTIALS + '\'');
 } catch (err) {
 	console.log('Failed to read credentials. Checking for available environment variable...');
 	let url = process.env.JAWSDB_MARIA_URL;
 
 	if (url == undefined || url == null) {
 		console.log('[ERROR] Unable to load database credentials from \'' + CREDENTIALS +
-				'\' OR from the JAWSDB_MARIA_URL environment.\n' +
+			'\' OR from the JAWSDB_MARIA_URL environment.\n' +
 			'Ensure that you have this file available in your current directory.');
 		process.exit(1);
 		return;
@@ -54,13 +54,13 @@ sql_pool.getConnection((error, connection) => {
 });
 
 /* Define the database management module and its public API */
-let db_mgmt_module = function() {
+let db_mgmt_module = function () {
 	function queryAsync(query, values) {
 		return new Promise((resolve, reject) => {
 			sql_pool.query(
 				query,
 				values,
-				function(error, results, fields) {
+				function (error, results, fields) {
 					if (error) {
 						// Create a generic HTTP error for display
 						const httperror = createError();
@@ -191,7 +191,7 @@ let db_mgmt_module = function() {
 
 	/* Create an entry in the sessions table */
 	async function create_session(session_token, account_id,
-			start_date, expire_date, ip_address, browser) {
+		start_date, expire_date, ip_address, browser) {
 		const values = {
 			id: session_token,
 			account_id: account_id,
@@ -208,7 +208,7 @@ let db_mgmt_module = function() {
 	/* Confirms whether the token corresponds to an active session. If it does, calls back
 		with the email associated with it.*/
 	async function get_session(session_token) {
-		const results = await queryAsync('SELECT * FROM `session` WHERE ?', {id: session_token});
+		const results = await queryAsync('SELECT * FROM `session` WHERE ?', { id: session_token });
 
 		if (results.length > 0) {
 			return results[0];
@@ -239,30 +239,6 @@ let db_mgmt_module = function() {
 			[email, after]);
 	}
 
-	/* Get a list of the user's writeup submissions */
-	async function get_writeup_submissions(account_id) {
-		return await queryAsync('SELECT `key` FROM `writeup_submissions` WHERE `account_id` = ?',
-			account_id);
-	}
-
-	/* Records a writeup submission */
-	async function record_writeup_submission(account_id, key) {
-		const values = {
-			account_id: account_id,
-			key: key,
-		};
-		return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
-	}
-
-	/* Records an image upload */
-	async function record_image_upload(account_id, key) {
-		const values = {
-			account_id: account_id,
-			key: key,
-		};
-		return await queryAsync('INSERT INTO `image_uploads` SET ?', values);
-	}
-
 	// Function to store election within the database
 	async function create_poll(election) {
 		if (await election_exists()) {
@@ -280,7 +256,7 @@ let db_mgmt_module = function() {
 
 		// Helper function that stores candidates and their desired positions
 		async function add_candidates(election) {
-			election.forEach(function(element) {
+			election.forEach(function (element) {
 				let values = {
 					person: element.candidate,
 					pres: 0,
@@ -308,7 +284,7 @@ let db_mgmt_module = function() {
 		return {
 			'president': await queryAsync('SELECT `person` FROM `candidates` WHERE `pres` = 1'),
 			'vp': await queryAsync('SELECT `person` FROM `candidates` WHERE `vp` = 1'),
-			'treasurer': await queryAsync('SELECT `person` FROM `candidates` WHERE `treas` = 1',),
+			'treasurer': await queryAsync('SELECT `person` FROM `candidates` WHERE `treas` = 1', ),
 			'secretary': await queryAsync('SELECT `person` FROM `candidates` WHERE `secr` = 1')
 		}
 	}
@@ -335,7 +311,7 @@ let db_mgmt_module = function() {
 				if (vote.treasurer.length) await insert_votes('treasurer', vote.treasurer);
 				if (vote.secretary.length) await insert_votes('secretary', vote.secretary);
 				return await record_that_user_voted();
-			} catch(error) {
+			} catch (error) {
 				throw new createError.BadRequest('There seems to be a problem with the db.  Please contact the developers');
 			}
 		}
@@ -345,39 +321,39 @@ let db_mgmt_module = function() {
 
 		// Adds a users email to the voters table so that they cannot vote again
 		async function record_that_user_voted() {
-			return await queryAsync('INSERT INTO `voters` SET ?', {person:user_id});
+			return await queryAsync('INSERT INTO `voters` SET ?', { person: user_id });
 		}
 
 		// Verifies that a vote is valid
 		async function verify_valid_vote() {
 			try {
 				// Verifies all president choices
-				for(var pres of vote.president) {
+				for (var pres of vote.president) {
 					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `pres`=1', pres);
 					// If the person is not in the list of candidates for president return false
 					if (count.length < 1) { return false; }
 				}
 				//vote.president.length = 30;
 				// Verifies all vp choices
-				for(var pres of vote.vp) {
+				for (var pres of vote.vp) {
 					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `vp`=1', pres);
 					if (count.length < 1) { return false; }
 				}
 				//vote.vp.length = 30;
 				// Verifies all Treasurer choices
-				for(var pres of vote.treasurer) {
+				for (var pres of vote.treasurer) {
 					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `treas`=1', pres);
 					if (count.length < 1) { return false; }
 				}
 				//vote.treasurer.length = 30;
 				// Verifies all Secretary choices
-				for(var pres of vote.secretary) {
+				for (var pres of vote.secretary) {
 					let count = await queryAsync('SELECT `person` FROM `candidates` WHERE person=? AND `secr`=1', pres);
 					if (count.length < 1) { return false; }
 				}
 				//vote.secretary.length = 30;
 				return true;
-			} catch(error) {	// Only catches an error when you have tried to vote for a person not running
+			} catch (error) {	// Only catches an error when you have tried to vote for a person not running
 				return false;
 			}
 		}
@@ -386,7 +362,7 @@ let db_mgmt_module = function() {
 		async function insert_votes(position, candidate_array) {
 			let values = {}
 			for (const [index, value] of candidate_array.entries()) {
-				values[(index + 1).toString() + 'th'] = value; 
+				values[(index + 1).toString() + 'th'] = value;
 			}
 			await queryAsync('INSERT INTO `' + position + '` SET ?', values);
 		}
@@ -411,19 +387,19 @@ let db_mgmt_module = function() {
 				secretary: await queryAsync('SELECT * FROM `secretary`')
 			}
 			return results;
-		} catch(error) {
+		} catch (error) {
 			throw new createError.BadRequest('There was an error trying to query the results of the election');
-		}	
+		}
 	}
 
 	// Stores the results of an election
 	async function store_results(results) {
 		// Everything get converted to a string and the results are stored
 		try {
-			await queryAsync('INSERT INTO `results` SET ?', {position:'president', json: JSON.stringify(results.president)});
-			await queryAsync('INSERT INTO `results` SET ?', {position:'vp', json: JSON.stringify(results.vp)});
-			await queryAsync('INSERT INTO `results` SET ?', {position:'treasurer', json: JSON.stringify(results.treasurer)});
-			await queryAsync('INSERT INTO `results` SET ?', {position:'secretary', json: JSON.stringify(results.secretary)});
+			await queryAsync('INSERT INTO `results` SET ?', { position: 'president', json: JSON.stringify(results.president) });
+			await queryAsync('INSERT INTO `results` SET ?', { position: 'vp', json: JSON.stringify(results.vp) });
+			await queryAsync('INSERT INTO `results` SET ?', { position: 'treasurer', json: JSON.stringify(results.treasurer) });
+			await queryAsync('INSERT INTO `results` SET ?', { position: 'secretary', json: JSON.stringify(results.secretary) });
 		} catch (error) {
 			throw new createError.BadRequest('There was an error trying to store the results of the election');
 		}
@@ -432,14 +408,12 @@ let db_mgmt_module = function() {
 	// Deletes everything having to do with voting (except candidates running because that was already deleted)
 	async function clear_database() {
 		try {
-			console.log('made it hereeeee');
 			await queryAsync('DELETE FROM `president`');
 			await queryAsync('DELETE FROM `vp`');
 			await queryAsync('DELETE FROM `treasurer`');
 			await queryAsync('DELETE FROM `secretary`');
 			await queryAsync('DELETE FROM `results`');
 			await queryAsync('DELETE FROM `voters`');
-			console.log('AND I ALSO MADE IT HERE!');
 		} catch (error) {
 			throw new createError.BadRequest('There was an error deleting data from the database');
 		}
@@ -464,6 +438,94 @@ let db_mgmt_module = function() {
 		return result.length > 0;
 	}
 
+	async function custom_tiles() {
+		return await queryAsync('SELECT * FROM `tiles` WHERE `deleted`= FALSE');
+	}
+
+	async function tile_click(user_id, tile_id) {
+		const results = await queryAsync('SELECT * FROM `tile_clicks` WHERE `user_id` = ? AND `tile_id` = ?', [user_id, tile_id]);
+		if (results.length <= 0) {
+			const values = { user_id, tile_id };
+			return await queryAsync('INSERT INTO `tile_clicks` SET ?', values);
+		}
+	}
+
+	async function add_tile(name, description, link) {
+		const values = { name: name, description: description, link: link };
+		return await queryAsync('INSERT INTO `tiles` SET ?', values);
+	}
+
+	async function delete_tile(id) {
+		return await queryAsync('UPDATE `tiles` SET `deleted` = TRUE WHERE `id` = ?', id);
+	}
+
+	/* Get a list of the user's writeup submissions */
+	async function get_user_writeup_submissions(account_id) {
+		return await queryAsync('SELECT `id`,`name` FROM `writeup_submissions` WHERE `account_id` = ?',
+			account_id);
+	}
+
+	/* Get a list of the user's writeup submissions */
+	async function get_all_writeup_submissions() {
+		return await queryAsync('SELECT `writeup_submissions`.id,`name`,`time_updated`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id');
+	}
+
+	/* Get a specific writeup, given its id */
+	async function get_writeup(id) {
+		return await queryAsync('SELECT `name`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id AND `writeup_submissions`.id = ?',
+			id);
+	}
+
+	/* Get a list of the user's writeup submissions */
+	async function get_file_uploads(account_id) {
+		return await queryAsync('SELECT `id`,`name` FROM `file_uploads` WHERE `account_id` = ?',
+			account_id);
+	}
+
+	/* Records a writeup submission */
+	async function record_writeup_submission(account_id, name) {
+		const values = {
+			account_id: account_id,
+			name: name,
+			time_created: new Date(),
+			time_updated: new Date(),
+		};
+		return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
+	}
+
+	/* Records a writeup submission */
+	async function update_writeup_submission(account_id, name, id) {
+		let results = await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `id` = ?',
+			[account_id, id]);
+		if (results.length === 0) {
+			throw new createError.BadRequest('Cannot update a different user\'s writeup');
+		}
+
+		return await queryAsync('UPDATE `writeup_submissions` SET `name` = ?, `time_updated` = ? WHERE `account_id` = ? AND `id` = ?',
+			[name, new Date(), account_id, id]);
+	}
+
+	/* Records a file upload */
+	async function record_file_upload(account_id, name) {
+		const values = {
+			account_id: account_id,
+			time_created: new Date(),
+			name: name,
+		};
+		return await queryAsync('INSERT INTO `file_uploads` SET ?', values);
+	}
+
+	/* Records a file upload */
+	async function get_resume_key(account_id) {
+		return await queryAsync('SELECT `resume` FROM `account` WHERE `id`=?', account_id);
+	}
+
+	/* Records a resume upload */
+	async function record_resume_upload(account_id, key) {
+		return await queryAsync('UPDATE `account` SET `resume`=? WHERE `id`=?',
+			[key, account_id]);
+	}
+
 	// Revealing module
 	return ({
 		create_account: create_account,
@@ -476,9 +538,19 @@ let db_mgmt_module = function() {
 		sign_in: sign_in,
 		get_sign_ins: get_sign_ins,
 		list_users: list_users,
-		get_writeup_submissions: get_writeup_submissions,
+		get_user_writeup_submissions: get_user_writeup_submissions,
+		get_all_writeup_submissions: get_all_writeup_submissions,
+		get_writeup: get_writeup,
 		record_writeup_submission: record_writeup_submission,
-		record_image_upload: record_image_upload,
+		update_writeup_submission: update_writeup_submission,
+		record_file_upload: record_file_upload,
+		get_file_uploads: get_file_uploads,
+		add_tile: add_tile,
+		delete_tile: delete_tile,
+		custom_tiles: custom_tiles,
+		tile_click: tile_click,
+		get_resume_key: get_resume_key,
+		record_resume_upload: record_resume_upload,
 		create_poll: create_poll,
 		current_election: current_election,
 		get_candidates: get_candidates,

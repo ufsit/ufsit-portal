@@ -10,6 +10,11 @@
   height: 200px;
 }
 
+.img-wide {
+    width: 300px;
+    max-width: 300px;
+}
+
 .b-gold {
   border-color: #D99910 !important;
 }

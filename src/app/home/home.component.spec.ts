@@ -4,6 +4,8 @@ import { HomeComponent } from './home.component';
 import { SessionService } from '../session.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { query } from '@angular/core/src/render3/instructions';
+import { RestService } from '../rest.service';
+import { of } from 'rxjs/observable/of';
 
 class MockSessionService {
   private profile;
@@ -22,6 +24,15 @@ class MockSessionService {
     this.profile = data;
   }
 
+  public getElection() {
+    return true;
+  }
+}
+
+class MockRestService {
+  public customTiles() {
+    return of(JSON.parse('[{}, {}]'));
+  }
 }
 
 describe('HomeComponent', () => {
@@ -36,7 +47,8 @@ describe('HomeComponent', () => {
       imports: [
         RouterTestingModule
       ], providers: [
-        {provide: SessionService, useClass: MockSessionService}
+        {provide: SessionService, useClass: MockSessionService},
+        {provide: RestService, useClass: MockRestService}
       ],
     })
     .compileComponents();

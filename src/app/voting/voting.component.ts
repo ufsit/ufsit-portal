@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from '../session.service';
 import { RestService } from '../rest.service';
 import { SortablejsModule } from 'angular-sortablejs';
 
@@ -23,7 +22,7 @@ export class VotingComponent implements OnInit {
     submittingVote: false
   };
 
-  constructor(private session: SessionService, private restService: RestService) { }
+  constructor(private restService: RestService) { }
 
   ngOnInit() {
     // Retrieves a list of candidates for each position from the backend
