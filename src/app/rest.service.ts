@@ -31,11 +31,6 @@ export class RestService {
         return this.post('/user/login', formData, { responseType: 'text' });
     }
 
-    // to validate a user's session
-    public validateSession(): Observable<Response> {
-        return this.get('/session/validate');
-    }
-
     // api call to get a user's profile
     public getProfile(id?: number) {
         // if id is undefined, then a user is requesting their own profile
@@ -47,6 +42,42 @@ export class RestService {
             // return the other user's profile data
             return this.get('/user/profile/' + id);
         }
+    }
+
+    // to validate a user's session
+    public validateSession(): Observable<Response> {
+        return this.get('/session/validate');
+    }
+
+    // makes an http request for a list of the members
+    public userList(variable: string): Observable<Response> {
+        return this.get('/admin' + variable);
+    }
+
+    // api call to log out a user
+    public logout() {
+        return this.post('/session/logout');
+    }
+
+    // api call to register a user, given his or her name , email, password,
+    // graduation year, and subscribe preferences
+    public register(formData: {}) {
+        return this.post('/user/register', formData, { responseType: 'text' });
+    }
+
+    // api call to update a user's profile information
+    public update(formData: FormGroup, url: string) {
+        return this.post('/user/profile' + url, formData.value, { responseType: 'text' });
+    }
+
+    // api call by admin only to create a poll
+    public createPoll(formData: FormGroup) {
+        return this.post('/admin/poll', formData.value, { responseType: 'text' });
+    }
+
+    // api call to sign a user into an event
+    public signin(email: string) {
+        return this.post('/event/sign_in', { email: email });
     }
 
     // request list of custom admin-added tiles for home page
@@ -67,31 +98,6 @@ export class RestService {
     // admin can remove previously added custom tiles
     public deleteTile(id) {
         this.post('/admin/delete_tile', { id }, { responseType: 'text' }).subscribe();
-    }
-
-    // api call to register a user, given his or her name, email, password,
-    // graduation year, and subscribe preferences
-    public register(formData: {}) {
-        return this.post('/user/register', formData, { responseType: 'text' });
-    }
-
-    public update(formData: FormGroup, url: string) {
-        return this.post('/user/profile' + url, formData.value, { responseType: 'text' });
-    }
-
-    // makes an http request for a list of the members
-    public userList(relativeUrl: string): Observable<Response> {
-        return this.get('/admin' + relativeUrl);
-    }
-
-    // api call to log out a user
-    public logout() {
-        return this.post('/session/logout');
-    }
-
-    // api call to sign a user into an event
-    public signin(email: string) {
-        return this.post('/event/sign_in', { email: email });
     }
 
     // api call to get a signed url for a file
@@ -156,4 +162,27 @@ export class RestService {
             .set('file-type', fileType));
     }
 
+    // api call to get a list of the candidates in an election
+    public getCandidates() {
+        return this.get('/voting/get_candidates');
+    }
+
+    // api call to store a person's vote
+    public vote(ballot) {
+        return this.post('/voting/send_vote', ballot);
+    }
+
+    // api call to delete the candidates in an election, thus ending the election
+    public endElection() {
+        return this.post('/voting/end_election');
+    }
+
+    // api call to get the results of an election
+    public getElectionResults() {
+        return this.get('/voting/get_election_results');
+    }
+
+    public deleteElectionResults() {
+        return this.post('/voting/delete_results');
+    }
 }

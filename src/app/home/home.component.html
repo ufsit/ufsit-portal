@@ -54,6 +54,18 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Voting Box -->
+                <div *ngIf="this.getElection()" class="col-sm-4">
+                    <div (click)="routeTo('/voting')" class="card tile">
+                        <img class='card-image' src="assets/voting.svg">
+                        <div class="card-body">
+                            <h3 class="card-title">Voting</h3>
+                            <p class="card-text">Vote on Current Elections and Events</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class=col-md-4 *ngFor="let ct of this.getCustomTiles()">
                     <div class="card tile" (click)="customTileClick(ct.id, ct.link)">
                         <img class="card-image" src="assets/star.svg">

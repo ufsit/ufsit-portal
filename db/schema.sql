@@ -100,6 +100,55 @@ CREATE TABLE `event_sign_ins_old` (
 	`timestamp` varchar(100)
 );
 
+CREATE TABLE `candidates` (
+	`person` varchar(255) NOT NULL,
+	`pres` bit NOT NULL,
+	`vp` bit NOT NULL,
+	`treas` bit NOT NULL,
+	`secr` bit NOT NULL
+);
+
+CREATE TABLE `pres` (
+	`first` varchar(255),
+	`second` varchar(255),
+	`third` varchar(255),
+	`fourth` varchar(255),
+	`fifth` varchar(255)
+);
+
+CREATE TABLE `vp` (
+	`first` varchar(255),
+	`second` varchar(255),
+	`third` varchar(255),
+	`fourth` varchar(255),
+	`fifth` varchar(255)
+);
+
+CREATE TABLE `treas` (
+	`first` varchar(255),
+	`second` varchar(255),
+	`third` varchar(255),
+	`fourth` varchar(255),
+	`fifth` varchar(255)
+);
+
+CREATE TABLE `secr` (
+	`first` varchar(255),
+	`second` varchar(255),
+	`third` varchar(255),
+	`fourth` varchar(255),
+	`fifth` varchar(255)
+);
+
+CREATE TABLE `voters` (
+	`person` INT NOT NULL
+);
+
+CREATE TABLE `results` {
+	`position`varchar(255),
+	`json` varchar(255)
+}
+
 ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`rank`) REFERENCES `account_rank`(`id`);
 
 ALTER TABLE `event_signin` ADD CONSTRAINT `event_signin_fk0` FOREIGN KEY (`event_id`) REFERENCES `event`(`id`);

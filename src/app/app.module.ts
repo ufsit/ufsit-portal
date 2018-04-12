@@ -3,9 +3,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
+import { SortablejsModule } from 'angular-sortablejs';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ShowdownModule } from 'ngx-showdown';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -30,6 +32,7 @@ import { TimeAgoPipe } from './time-ago.pipe';
 import { EditProfileComponent } from './edit_profile/edit_profile.component';
 import { WriteupsComponent } from './writeups/writeups.component';
 import { ExternalFileService } from './external-file.service';
+import { VotingComponent } from './voting/voting.component';
 import { ResumeComponent } from './resume/resume.component';
 import { WriteupViewComponent } from './writeup-view/writeup-view.component';
 import { AdminGuardService } from './admin-guard.service';
@@ -51,6 +54,7 @@ import { AdminGuardService } from './admin-guard.service';
     TimeAgoPipe,
     EditProfileComponent,
     WriteupsComponent,
+    VotingComponent,
     ResumeComponent,
     WriteupViewComponent
   ],
@@ -61,7 +65,9 @@ import { AdminGuardService } from './admin-guard.service';
     FormsModule,
     ReactiveFormsModule,
     NgbModule.forRoot(),
-    ShowdownModule
+    ShowdownModule,
+    SortablejsModule.forRoot({animation: 150}),
+    MultiselectDropdownModule
   ],
   providers: [
     AuthGuardService,

@@ -14,6 +14,7 @@ import { ProfileResolverService } from './profile-resolver.service';
 import { HomeResolverService } from './home-resolver.service';
 import { AdminComponent } from './admin/admin.component';
 import { WriteupsComponent } from './writeups/writeups.component';
+import { VotingComponent } from './voting/voting.component';
 import { WriteupViewComponent } from './writeup-view/writeup-view.component';
 import { ResumeComponent } from './resume/resume.component';
 import { AdminGuardService } from './admin-guard.service';
@@ -95,6 +96,14 @@ const routes: Routes = [
     path: 'writeups',
     canActivate: [AuthGuardService],
     component: WriteupsComponent
+  },
+  {
+    path: 'voting',
+    canActivate: [AuthGuardService],
+    component: VotingComponent,
+    resolve: {
+      profile: ProfileResolverService
+    }
   },
   {
     path: 'writeups/:id',

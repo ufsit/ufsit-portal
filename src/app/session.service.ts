@@ -13,6 +13,7 @@ import { FormGroup } from '@angular/forms';
 export class SessionService {
 
   private admin = false;
+  private election = false;
 
   // import the Router and RestService so we can use them in later functions
   constructor(private router: Router,
@@ -69,6 +70,7 @@ export class SessionService {
    return this.restService.validateSession().pipe(
       map(res => {
           this.admin = res['admin'];
+          this.election = res['election'];
         return res;
       })
     );
@@ -77,6 +79,10 @@ export class SessionService {
   //returns true if the user is an admin
   public getAdmin(): boolean {
     return this.admin;
+  }
+
+  public getElection(): boolean {
+    return this.election;
   }
 
   // get the cached login value
@@ -115,6 +121,18 @@ export class SessionService {
   // update the user's profile with new name, email, password, or grad year
   public update_profile(formData: FormGroup, url:string): Observable<any> {
     return this.restService.update(formData, url);
+  }
+
+  //Allows admins to make make polls for elections
+  public createPoll(formData: FormGroup): Observable<any> {
+    return this.restService.createPoll(formData).pipe(
+      map(res => {
+        return res;
+      }),
+      catchError(err => {
+        return of(err);
+      })
+    );
   }
 
 }

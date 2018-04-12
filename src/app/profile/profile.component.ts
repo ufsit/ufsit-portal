@@ -31,7 +31,6 @@ export class ProfileComponent implements OnInit {
         if (id === undefined) {
             this.title = 'Your Profile';
             this.editLink = '/profile/edit';
-
             // get the resolved data
             const routeProfile = this.route.snapshot.data.profile;
             // as long as the resolved data isn't null, update the cached profile
