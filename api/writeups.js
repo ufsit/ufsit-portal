@@ -108,7 +108,13 @@ routes.get('/writeups/files/:fileName', async (req, res) => {
   };
 
   // pipe the file back
-  s3.getObject(params).createReadStream().pipe(res);
+  s3.headObject(params, (err) => {
+    if (err) {
+      res.status(404).send('File does not exist');
+    } else {
+      s3.getObject(params).createReadStream().pipe(res);
+    }
+  });
 });
 
 module.exports = routes;

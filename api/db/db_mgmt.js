@@ -84,40 +84,55 @@ let db_mgmt_module = function () {
 		error if there was a conflict, or proceed creating
 		the account */
 
-		if (await account_exists(new_record.email)) {
-			throw new createError.Conflict('Attempted to create duplicate account: '
-				+ new_record.email
-			);
-		} else {
-			await insert_new_account(new_record);
+        if (await account_exists(new_record.email)) { //check email
+            throw new createError.Conflict('Attempted to create duplicate account: '
+                + new_record.email
+            );
+        }
+
+        if (await account_exists(new_record.ufl_email)) { //check ufl_email
+            throw new createError.Conflict('Attempted to create duplicate account: '
+                + new_record.ufl_email
+            );
+        }
+
+        else {
+            await insert_new_account(new_record);
 
 			return;
 		}
 
-		/* Helper function: Check if an account with the given email already exists.*/
-		async function account_exists(email) {
-			/* Form a query to the 'accounts' table for entries with the given email */
-			let results = await queryAsync('SELECT `id` FROM `account` WHERE email = ?', email);
-
-			return results.length > 0;
-		}
+    /* Helper function: Check if an account with the given email already exists.*/
+    async function account_exists(email) {
+        if (email !== 'left_blank@ufl.edu') //check if placeholder email used
+        {
+            /* Form a query to the 'accounts' table for entries with the given email */
+            let results = await queryAsync('SELECT `id` FROM `account` WHERE email = ?', email);
+            if (results.length <= 0)
+                results = await queryAsync('SELECT `id` FROM `account` WHERE ufl_email = ?', email);
+            return results.length > 0;
+        }
+        console.log("ERROR: Tried to lookup account by placeholder email left_blank@ufl.edu");
+        return false;
+    }
 
 		/* Helper function: Inserts a new account element into the database with the
 		parameters passed in the new_account object */
-		async function insert_new_account(new_account) {
-			let values = {
-				full_name: new_account.full_name,
-				email: new_account.email,
-				permissions: '',
-				password: new_account.password.salt + '$' + new_account.password.hash,
-				registration_ip: new_account.registration_ip,
-				registration_date: util.mysql_iso_time(new Date(Date.now())),
-				grad_date: new_account.grad_date,
-				mass_mail_optin: new_account.in_mailing_list,
-			};
+        async function insert_new_account(new_account) {
+            let values = {
+                full_name: new_account.full_name,
+                email: new_account.email,
+                ufl_email: new_account.ufl_email,
+                permissions: '',
+                password: new_account.password.salt + '$' + new_account.password.hash,
+                registration_ip: new_account.registration_ip,
+                registration_date: util.mysql_iso_time(new Date(Date.now())),
+                grad_date: new_account.grad_date,
+                mass_mail_optin: new_account.in_mailing_list,
+            };
 
-			return await queryAsync('INSERT INTO `account` SET ?', values);
-		}
+            return await queryAsync('INSERT INTO `account` SET ?', values);
+        }
 	}
 
 	async function update_account(account_id, account_data) {
@@ -143,6 +158,18 @@ let db_mgmt_module = function () {
 
 		return await sql_pool.query('UPDATE `account` SET ? WHERE id = ?', [account_data, account_id]);
 	}
+  
+    async function custom_tiles() {
+        return await queryAsync('SELECT * FROM `tiles` WHERE `deleted`= FALSE');
+    }
+
+    async function tile_click(user_id, tile_id) {
+        const results = await queryAsync('SELECT * FROM `tile_clicks` WHERE `user_id` = ? AND `tile_id` = ?', [user_id, tile_id]);
+        if (results.length <= 0) {
+            const values = { user_id, tile_id };
+            return await queryAsync('INSERT INTO `tile_clicks` SET ?', values);
+        }
+    }
 
 	async function list_users() {
 		return await queryAsync('SELECT ?? FROM `account`',
@@ -150,27 +177,36 @@ let db_mgmt_module = function () {
 	}
 
 	/* Retrieve an account with the given email address */
-	async function retrieve(email_addr) {
-		/* Form a query to the 'accounts' table for entries with the given email */
-		/* Execute the query using a connection from the connection pool */
-		const results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
-			[['id', 'password', 'full_name'], email_addr]);
+	    async function retrieve(email_addr) {
+        /* Form a query to the 'accounts' table for entries with the given email */
+        /* Execute the query using a connection from the connection pool */
+        
+        if(email_addr === 'left_blank@ufl.edu'){
+            throw new createError.NotFound('No account with email address ' + email_addr);
+        }
+
+        let results = await queryAsync('SELECT ?? FROM `account` WHERE email = ?',
+            [['id', 'password', 'full_name'], email_addr]);
 
 		/* If the results array has any elements in it, call back with the 0th element
 		(entries are unique) */
-		if (results.length <= 0) {
-			throw new createError.NotFound('No account with email address ' + email_addr);
-		}
+        if (results.length <= 0) {
+            results = await queryAsync('SELECT ?? FROM `account` WHERE ufl_email = ?',
+                [['id', 'password', 'full_name'], email_addr]);
+            if (results.length <= 0) {
+                throw new createError.NotFound('No account with email address ' + email_addr);
+            }
+        }
 
-		let pwparts = results[0].password.split('$');
+        let pwparts = results[0].password.split('$');
 
-		return {	// Encapsulate the results nicely for account_mgmt.js
-			'id': results[0].id,
-			'salt': pwparts[0],
-			'hash': pwparts[1],
-			'name': results[0].full_name,
-		};
-	}
+        return {	// Encapsulate the results nicely for account_mgmt.js
+            'id': results[0].id,
+            'salt': pwparts[0],
+            'hash': pwparts[1],
+            'name': results[0].full_name,
+        };
+    }
 
 	/* Retrieve an account by account ID */
 	async function retrieve_by_id(account_id) {
@@ -436,18 +472,6 @@ let db_mgmt_module = function () {
 	async function there_are_results() {
 		let result = await queryAsync('SELECT * FROM `results`');
 		return result.length > 0;
-	}
-
-	async function custom_tiles() {
-		return await queryAsync('SELECT * FROM `tiles` WHERE `deleted`= FALSE');
-	}
-
-	async function tile_click(user_id, tile_id) {
-		const results = await queryAsync('SELECT * FROM `tile_clicks` WHERE `user_id` = ? AND `tile_id` = ?', [user_id, tile_id]);
-		if (results.length <= 0) {
-			const values = { user_id, tile_id };
-			return await queryAsync('INSERT INTO `tile_clicks` SET ?', values);
-		}
 	}
 
 	async function add_tile(name, description, link) {
