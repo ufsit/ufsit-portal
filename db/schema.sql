@@ -248,10 +248,10 @@ CREATE TABLE `voters` (
 	`person` INT NOT NULL
 );
 
-CREATE TABLE `results` {
-	`position`varchar(255),
+CREATE TABLE `results` (
+	`position` varchar(255),
 	`json` varchar(255)
-}
+);
 
 ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`rank`) REFERENCES `account_rank`(`id`);
 
