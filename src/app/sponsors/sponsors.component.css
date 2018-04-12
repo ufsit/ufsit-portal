@@ -1,0 +1,32 @@
+.container-fluid {
+  max-width: 90%;
+}
+
+.img-thumbnail {
+  border: 8px solid !important;
+  max-width: 200px;
+  max-height: 200px;
+  width: 200px;
+  height: 200px;
+}
+
+.img-wide {
+    width: 300px;
+    max-width: 300px;
+}
+
+.b-gold {
+  border-color: #D99910 !important;
+}
+
+.b-silver {
+  border-color: #A8A8A8 !important;
+}
+
+.b-bronze {
+  border-color: #965A38 !important;
+}
+
+.b-plat {
+  border-color: #CCC2C2 !important;
+}

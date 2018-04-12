@@ -2,11 +2,17 @@
 .env
 
 # Potentially Sensitive
-*.json
+credentials.json
 
-# Vim shit
+# Vim
 *.swp
 *.swo
 
 # Bulky. Prefer dynamic resolution
 node_modules/
+
+# angular optimized build
+static/
+
+# Misc
+aws.json

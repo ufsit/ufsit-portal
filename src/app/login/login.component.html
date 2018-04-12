@@ -1,0 +1,65 @@
+<div class="container container-fluid full-height">
+  <div class="row" ng-show="pageReady">
+    <div class="col-md-5 col-md-offset-1 p-3">
+      <div class="main_header">Sign In</div>
+
+      <!-- Notification panels -->
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div *ngIf="notifications.invalid_credentials" id="invalidCredentialsAlert" class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" (click)="notifications.invalid_credentials = false">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span class="notification_panel">
+              <strong>Error:</strong> Could not authenticate your credentials. Please try again, or make sure that you're registered.</span>
+          </div>
+
+          <div *ngIf="notifications.generic_error" id="genericErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" (click)="notifications.generic_error = false">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span class="notification_panel">
+              <strong>Error</strong> Something went wrong on our end. Please contact the developers.</span>
+          </div>
+
+          <div *ngIf="notifications.bad_request" id="badRequestAlert" class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" (click)="notifications.bad_request = false">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span class="notification_panel">
+              <strong>Error</strong> It looks like you're trying to do something sketchy. Remember that "unauthorized penetration
+              tests" are illegal :P. If you believe this is a mistake, please contact the developers.</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row p-3">
+        <div class="col-md-10 col-md-offset-1 pt-2">
+          <form (ngSubmit)="submitLogin()" [formGroup]="formData">
+            <div class="form-group">
+              <label class="input-label">Email</label>
+              <input type="email" class="form-control" placeholder="Email" formControlName="email">
+            </div>
+            <div class="form-group">
+              <label class="input-label">Password</label>
+              <input type="password" class="form-control" placeholder="Password" formControlName="password">
+            </div>
+
+            <div class="row p-3">
+              <div class="col-xs-12">
+                <button class="btn btn-success input-label">Log In</button>
+                <a routerLink="/register">
+                  <input type="button" class="btn btn-primary input-label" value="Sign Up"> </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5 d-none d-md-block pt-4">
+      <img src="assets/sit.png" alt="" style="width:100%">
+    </div>
+  </div>
+</div>

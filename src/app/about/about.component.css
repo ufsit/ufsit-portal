@@ -1,0 +1,23 @@
+.container-fluid {
+  max-width: 90%;
+}
+
+.fa-size {
+  font-size: 1.5em;
+}
+
+.headshot {
+    max-width: 175px;
+    max-height: 175px;
+    width: 175px;
+    height: 175px;
+}
+
+@media (max-width: 425px) {
+    .headshot {
+        display: none;
+    }
+    h4 {
+        font-size: 1.5em;
+    }
+}

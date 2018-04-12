@@ -62,13 +62,25 @@ Create this file in the same directory as `app.js` and name it `credentials.json
 Note that this provided file assumes you are using the default `root` user without a password and with a database
 name of `ufsit_portal`. This may be different depending on your MySQL setup.
 
-With this file, you can run the node application using:
+We must also create a file to store the Amazon S3 credentials to tell the webapp how to communicate with AWS. Here is an example file
+
+```json
+{
+    "region":"us-east-1",
+    "accessKeyId":"",
+    "secretAccessKey":"",
+    "s3Bucket":""
+}
+```
+
+With this file, you can start the server with:
 
 ```
-node app.js
+node run dev
 ```
+Note: This will run both the nodeJS server and the angular server. Both will automatically reload when any of their files are modified.
 
-Or with NPM like:
+To create a production build of the frontend and start the nodeJS server to deploy them, run:
 
 ```
 npm start
@@ -78,20 +90,21 @@ If you have multiple database credentials files (e.g. one for development and an
 explicitly pass the filename in an environment variable:
 
 ```shell
-CREDENTIALS=credentials.json node app.js
+CREDENTIALS=credentials.json AWS=aws.json node app.js
 ```
 
-Where the `CREDENTIALS` environment variable points to the details about the database you are connecting to.
-This variable can be exported or passed on the command line right before the start command.
+Where the `CREDENTIALS` environment variable points to the details about the database you are connecting to, and `AWS` environment variable points to the Amazon S3 credentials.
+These variables can be exported or passed on the command line right before the start command.
 
-If this environment variable is not included, the application will fallback to a file named `credentials.json` or a
+If the `CREDENTIALS` environment variable is not included, the application will fallback to a file named `credentials.json` or a
 Heroku specific environment variable for our JawsDB plan. The JawsDB
 variable _only_ exists when running in the Heroku cloud, so the webapp will
-error out if it was not able to find valid credentials for the database.
+error out if it was not able to find valid credentials for the database. 
+If the `AWS` environmental variable is not included, the application will fallback to a file name aws.json.
 
 ## Starting Development
 
-With the webapp running locally, you can visit http://localhost:8080 in your web browser.
+With the webapp running locally, you can visit http://localhost:4200 in your web browser.
 Here you can modify any file on both the server-side and client side. It is **strongly recommended**
 that you use [nodemon](https://github.com/remy/nodemon) to automatically restart the node
 process when a server file is changed. This will save you from development headaches.
@@ -102,54 +115,87 @@ you may run `nodemon app.js` instead of `node app.js` or `npm start`.
 ### Code Map
 The top-level file is `app.js`. This configures Express the site in general. The API directory has the actual routes along with the DB-related helper functions in the `db/` directory. Knowledge of Express should not extend down to the DB directory and should only be handled at the top-level route declarations.
 
-For the front end, the `html/` directory has all of the Angular-based HTML, `css/` all of the stylesheets, `scripts/controller/` all of the NG controllers, `images/` all of the images, and `routes/config.js` the top-level single-page application routing configuration.
+For the front end, the `src/` directory has all of the Angular-based code. Within `src/`, `app/` contains the components that make up the application, and `assets/` contains other necessary files, such as images and stylesheets. Each component within `app/` has its own stylesheet, html, typescript, and unit testing file. Also contained in `app/` are services and the routing module.
 
 ```
-├── API/
-│   ├── README.md
+├── api
 │   ├── admin.js
 │   ├── anonymous.js
-│   ├── db/
+│   ├── db
 │   │   ├── account_mgmt.js
 │   │   ├── admin.js
 │   │   ├── db_mgmt.js
 │   │   └── event_mgmt.js
 │   ├── event.js
 │   ├── index.js
+│   ├── README.md
 │   ├── session.js
-│   └── user.js
+│   ├── upload.js
+│   ├── user.js
+│   └── writeups.js
 ├── app.js
-├── css/
-│   ├── bootstrap.css
-│   └── ...
-├── data/
-│   └── schema.sql
-├── html/
-│   ├── index.html
-│   ├── login.html
-│   ├── ...
-│   └── views/
-│       ├── header.html
-│       ├── home.html
-│       └── ...
-├── images/
-│   └── ...
+├── aws.json
+├── credentials.json
+├── nodemon.json
 ├── package.json
-├── routes/
-│   └── config.js
-├── scripts/
-│   └── controllers/
-│       ├── AdminController.js
-│       ├── LoginController.js
-│       └── ...
-├── services/
-│   └── Validate.js
-└── util/
+├── package-lock.json
+├── proxy.conf.json
+├── README.md
+├── src
+│   ├── app
+│   │   ├── about
+│   │   │   ├── about.component.css
+│   │   │   ├── about.component.html
+│   │   │   ├── about.component.spec.ts
+│   │   │   └── about.component.ts
+│   │   ├── admin
+│   │   │   ├── admin.component.css
+│   │   │   ├── ...
+│   │   ├── app.component.css
+│   │   ├── app.component.html
+│   │   ├── app.component.spec.ts
+│   │   ├── app.component.ts
+│   │   ├── app.module.ts
+│   │   ├── app-routing.module.ts
+│   │   ├── ...
+│   ├── assets
+│   │   ├── calendar-alt.svg
+│   │   ├── css
+│   │   │   ├── bootstrap-grid.min.css
+│   │   │   ├── ...
+│   │   ├── images
+│   │   │   ├── Chabab.png
+│   │   │   ├── ...
+│   │   ├── list-alt.svg
+│   │   ├── sit.png
+│   │   └── sponsors
+│   │       ├── CSFSU.png
+│   │       ├── ...
+│   ├── environments
+│   │   ├── environment.prod.ts
+│   │   └── environment.ts
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── main.ts
+│   ├── polyfills.ts
+│   ├── styles.css
+│   ├── test.ts
+│   ├── tsconfig.app.json
+│   ├── tsconfig.spec.json
+│   └── typings.d.ts
+├── static_old
+│   ├── css
+│   │   ├── bootstrap.css
+│   │   ├── ...
+│   ├── views
+│   │   ├── admin.html
+│   ├── ...
+└── util
     └── index.js
 ```
 
 ### Relevant Documentation
-* AngularJS 1.x - https://docs.angularjs.org/guide
+* AngularJS 5.x - https://angular.io/docs/
 * Node.js Express - https://expressjs.com/en/4x/api.html
 * Node.sj 9.3.x - https://nodejs.org/dist/latest-v9.x/docs/api/
 * MySQL for Node.js - https://www.npmjs.com/package/mysql

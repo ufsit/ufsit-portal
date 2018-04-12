@@ -1,0 +1,69 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { SessionService } from '../session.service';
+import { RestService } from '../rest.service';
+
+@Component({
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css']
+})
+
+export class HomeComponent implements OnInit {
+
+    public lecturePath;
+    public resumePath;
+    private customTiles;
+
+    // import the ActivatedRoute so we can get the result of what was resolved
+    // before navigating here
+    constructor(
+        private sessionService: SessionService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private requests: RestService
+    ) { }
+
+    ngOnInit() {
+        // tslint:disable-next-line:max-line-length
+        this.lecturePath = 'https://uflorida-my.sharepoint.com/personal/elan22_ufl_edu/_layouts/15/guestaccess.aspx?folderid=0d67d1c9bc1be4aa68ea7bd61d21b612a&authkey=AbD-gTKCDdCIpE8vtELGWzw';
+        this.resumePath = 'https://docs.google.com/forms/d/e/1FAIpQLScP-7T3VGFAcgVOcr12ErLfM0qIh4P9YjaxvCE8dqxIQ2sxVQ/viewform';
+
+        this.requests.customTiles().subscribe(
+            success => { this.customTiles = success; },
+            failure => { console.log(failure); }
+        );
+
+        const routeProfile = this.route.snapshot.data.profile;
+
+        if (this.sessionService.getProfile() == null) {
+            this.sessionService.setProfile(routeProfile);
+        }
+    }
+
+    public getName() {
+        if (this.sessionService.getProfile() != null) {
+            return this.sessionService.getProfile().full_name;
+        }
+        return '';
+    }
+
+    public getCustomTiles() {
+        return this.customTiles;
+    }
+
+    public redirect(path: string) {
+        window.open(path, '_blank');
+    }
+
+    public customTileClick(id, link) {
+        this.requests.customTileClick(id);
+        this.redirect(link);
+    }
+
+    public routeTo(path: string) {
+        this.router.navigate([path]);
+    }
+
+}

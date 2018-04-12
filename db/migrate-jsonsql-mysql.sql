@@ -8,7 +8,7 @@ ALTER TABLE event_sign_ins RENAME TO event_sign_ins_old;
 -- Note that we are changing the password format
 -- Registration IP is just going to have to be lost :(
 -- Permissions are set to nothing for now
-INSERT INTO account (`full_name`, `email`, `password`,
+INSERT INTO account (`full_name`, `email`, `ufl_email`, `password`,
   `mass_mail_optin`, `grad_date`,
   `permissions`, `registration_ip`, `registration_date`)
 SELECT `full_name`, `email`, CONCAT(`password_salt`, "$", `password_hash`),
