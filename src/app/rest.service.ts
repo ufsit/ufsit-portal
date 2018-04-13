@@ -49,9 +49,19 @@ export class RestService {
         }
     }
 
-    // analytics track user clicks
-    public customCTFClick(id) {
+    // analytics track user clicks for writeups
+    public customCTFClick(id: number) {
         this.post('/app/ctf_click', { id }, { responseType: 'text' }).subscribe();
+    }
+
+    // sets the value of a writeup to true (shown) or false (hidden)
+    public ctfShowHide(id: number, status: boolean) {
+        this.post('/writeups/show_hide', { id, status }, { responseType: 'text' }).subscribe();
+    }
+
+    // sets the difficulty of a writeup
+    public ctfDifficulty(id: number, diff: number) {
+        this.post('/writeups/difficulty', { id, diff }, { responseType: 'text' }).subscribe();
     }
 
     // request list of custom admin-added tiles for home page

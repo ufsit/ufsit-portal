@@ -112,4 +112,32 @@ routes.get('/writeups/files/:fileName', async (req, res) => {
     s3.getObject(params).createReadStream().pipe(res);
 });
 
+// show(true)/hide(false) writeup submissions on ctf page
+routes.post('/writeups/show_hide', async function (req, res, next) {
+    if (util.account_has_admin(req.account)) { // require admin access
+        try {
+            await db_mgmt.writeup_show_hide(req.body.id, req.body.status);
+        } catch (error) {
+            next(error);
+        }
+        res.status(200).send('Success');
+    } else {
+        return res.status(403).send('Access denied');
+    }
+});
+
+// update writeup difficulty
+routes.post('/writeups/difficulty', async function (req, res, next) {
+    if (util.account_has_admin(req.account)) { // require admin access
+        try {
+            await db_mgmt.writeup_difficulty(req.body.id, req.body.diff);
+        } catch (error) {
+            next(error);
+        }
+        res.status(200).send('Success');
+    } else {
+        return res.status(403).send('Access denied');
+    }
+});
+
 module.exports = routes;

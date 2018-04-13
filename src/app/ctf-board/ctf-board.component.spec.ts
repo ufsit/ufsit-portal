@@ -8,18 +8,31 @@ import { Observable } from 'rxjs/Observable';
 import { HttpResponse, HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { MockBackend, MockConnection } from '@angular/http/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { NgbModule, NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { SessionService } from '../session.service';
+import { NgForm } from '@angular/forms';
 
 class MockRestService {
 
-    public getAllWriteups() {
-        return of([
-            { name: 'name1', description: 'description1', link: 'https://google.com' },
-            { name: 'name2', description: 'description2', link: 'https://google.com' },
-        ]);
-    }
+    public getAllWriteups() { return of([]); }
 
     public customCTFClick(id: number) { return id; }
+
+    public ctfShowHide(id: number, status) { return id; }
+
+    public ctfSetDifficulty(id: number, form, ind) { return id; }
+
+    public ctfDelete() { return null; }
+
+}
+
+class MockSessionService {
+
+    public getAdmin() { return true; }
 
 }
 
@@ -34,7 +47,12 @@ describe('CTFBoardComponent', () => {
                 LimitToPipe,
                 CTFBoardComponent
             ],
-            imports: [RouterTestingModule],
+            imports: [
+                RouterTestingModule,
+                ReactiveFormsModule,
+                FormsModule,
+                NgbModule.forRoot()
+            ],
             providers: [
                 {
                     provide: ActivatedRoute, useValue: {
@@ -55,6 +73,12 @@ describe('CTFBoardComponent', () => {
                 },
                 {
                     provide: RestService, useClass: MockRestService
+                },
+                {
+                    provide: SessionService, useClass: MockSessionService
+                },
+                {
+                    provide: NgbModal, useClass: NgbModal
                 }
             ]
         }).compileComponents();
@@ -67,6 +91,7 @@ describe('CTFBoardComponent', () => {
         restService = TestBed.get(RestService);
         spyOn(restService, 'getAllWriteups').and.callThrough();
         spyOn(restService, 'customCTFClick').and.callThrough();
+        spyOn(restService, 'ctfShowHide').and.callThrough();
     });
 
     describe('should create', () => {

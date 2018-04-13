@@ -159,6 +159,14 @@ let db_mgmt_module = function () {
         return await queryAsync('INSERT INTO `writeup_clicks` SET ?', values);
     }
 
+    async function writeup_show_hide(id, status) {
+        return await queryAsync('UPDATE `writeup_submissions` SET `hidden` = ? WHERE `id` = ?', [!(status), id]);
+    }
+
+    async function writeup_difficulty(id, diff) {
+        return await queryAsync('UPDATE `writeup_submissions` SET `difficulty` = ? WHERE `id` = ?', [diff, id]);
+    }
+
     async function list_users() {
         return await queryAsync('SELECT ?? FROM `account`',
             [['id', 'email', 'full_name', 'mass_mail_optin', 'grad_date', 'registration_date']]);
@@ -356,6 +364,8 @@ let db_mgmt_module = function () {
         writeup_click: writeup_click,
         get_resume_key: get_resume_key,
         record_resume_upload: record_resume_upload,
+        writeup_show_hide: writeup_show_hide,
+        writeup_difficulty: writeup_difficulty,
     });
 };
 
