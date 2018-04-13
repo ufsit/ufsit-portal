@@ -84,6 +84,10 @@ export class ResumeComponent implements OnInit {
       this.uploadResume();
     }
 
+    let data = this.form.value;
+    this.form.value.research = (this.form.value.research === 'true') ? true : false;
+    this.form.value.internship = (this.form.value.internship === 'true') ? true : false;
+
     this.restService.submitResumeQuestions(this.form.value).subscribe(
       res => {
         this.notifications.resume_upload_successful = true;
