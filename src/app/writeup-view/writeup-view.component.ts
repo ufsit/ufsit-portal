@@ -44,7 +44,6 @@ export class WriteupViewComponent implements OnInit {
     this.externalFileService
       .getWriteup((this.route.snapshot.params.id)).subscribe(
         res => {
-          console.log(res);
           this.setWriteupTitle(res.name);
           this.setWriteupSubtitle(res.user_name);
           this.writeupText = res.text;
@@ -68,6 +67,10 @@ export class WriteupViewComponent implements OnInit {
 
   public getWriteupSubtitle() {
     return this.writeupSubtitle;
+  }
+
+  public getWriteupText() {
+    return this.writeupText;
   }
 
 }
