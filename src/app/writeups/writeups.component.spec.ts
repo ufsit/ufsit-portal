@@ -19,8 +19,9 @@ class MockExternalFileService {
 
   public getWriteup(id: number) {
     return of({
-      writeupName: 'writeup name',
-      markdownInput: 'test'
+      name: 'writeup name',
+      text: 'test',
+      id: id
     });
   }
 
@@ -39,8 +40,8 @@ class MockExternalFileService {
 class MockRestService {
   public getSubmittedWriteups() {
     return of([
-      {key: 'writeups/1.md'},
-      {key: 'writeups/2.md'}
+      {name: 'Writeup1', id: 1},
+      {name: 'Writeup2', id: 2}
     ]);
   }
 }
@@ -123,22 +124,17 @@ describe('WriteupsComponent', () => {
   describe('getting list of submitted writeups', () => {
     it('should display all submitted writeups', () => {
       component.getSubmittedWriteups();
+      component.switchToUpdate();
 
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         const rows = fixture.nativeElement.querySelectorAll('tbody tr');
         expect(rows.length).toBe(2);
-        expect(rows[0].html().indexOf('CTF 1')).not.toBe(-1);
-        expect(rows[0].html().indexOf('Challenge A')).not.toBe(-1);
-        expect(rows[0].html().indexOf('1.md')).not.toBe(-1);
-        expect(rows[0].html().indexOf('Challenge B')).toBe(-1);
-        expect(rows[0].html().indexOf('3.md')).not.toBe(-1);
+        expect(rows[0].innerHTML.indexOf('Writeup1')).not.toBe(-1);
+        expect(rows[0].innerHTML.indexOf('Writeup2')).toBe(-1);
 
-        expect(rows[1].html().indexOf('CTF 1')).not.toBe(-1);
-        expect(rows[1].html().indexOf('Challenge B')).not.toBe(-1);
-        expect(rows[1].html().indexOf('3.md')).not.toBe(-1);
-        expect(rows[1].html().indexOf('Challenge A')).toBe(-1);
-        expect(rows[1].html().indexOf('1.md')).not.toBe(-1);
+        expect(rows[1].innerHTML.indexOf('Writeup1')).toBe(-1);
+        expect(rows[1].innerHTML.indexOf('Writeup2')).not.toBe(-1);
       });
     });
   });
@@ -149,7 +145,7 @@ describe('WriteupsComponent', () => {
 
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(element.querySelector('showdown').html().indexOf('test')).not.toBe(-1);
+        expect(element.querySelector('showdown').innerHTML.indexOf('test')).not.toBe(-1);
 
         expect(component.notifications.writeup_submit_successful).toBe(false);
         expect(component.notifications.writeup_submit_error).toBe(false);
@@ -177,13 +173,13 @@ describe('WriteupsComponent', () => {
   });
 
   describe('uploading file', () => {
-    it('should upload file', () => {
+    it('should upload file when successful', () => {
       component.file = new File(['data'], 'file.jpg');
       component.uploadFile();
 
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(element.querySelector('#fileBank').html()
+        expect(element.querySelector('#fileBank').innerHTML
           .indexOf('writeups/files/file.jpg')).not.toBe(-1);
 
         expect(component.notifications.writeup_submit_successful).toBe(false);

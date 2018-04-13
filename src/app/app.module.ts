@@ -7,6 +7,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { SortablejsModule } from 'angular-sortablejs';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 import { AuthGuardService } from './auth-guard.service';
 import { SessionService } from './session.service';
@@ -30,6 +32,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FooterComponent } from './footer/footer.component';
+import { VotingComponent } from './voting/voting.component';
 import { ResumeComponent } from './resume/resume.component';
 import { WriteupViewComponent } from './writeup-view/writeup-view.component';
 
@@ -57,6 +60,7 @@ import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
     EditProfileComponent,
     WriteupsComponent,
     CTFBoardComponent,
+    VotingComponent,
     ResumeComponent,
     WriteupViewComponent
   ],
@@ -68,7 +72,9 @@ import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
     ReactiveFormsModule,
     NgbModule.forRoot(),
     ShowdownModule,
-    RouterModule
+    RouterModule,
+    SortablejsModule.forRoot({animation: 150}),
+    MultiselectDropdownModule
   ],
   providers: [
     AuthGuardService,

@@ -69,4 +69,8 @@ export class WriteupViewComponent implements OnInit {
     return this.writeupSubtitle;
   }
 
+  public getWriteupText() {
+    return this.writeupText;
+  }
+
 }

@@ -24,6 +24,9 @@ class MockSessionService {
     this.profile = data;
   }
 
+  public getElection() {
+    return true;
+  }
 }
 
 class MockRestService {

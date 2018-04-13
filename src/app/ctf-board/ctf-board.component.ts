@@ -78,8 +78,11 @@ export class CTFBoardComponent implements OnInit {
     }
 
     public ctfSetDifficulty(id, form, ind) {
+        const val = form.value.difficulty;
+        if (val > 100 || val < 0) { return; }
         this.ctfCards[ind].difficulty = form.value.difficulty;
         this.restService.ctfDifficulty(id, form.value.difficulty);
+        form.reset();
     }
 
     public ctfDelete() {

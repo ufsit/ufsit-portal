@@ -1,89 +1,208 @@
 <div class="container container-fluid full-height">
 
-    <br/>
+  <br/>
 
-    <div class="row m-1 center">
+  <div class="row m-1 center">
 
-        <div class="col m-0 p-0">
-            <h3>Custom Tiles</h3>
-            <table id="tile-list" class="table table-striped center">
-                <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td>Description</td>
-                        <td>Link</td>
-                        <td>Delete</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let ct of this.getCustomTiles(); let i = index">
-                        <td>{{ct.name}}</td>
-                        <td>{{ct.description}}</td>
-                        <td>{{ct.link}}</td>
-                        <button class="btn btn-danger" (click)="deleteTile(ct.id, i)">Delete</button>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="col m-0 p-0">
+      <h3>Custom Tiles</h3>
+      <table id="tile-list" class="table table-striped center">
+        <thead>
+          <tr>
+            <td>Name</td>
+            <td>Description</td>
+            <td>Link</td>
+            <td>Delete</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ct of this.getCustomTiles(); let i = index">
+            <td>{{ct.name}}</td>
+            <td>{{ct.description}}</td>
+            <td>{{ct.link}}</td>
+            <button class="btn btn-danger" (click)="deleteTile(ct.id, i)">Delete</button>
+          </tr>
+        </tbody>
+      </table>
 
-            <br/>
+      <br/>
 
-            <div class="col m-0 p-0">
-                <h3>Users</h3>
-                <table id="account-list" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <td>Full Name</td>
-                            <td>Email</td>
-                            <td>Graduation Year</td>
-                            <td>Mailing List?</td>
-                            <td>Registration Date</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let u of this.getUsers()">
-                            <td>
-                                <a routerLink="/profile/{{u.id}}">{{u.full_name}}</a>
-                            </td>
-                            <td>{{u.email}}</td>
-                            <td>{{u.grad_date}}</td>
-                            <td>{{u.mass_mail_optin}}</td>
-                            <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
-        <div class="col-md-4 m-0 p-0">
-            <form (ngSubmit)="addTile(formData)" [formGroup]="formData">
-                <h5>Create New Tile</h5>
-                <div class="form-group">
-                    <input class="form-control" placeholder="Name" formControlName="name">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" placeholder="Description" formControlName="description">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" placeholder="Link (full url)" formControlName="link">
-                </div>
-                <div class="row m-0 p-0">
-                    <div class="col m-0 p-0">
-                        <button class="btn btn-success">Add Tile</button>
-                    </div>
-                    <div class="col m-0 p-0">
-                        <p class="text-right font-italic"> - opens link preview </p>
-                    </div>
-                </div>
-            </form>
-
-            <br/>
-
-            <h5 class="mb-3">Create New Poll</h5>
-            <button [disabled]="true" class="btn btn-md btn-success" (click)="open(content)">Add Poll</button>
-
-        </div>
+      <div class="col m-0 p-0">
+        <h3>Users</h3>
+        <table id="account-list" class="table table-striped">
+          <thead>
+            <tr>
+              <td>Full Name</td>
+              <td>Email</td>
+              <td>Graduation Year</td>
+              <td>Mailing List?</td>
+              <td>Registration Date</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of this.getUsers()">
+              <td>
+                <a routerLink="/profile/{{u.id}}">{{u.full_name}}</a>
+              </td>
+              <td>{{u.email}}</td>
+              <td>{{u.grad_date}}</td>
+              <td>{{u.mass_mail_optin}}</td>
+              <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
     </div>
 
+    <div class="col-md-4 m-0 p-0">
+      <form (ngSubmit)="addTile(formData)" [formGroup]="formData">
+        <h5>Create New Tile</h5>
+        <div class="form-group">
+          <input class="form-control" placeholder="Name" formControlName="name">
+        </div>
+        <div class="form-group">
+          <input class="form-control" placeholder="Description" formControlName="description">
+        </div>
+        <div class="form-group">
+          <input class="form-control" placeholder="Link (full url)" formControlName="link">
+        </div>
+        <div class="row m-0 p-0">
+          <div class="col m-0 p-0">
+            <button class="btn btn-success">Add Tile</button>
+          </div>
+          <div class="col m-0 p-0">
+            <p class="text-right font-italic"> - opens link preview </p>
+          </div>
+        </div>
+      </form>
+
+      <br/>
+
+      <h5 class="mb-3">Elections</h5>
+      <button class="btn btn-md btn-success" (click)="open(content)">Create new Poll</button>
+      <button *ngIf="notifications.electionResults" class="btn btn-md btn-success" (click)="open(content2)">View Results of election</button>
+
+      <!-- Warning before submitting poll -->
+      <div *ngIf="notifications.endingElection" class="alert alert-danger alert-dismissible" role="alert">
+        <span aria-hidden="true"></span>
+        <span class="notification_panel">
+          <strong>Warning</strong> You are about to end the current elections. This will effect EVERY USER and cannot be undone.
+          To proceed, click end election again</span>
+        <br>
+      </div>
+      <button *ngIf="this.getElection()" class="btn btn-md btn-success" (click)="endElection()">End Election</button>
+
+    </div>
+
+  </div>
+
 </div>
+
+<!-- Election modal (popup) -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <!--Empty Field Notification -->
+  <div *ngIf="notifications.emptyField" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+    <button type="button" class="close" (click)="notifications.emptyField = false">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="notification_panel">
+      <strong>Error</strong> Cannot have empty field</span>
+  </div>
+  <!--Existing Poll Notification -->
+  <div *ngIf="notifications.existingPoll" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+    <button type="button" class="close" (click)="notifications.existingPoll = false">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="notification_panel">
+      <strong>Error</strong> There appears to already be an existing election</span>
+  </div>
+
+  <!-- Header for modal -->
+  <div class="modal-header">
+    <h3 class="modal-title">Create Election</h3>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click'); notifications.createElectionWarning = false">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit(orderForm)">
+      <div formArrayName="candidates" *ngFor="let cand of orderForm.controls.candidates.controls; let i = index;">
+        <div [formGroupName]="i">
+          <h6 class="modal-title">Candidate</h6>
+          <div class="row p-1 m-1">
+            <input class="p-0 m-0 mr-2" type="textarea" formControlName="candidate" placeholder="Person">
+            <ss-multiselect-dropdown class="m-0 ml-1 mr-1" [options]="myOptions" formControlName="position" [settings]="mySettings">
+            </ss-multiselect-dropdown>
+            <button class="btn btn-danger p-1 m-0 ml-2" (click)="deleteField(i)"> Delete </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Warning before submitting poll -->
+      <div *ngIf="notifications.createElectionWarning" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+        <span aria-hidden="true"></span>
+        <span class="notification_panel">
+          <strong>Warning</strong> You are about to create an election that will be visible to *all* users. If you want to proceed,
+          press submit again</span>
+      </div>
+
+      <button type="submit">Save</button>
+      <button type="button" (click)="addItem(); notifications.createElectionWarning = false">Add More</button>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Modal for displaying the election results -->
+<ng-template #content2 let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h3 class="modal-title">Results from Election</h3>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click'); notifications.deletingResults = false">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Position</th>
+          <th scope="col">Candidate</th>
+          <th scope="col">Number of Votes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-primary" *ngFor="let item of getPresidentResults()">
+          <td>President</td>
+          <td>{{item}}</td>
+          <td>{{results.president[item]}}</td>
+        </tr>
+        <tr class="table-secondary" *ngFor="let item of getVpResults()">
+          <td>VP</td>
+          <td>{{item}}</td>
+          <td>{{results.vp[item]}}</td>
+        </tr>
+        <tr class="table-success" *ngFor="let item of getTreasurerResults()">
+          <td>Treasurer</td>
+          <td>{{item}}</td>
+          <td>{{results.treasurer[item]}}</td>
+        </tr>
+        <tr class="table-warning" *ngFor="let item of getSecretaryResults()">
+          <td>Secretary</td>
+          <td>{{item}}</td>
+          <td>{{results.secretary[item]}}</td>
+        </tr>
+      </tbody>
+      <br>
+    </table>
+
+    <!-- Deleting election results warning -->
+    <div *ngIf="notifications.deletingResults" class="alert alert-danger">
+      <strong>Warning</strong> You are about to permanately delete the results of the election from the database. Neither admins
+      nor users will ever be able to see them again. Click delete again if you wish to proceed.
+    </div>
+    <button (click)="deleteResults()" class="btn btn-primary btn-lg btn-block">Delete all election results</button>
+  </div>
+
+</ng-template>
