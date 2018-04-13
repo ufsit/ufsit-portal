@@ -1,11 +1,13 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgForm, FormGroup, FormBuilder, Validators, FormControl, ValidationErrors } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RestService } from '../rest.service';
 import { SessionService } from '../session.service';
-import { NgForm } from '@angular/forms';
+import { of } from 'rxjs/observable/of';
 
 @Component({
     selector: 'app-ctf-board',
@@ -18,14 +20,22 @@ export class CTFBoardComponent implements OnInit {
     private ctfCards;
     private ctfIDToDelete;
     private ctfIndToDelete;
+    form: FormGroup;
+    innerHtml: SafeHtml;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private restService: RestService,
         private sessionService: SessionService,
-        private modalService: NgbModal
-    ) { }
+        private modalService: NgbModal,
+        private domSanitizer: DomSanitizer
+    ) {
+        const formBuilder = new FormBuilder();
+        this.form = formBuilder.group({
+            difficulty: ['', Validators.required, this.isValid]
+        });
+    }
 
     ngOnInit() {
 
@@ -51,13 +61,15 @@ export class CTFBoardComponent implements OnInit {
         this.ctfIndToDelete = ind;
     }
 
-    // Opens the popup window for the admin to use
-    public open(content: any) {
-        this.modalService.open(content);
-    }
+    public isValid(control: FormControl): ValidationErrors {
+        const val = control.value;
+        if (0 <= val && val <= 100) { return of(null); }
+        return of({'isInvalid': true});
+      }
+
+    public open(content: any) { this.modalService.open(content); }
 
     public getCTFCards() {
-        // [ngClass]="{'d-none': ctf.hidden && !isAdmin()}";
         if (!this.ctfCards) { return null; }
         if (this.isAdmin()) { return this.ctfCards; }
         return this.ctfCards.filter((x) => {
@@ -77,12 +89,13 @@ export class CTFBoardComponent implements OnInit {
         this.ctfCards[ind].hidden = !status;
     }
 
-    public ctfSetDifficulty(id, form, ind) {
-        const val = form.value.difficulty;
-        if (val > 100 || val < 0) { return; }
-        this.ctfCards[ind].difficulty = form.value.difficulty;
-        this.restService.ctfDifficulty(id, form.value.difficulty);
-        form.reset();
+    public ctfSetDifficulty(id, ind) {
+        let val = this.form.value.difficulty;
+        val -= (val % 1);
+        if (val < 0 || 100 < val) { return; }
+        this.ctfCards[ind].difficulty = val;
+        this.restService.ctfDifficulty(id, val);
+        this.form.reset();
     }
 
     public ctfDelete() {

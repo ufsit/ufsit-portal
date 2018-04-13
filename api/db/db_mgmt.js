@@ -180,8 +180,16 @@ let db_mgmt_module = function () {
         return await queryAsync('UPDATE `writeup_submissions` SET `hidden` = ? WHERE `id` = ?', [!(status), id]);
     }
 
-    async function writeup_difficulty(id, diff) {
-        return await queryAsync('UPDATE `writeup_submissions` SET `difficulty` = ? WHERE `id` = ?', [diff, id]);
+    async function writeup_difficulty(writeup_id, new_difficulty) {
+        const res1 = await queryAsync('SELECT `difficulty`, `account_id` FROM `writeup_submissions` WHERE `id` = ?', writeup_id);
+        let account_id = res1[0].account_id; let old_difficulty = res1[0].difficulty;
+        const res2 = await queryAsync('SELECT `rank` FROM `account` WHERE `id` = ?', account_id);
+        let rank = res2[0].rank;
+        let new_rank = rank-Math.ceil(old_difficulty/25)+Math.ceil(new_difficulty/25);
+        console.log('(',rank,') - ceil(',old_difficulty,'/25) + ceil(',new_difficulty,'/25) = ',new_rank);
+        console.log(rank,' - ', Math.ceil(old_difficulty/25),' + ', Math.ceil(new_difficulty/25),' = ',new_rank);
+        await queryAsync('UPDATE `account` SET `rank` = ? WHERE `id` = ?', [new_rank, account_id]);
+        await queryAsync('UPDATE `writeup_submissions` SET `difficulty` = ? WHERE `id` = ?', [new_difficulty, writeup_id]);
     }
 
     async function list_users() {

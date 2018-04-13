@@ -11,7 +11,7 @@ CREATE TABLE `account` (
 	`last_visit` DATETIME,
 	`mass_mail_optin` INT(1) NOT NULL,
 	`grad_date` varchar(50) NOT NULL,
-	`rank` INT NULL,
+	`rank` INT NOT NULL DEFAULT '0',
 	`resume` varchar(255) NULL,
 	`resume_date` DATETIME NULL,
 	`social_slack` varchar(128) NULL,
@@ -20,13 +20,6 @@ CREATE TABLE `account` (
 	`social_github` varchar(128) NULL,
 	`total_meetings` INT NOT NULL DEFAULT '0',
 	`ufl_email` varchar(254) NOT NULL,
-	PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `account_rank` (
-	`id` INT NOT NULL AUTO_INCREMENT,
-	`title` varchar(150) NOT NULL,
-	`image` varchar(255),
 	PRIMARY KEY (`id`)
 );
 
@@ -279,7 +272,6 @@ CREATE TABLE `event_sign_ins_old` (
 	`timestamp` varchar(100)
 );
 
-ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`rank`) REFERENCES `account_rank`(`id`);
 ALTER TABLE `event_signin` ADD CONSTRAINT `event_signin_fk0` FOREIGN KEY (`event_id`) REFERENCES `event`(`id`);
 ALTER TABLE `event_signin` ADD CONSTRAINT `event_signin_fk1` FOREIGN KEY (`account_id`) REFERENCES `account`(`id`);
 ALTER TABLE `event` ADD CONSTRAINT `event_fk1` FOREIGN KEY (`CREATEd_by`) REFERENCES `account`(`id`);
