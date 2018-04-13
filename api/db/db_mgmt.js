@@ -568,8 +568,27 @@ let db_mgmt_module = function () {
 
     /* Records a resume upload */
     async function record_resume_upload(account_id, key) {
-        return await queryAsync('UPDATE `account` SET `resume`=? WHERE `id`=?',
-            [key, account_id]);
+        return await queryAsync('UPDATE `account` SET `resume`=? WHERE `id`=?', [key, account_id]);
+    }
+
+    /* Get total writeup clicks for a user */
+    async function total_user_writeup_clicks(account_id) {
+        return await queryAsync('SELECT COUNT(*) FROM `writeup_clicks` WHERE `account_id`=?', account_id);
+    }
+
+    /* Get unique writeup clicks for a user */
+    async function unique_user_writeup_clicks(account_id) {
+        return await queryAsync('SELECT COUNT(DISTINCT `writeup_id`) FROM `writeup_clicks` WHERE `account_id`=?', account_id);
+    }
+
+    /* Get total clicks on a writeup for all users */
+    async function total_writeup_clicks(writeup_id) {
+        return await queryAsync('SELECT COUNT(*) FROM `writeup_clicks` WHERE `writeup_id`=?', writeup_id);
+    }
+
+    /* Get unique clicks on a writeup for all users */
+    async function unique_writeup_clicks(writeup_id) {
+        return await queryAsync('SELECT COUNT(DISTINCT `user_id`) FROM `writeup_clicks` WHERE `writeup_id`=?', writeup_id);
     }
 
     // Revealing module
@@ -612,6 +631,10 @@ let db_mgmt_module = function () {
         there_are_results: there_are_results,
         get_election_results: get_election_results,
         clear_database: clear_database,
+        total_user_writeup_clicks: total_user_writeup_clicks,
+        unique_user_writeup_clicks: unique_user_writeup_clicks,
+        total_writeup_clicks: total_writeup_clicks,
+        unique_writeup_clicks: unique_writeup_clicks
     });
 };
 
