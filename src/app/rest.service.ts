@@ -44,6 +44,31 @@ export class RestService {
         }
     }
 
+    // analytics track user clicks for writeups
+    public customCTFClick(id: number) {
+        this.post('/app/ctf_click', { id }, { responseType: 'text' }).subscribe();
+    }
+
+    // sets the value of a writeup to true (shown) or false (hidden)
+    public ctfShowHide(id: number, status: boolean) {
+        this.post('/writeups/show_hide', { id, status }, { responseType: 'text' }).subscribe();
+    }
+
+    // sets the difficulty of a writeup
+    public ctfDifficulty(id: number, diff: number) {
+        this.post('/writeups/difficulty', { id, diff }, { responseType: 'text' }).subscribe();
+    }
+
+    // request list of custom admin-added tiles for home page
+    public customTiles(): Observable<Response> {
+        return this.get('/app/custom_tiles');
+    }
+
+    // analytics track user clicks
+    public customTileClick(id) {
+        this.post('/app/tile_click', { id }, { responseType: 'text' }).subscribe();
+    }
+
     // to validate a user's session
     public validateSession(): Observable<Response> {
         return this.get('/session/validate');
@@ -78,16 +103,6 @@ export class RestService {
     // api call to sign a user into an event
     public signin(email: string) {
         return this.post('/event/sign_in', { email: email });
-    }
-
-    // request list of custom admin-added tiles for home page
-    public customTiles(): Observable<Response> {
-        return this.get('/app/custom_tiles');
-    }
-
-    // analytics track user clicks
-    public customTileClick(id) {
-        this.post('/app/tile_click', { id }, { responseType: 'text' }).subscribe();
     }
 
     // admin can add new custom tiles

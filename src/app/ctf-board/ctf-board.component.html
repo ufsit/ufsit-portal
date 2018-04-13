@@ -1,0 +1,74 @@
+<div class="container container-fluid full-height">
+
+    <div class="col m-0 p-0">
+
+        <br/>
+
+        <div class="row m-1">
+            <div class="col center text-center">
+                <h1 class="green_header">CTF Practice Board</h1>
+                <p>Challenge yourself for fun or train for upcoming events!</p>
+            </div>
+        </div>
+
+        <div class="row m-1">
+            <div class=col-md-4 *ngFor="let ctf of getCTFCards(); let i = index">
+                <div class="card tile border-secondary mt-3 mb-3">
+                    <div class="card-header text-center border-secondary" style="background-color:#D0D0D0">
+                        <h4 class="mb-0" style="color:#303030">{{ ctf.name }}</h4>
+                    </div>
+                    <div class="card-body border-secondary">
+                        <p class="card-text mt-0 mb-0">
+                            <strong>Date: </strong>{{ ctf.time_updated | limitTo : 10 : false }}</p>
+                        <p class="card-text mt-0 mb-0 pb-1">
+                            <strong>Difficulty: </strong>{{ ctf.difficulty }}</p>
+                        <p class="card-text">
+                            <strong>Description: </strong>{{ ctf.description | limitTo : 100 : true }}</p>
+                        <div *ngIf="isAdmin()" class="col center text-center">
+                            <div class="row center text-center mb-1">
+                                <button class="col btn input-label m-1" [ngClass]="{'btn-warning': !ctf.hidden, 'btn-outline-warning': ctf.hidden}" (click)="ctfShowHide(ctf.id,true,i)">Shown</button>
+                                <button class="col btn btn-outline-warning input-label m-1" [ngClass]="{'btn-warning': ctf.hidden, 'btn-outline-warning': !ctf.hidden}"
+                                    (click)="ctfShowHide(ctf.id,false,i)">Hidden</button>
+                                <button class="col btn btn-danger input-label m-1" (click)="saveStateToDelete(ctf.id,i); open(content);">Delete</button>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-2"></div>
+                                <form #diffForm="ngForm" class="col-8 input-group" (ngSubmit)="ctfSetDifficulty(ctf.id,diffForm,i)">
+                                    <input type="number" class="form-control" placeholder="Difficulty" name="difficulty" id="difficulty" min="0" max="100" ngModel>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary input-label">Set</button>
+                                    </div>
+                                </form>
+                                <div class="col-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary" style="background-color:#D0D0D0">
+                        <button class="btn btn-secondary input-label" (click)="cardClick(ctf)">Continue Reading</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+    </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div>
+        <div class="modal-header">
+            <h2>Confirm Delete</h2>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body center text-center col">
+            <h4>Are you sure you want to permanently delete this writeup from all records?</h4>
+            <h4>This action cannot be undone.</h4>
+        </div>
+        <div class="modal-footer center text-center">
+            <button [disabled]='true' class="btn btn-sm btn-danger col-3" (click)="ctfDelete()">Delete</button>
+            <button class="btn btn-sm btn-secondary col-3" (click)="d('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>

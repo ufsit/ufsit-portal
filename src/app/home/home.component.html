@@ -18,6 +18,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-4">
                     <div class="card tile" (click)="routeTo('/events')">
                         <img class="card-image" src="assets/calendar-alt.svg">
@@ -27,6 +28,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-4" (click)="routeTo('/resume')">
                     <div class="card tile">
                         <img class="card-image" src="assets/file-pdf.svg">
@@ -36,15 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card tile disabled">
-                        <img class="card-image" src="assets/list-alt.svg">
-                        <div class="card-body">
-                            <h3 class="card-title">CTF Practice Challenges</h3>
-                            <p class="card-text">Practice CTF challenges and view solutions</p>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="col-md-4">
                     <div class="card tile" (click)="routeTo('/writeups')">
                         <img class="card-image" src="assets/file-code.svg">
@@ -55,7 +49,16 @@
                     </div>
                 </div>
 
-                <!-- Voting Box -->
+                <div class="col-md-4" (click)="routeTo('/ctf-board')">
+                    <div class="card tile">
+                        <img class="card-image" src="assets/list-alt.svg">
+                        <div class="card-body">
+                            <h3 class="card-title">CTF Practice Challenges</h3>
+                            <p class="card-text">Practice CTF challenges and view solutions</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div *ngIf="this.getElection()" class="col-sm-4">
                     <div (click)="routeTo('/voting')" class="card tile">
                         <img class='card-image' src="assets/voting.svg">
