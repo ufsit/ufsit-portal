@@ -572,6 +572,18 @@ let db_mgmt_module = function () {
             [key, account_id]);
     }
 
+    /* Returns a user's resume questions */
+    async function get_resume_questions(account_id) {
+        return await queryAsync('SELECT `research`,`internship`,`major`,`grad_date`,`gpa` FROM `account` WHERE `id`=?',
+                                account_id);
+    }
+
+    /* Returns a user's resume questions */
+    async function set_resume_questions(account_id, new_data) {
+        return await queryAsync('UPDATE `account` SET `research`=?,`internship`=?,`major`=?,`grad_date`=?,`gpa`=? WHERE `id`=?',
+                                [new_data.research, new_data.internship, new_data.major, new_data.grad_date, new_data.gpa, account_id]);
+    }
+
     // Revealing module
     return ({
         create_account: create_account,
@@ -600,6 +612,8 @@ let db_mgmt_module = function () {
         tile_click: tile_click,
         get_resume_key: get_resume_key,
         record_resume_upload: record_resume_upload,
+        get_resume_questions: get_resume_questions,
+        set_resume_questions: set_resume_questions
         create_poll: create_poll,
         current_election: current_election,
         get_candidates: get_candidates,

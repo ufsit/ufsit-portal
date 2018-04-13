@@ -18,6 +18,10 @@ CREATE TABLE `account` (
 	`social_facebook` varchar(128) NULL,
 	`social_twitter` varchar(128) NULL,
 	`social_github` varchar(128) NULL,
+	`research` boolean NOT NULL DEFAULT FALSE,
+	`internship` boolean NOT NULL DEFAULT FALSE,
+	`major` varchar(128) NOT NULL DEFAULT 'computer science',
+	`gpa` INT NOT NULL DEFAULT '0'
 	PRIMARY KEY (`id`)
 );
 
