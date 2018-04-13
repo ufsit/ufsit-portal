@@ -177,6 +177,14 @@ export class RestService {
             .set('file-type', fileType));
     }
 
+    public getResumeQuestions() {
+        return this.get('/resume/questions');
+    }
+
+    public submitResumeQuestions(formData: {}) {
+        return this.post('/resume/questions', formData, { responseType: 'text' });
+    }
+
     // api call to get a list of the candidates in an election
     public getCandidates() {
         return this.get('/voting/get_candidates');

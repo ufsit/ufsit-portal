@@ -61,4 +61,28 @@ routes.get('/resume', async (req, res, next) => {
   });
 });
 
+// returns a user's resume questions
+routes.get('/resume/questions', async (req, res, next) => {
+  try {
+    let result = await db_mgmt.get_resume_questions(req.session.account_id);
+    if(result.length == 0) {
+      res.status(500).send('User not found, please contact the developers.');
+    } else {
+      res.status(200).send(result[0]);
+    }
+  } catch (error) {
+    return next(error);
+  }
+});
+
+// updates a user's resume questions
+routes.post('/resume/questions', async (req, res, next) => {
+  try {
+    await db_mgmt.set_resume_questions(req.session.account_id, req.body);
+    res.status(200).send('success');
+  } catch(error) {
+    next(error);
+  }
+});
+
 module.exports = routes;
