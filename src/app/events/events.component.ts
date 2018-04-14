@@ -43,7 +43,7 @@ const colors: any = {
   styleUrls: ['./events.component.css'],
   templateUrl: './events.component.html'
 })
-export class EventsComponent {
+export class EventsComponent implements OnInit {
   @ViewChild('modalContent') modalContent: TemplateRef<any>;
 
   view: string = 'month';
@@ -54,6 +54,16 @@ export class EventsComponent {
     action: string;
     event: CalendarEvent;
   };
+
+  googleCalendar.events.list({
+   auth: jwtClient,
+   calendarId: 'Valentino Christian'
+  }, function (err, response) {
+   if (err) {
+       console.log('The API returned an error: ' + err);
+       return;
+   }
+   var googleEvents = response.items;
 
   actions: CalendarEventAction[] = [
     {
@@ -110,6 +120,15 @@ export class EventsComponent {
   activeDayIsOpen: boolean = true;
 
   constructor(private modal: NgbModal) {}
+
+  ngOnInit() {
+    for (thing in googleEvents) {
+      events.push({title: thing.id, start:
+
+      })
+    }
+        
+    }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {

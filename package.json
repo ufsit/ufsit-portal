@@ -67,6 +67,7 @@
     "concurrently": "^3.5.1",
     "eslint": "^4.16.0",
     "eslint-config-google": "^0.9.1",
+    "googleapis": "^28.1.0",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~2.0.0",
