@@ -613,7 +613,7 @@ let db_mgmt_module = function () {
         get_resume_key: get_resume_key,
         record_resume_upload: record_resume_upload,
         get_resume_questions: get_resume_questions,
-        set_resume_questions: set_resume_questions
+        set_resume_questions: set_resume_questions,
         create_poll: create_poll,
         current_election: current_election,
         get_candidates: get_candidates,
