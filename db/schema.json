@@ -7,6 +7,9 @@
 				"email":{
 					"type": "string"
 				},
+				"ufl_email":{
+					"type": "string"
+				},
 				"password":{
 					"salt": {
 						"type": "string"
@@ -30,7 +33,7 @@
 			},
 			"required": [
 				"username", "password",
-				"name","email","in_mailing_list"
+				"name","email","ufl_email","in_mailing_list"
 			]
 		}
 	]

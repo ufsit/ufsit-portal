@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
     // create the form data to submit
     const data = {
       email: this.formData.value.email,
+      ufl_email: this.formData.value.email,
       password: this.formData.value.password
     };
 

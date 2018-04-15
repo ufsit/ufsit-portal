@@ -7,12 +7,13 @@ import { NgModule } from '@angular/core';
 import { ProfileResolverService } from '../profile-resolver.service';
 
 @Component({
-    selector: 'app-edit_profile',
+    selector: 'app-edit_profile', // tslint:disable-line:component-selector
     templateUrl: './edit_profile.component.html',
     styleUrls: ['../app.component.css']
 })
 
 export class EditProfileComponent implements OnInit {
+
     // profile holds the profile data we are currently viewing
     private profile;
     public title = '';
@@ -22,7 +23,7 @@ export class EditProfileComponent implements OnInit {
     private error_text: String;
     private success_items: {};
 
-    // A notification is displayed when it's falue is switched to true
+    // A notification is displayed when it's value is switched to true
     notifications = {
         invalid_credentials: false,
         generic_error: false,
@@ -41,6 +42,7 @@ export class EditProfileComponent implements OnInit {
     constructor(private sessionService: SessionService, private route: ActivatedRoute) { }
 
     ngOnInit() {
+
         // get the id of the user we are viewing
         const id = this.route.snapshot.params.id;
 
@@ -49,7 +51,7 @@ export class EditProfileComponent implements OnInit {
 
         // if there is no id (the user is looking at their own profile)
         // set the title and editLink accordingly
-        if (id === undefined) {
+        if (id == undefined) {
             this.title = 'Your Profile';
             // otherwise, the user is an admin looking at another user's profile
             // set the title and edit link accordingly
@@ -57,25 +59,57 @@ export class EditProfileComponent implements OnInit {
             this.title = this.profile.full_name + '\'s Profile';
         }
 
+        this.sessionService.setProfile(this.route.snapshot.data.profile);
+
+        
+        let email_display = this.sessionService.getProfile().email;
+        if(email_display == 'left_blank@ufl.edu')
+            email_display = '';
+        let ufl_email_display = this.sessionService.getProfile().ufl_email;
+        if(ufl_email_display == 'left_blank@ufl.edu')
+            ufl_email_display = '';
+        
+
         const fb: FormBuilder = new FormBuilder();
         this.formData = fb.group({
-            name: [this.profile.full_name, [
+
+            name: [this.sessionService.getProfile().full_name, [
                 Validators.required
             ]],
-            email: [this.profile.email, [
-                Validators.required,
+
+//            email: [this.sessionService.getProfile().email, [
+            email: [email_display, [
+                    // Validators.required,
                 // tslint:disable-next-line:max-line-length
-                Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
+                //Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+            ]],
 
-            old_password: ['', []],
+//            ufl_email: [this.sessionService.getProfile().ufl_email, [
+            ufl_email: [ufl_email_display, [
+                    // Validators.required,
+                // tslint:disable-next-line:max-line-length
+                //Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+            ]],
 
-            new_password: ['', []],
+            old_password: ['', [
+                Validators.required,
+                Validators.minLength(5)
+            ]],
 
-            confirm_password: ['', []],
+            new_password: ['', [
+                // Validators.required,
+                Validators.minLength(5)
+            ]],
 
-            grad_year: [this.profile.grad_date, [
+            confirm_password: ['', [
+                // Validators.required,
+                Validators.minLength(5)
+            ]],
+
+            grad_year: [this.sessionService.getProfile().grad_date, [
                 Validators.required
             ]],
+
             subscribe: ['true', []]
         });
     }
@@ -84,11 +118,12 @@ export class EditProfileComponent implements OnInit {
         this.notifications.invalid_credentials = false;
         this.notifications.bad_request = false;
         this.notifications.generic_error = false;
+
         // Scrolls the user to the top of the page
         window.scrollTo(0, 0);
 
         // If the form is not valid display error
-        if (!this.formData.valid ||
+        if (!this.formData.valid || this.formData.value.old_password === '' ||
             this.formData.value.new_password !== this.formData.value.confirm_password ||
             this.formData.value.grad_year === 'Select a semester' || !this.form_changed()) {
             this.notifications.invalid_credentials = true;
@@ -106,8 +141,8 @@ export class EditProfileComponent implements OnInit {
             // called if the account was created successfully
             res => {
                 if (res.status === undefined) {
-                    //window.location.reload();
-                    alert('Success!  You have changed:\n ' + res);
+                    // window.location.reload();
+                    alert('Success! You have changed your password!');
                 } else if (res.status === 409) {
                     this.notifications.bad_request = true;
                 } else if (res.status === 400) {

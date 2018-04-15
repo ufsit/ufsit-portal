@@ -12,4 +12,9 @@ routes.post('/app/tile_click', async function (req, res, next) {
     res.status(200).send('Success');
 });
 
+routes.post('/app/ctf_click', async function (req, res, next) {
+    await app_mgmt.ctf_click(req.session.account_id, req.body.id);
+    res.status(200).send('Success');
+});
+
 module.exports = routes;

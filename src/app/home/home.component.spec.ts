@@ -24,6 +24,9 @@ class MockSessionService {
     this.profile = data;
   }
 
+  public getElection() {
+    return true;
+  }
 }
 
 class MockRestService {
@@ -35,7 +38,7 @@ class MockRestService {
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
-  let service;
+  // let service;
   let element;
 
   beforeEach(async(() => {
