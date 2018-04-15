@@ -20,6 +20,7 @@ class MockExternalFileService {
   public getWriteup(id: number) {
     return of({
       name: 'writeup name',
+      description: 'description'
       text: 'test',
       id: id
     });
@@ -90,6 +91,7 @@ describe('WriteupsComponent', () => {
     it('should notify the user on success', () => {
       component.formData.patchValue({
         writeupName: 'name',
+        writeupDescription: 'test',
         markdownInput: 'success'
       });
       component.submitWriteup();
