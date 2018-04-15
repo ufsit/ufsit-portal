@@ -523,6 +523,34 @@ let db_mgmt_module = function () {
             id);
     }
 
+    /* Deletes a specific writeup, given its id */
+    async function delete_writeup(id, account_id, isAdmin) {
+        let result = await queryAsync('SELECT * FROM `writeup_submissions` WHERE account_id = ? AND id = ?',
+        [account_id, id]);
+
+        if(result.length === 0 && !isAdmin) {
+            throw new createError.BadRequest('You do not own this writeup.');
+        }
+
+        await queryAsync('DELETE FROM `writeup_clicks` WHERE writeup_id = ?',
+            id);
+        return await queryAsync('DELETE FROM `writeup_submissions` WHERE account_id = ? AND id = ?',
+            [account_id, id]);
+    }
+
+    /* Deletes a specific file, given its id */
+    async function delete_file(id, account_id, isAdmin) {
+        let result = await queryAsync('SELECT * FROM `file_uploads` WHERE account_id = ? AND id = ?',
+        [account_id, id]);
+
+        if(result.length === 0 && !isAdmin) {
+            throw new createError.BadRequest('You do not own this file.');
+        }
+
+        return await queryAsync('DELETE FROM `file_uploads` WHERE account_id = ? AND id = ?',
+            [account_id, id]);
+    }
+
     /* Get a list of the user's writeup submissions */
     async function get_file_uploads(account_id) {
         return await queryAsync('SELECT `id`,`name` FROM `file_uploads` WHERE `account_id` = ?',
@@ -614,6 +642,8 @@ let db_mgmt_module = function () {
         there_are_results: there_are_results,
         get_election_results: get_election_results,
         clear_database: clear_database,
+        delete_writeup: delete_writeup,
+        delete_file: delete_file
     });
 };
 
