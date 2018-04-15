@@ -37,7 +37,6 @@ import { AdminGuardService } from './admin-guard.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule } from 'angular-calendar';
-import { googleCalendar } from '../../googleCalConnect.ts';
 
 @NgModule({
   declarations: [
@@ -56,8 +55,7 @@ import { googleCalendar } from '../../googleCalConnect.ts';
     EditProfileComponent,
     WriteupsComponent,
     ResumeComponent,
-    WriteupViewComponent,
-    googleCalendar
+    WriteupViewComponent
   ],
   imports: [
     BrowserModule,

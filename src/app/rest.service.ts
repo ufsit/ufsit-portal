@@ -156,4 +156,8 @@ export class RestService {
             .set('file-type', fileType));
     }
 
+    public getEvents() {
+        return this.get('/googleCal/get_events');
+    }
+
 }

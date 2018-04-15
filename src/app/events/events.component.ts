@@ -2,7 +2,8 @@ import {
   Component,
   ChangeDetectionStrategy,
   ViewChild,
-  TemplateRef
+  TemplateRef,
+  OnInit
 } from '@angular/core';
 import {
   startOfDay,
@@ -19,8 +20,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CalendarEvent,
   CalendarEventAction,
-  CalendarEventTimesChangedEvent
+  CalendarEventTimesChangedEvent,
+  CalendarEventTitleFormatter
 } from 'angular-calendar';
+
+import { CustomEventTitleFormatter } from './custom-event-title-formatter.provider';
+import { RestService } from '../rest.service';
+
 
 const colors: any = {
   red: {
@@ -41,9 +47,16 @@ const colors: any = {
   selector: 'mwl-demo-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./events.component.css'],
-  templateUrl: './events.component.html'
+  templateUrl: './events.component.html',
+  providers: [
+    {
+      provide: CalendarEventTitleFormatter,
+      useClass: CustomEventTitleFormatter
+    }
+  ]
 })
-export class EventsComponent implements OnInit {
+
+export class EventsComponent implements OnInit{
   @ViewChild('modalContent') modalContent: TemplateRef<any>;
 
   view: string = 'month';
@@ -54,16 +67,6 @@ export class EventsComponent implements OnInit {
     action: string;
     event: CalendarEvent;
   };
-
-  googleCalendar.events.list({
-   auth: jwtClient,
-   calendarId: 'Valentino Christian'
-  }, function (err, response) {
-   if (err) {
-       console.log('The API returned an error: ' + err);
-       return;
-   }
-   var googleEvents = response.items;
 
   actions: CalendarEventAction[] = [
     {
@@ -83,52 +86,43 @@ export class EventsComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.red,
-      actions: this.actions
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.blue
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    }
-  ];
+  events: CalendarEvent[] = [];
 
-  activeDayIsOpen: boolean = true;
+  activeDayIsOpen: boolean = false;
+  private googleEvents;
 
-  constructor(private modal: NgbModal) {}
+
+  constructor(private modal: NgbModal,
+              private requests: RestService
+              ) {}
 
   ngOnInit() {
-    for (thing in googleEvents) {
-      events.push({title: thing.id, start:
+    console.log("Success in oninit method");
+    this.requests.getEvents().subscribe(
+      success => { console.log(success)
+        for (let x of success) { 
+          console.log("XXXXX")
+          console.log(x)
+          this.events.push({
+            title : x.summary,
+            start : new Date(JSON.parse(JSON.stringify(x.start.dateTime))),
+            end : new Date(JSON.parse(JSON.stringify(x.end.dateTime))), 
+            color : colors.red,
+            draggable : false,
+            resizable: {
+              beforeStart: false,
+              afterEnd: false
+            }
+          });
+        }
+        this.refresh.next();
+      },
 
-      })
-    }
-        
-    }
+      failure => { console.log(failure);}
+    );
+
+  }
+
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
