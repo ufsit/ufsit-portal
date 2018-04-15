@@ -20,7 +20,7 @@ class MockExternalFileService {
   public getWriteup(id: number) {
     return of({
       name: 'writeup name',
-      description: 'description'
+      description: 'description',
       text: 'test',
       id: id
     });
