@@ -224,4 +224,10 @@ export class RestService {
     public deleteElectionResults() {
         return this.post('/voting/delete_results');
     }
+
+    public getEvents() {
+        return this.get('/googleCal/get_events');
+    }
+
+
 }
