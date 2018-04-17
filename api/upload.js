@@ -23,7 +23,7 @@ routes.post('/upload/writeup', async (req, res, next) => {
   if (req.body.writeupId == 0) {
     let result = '';
     try {
-      result = await db_mgmt.record_writeup_submission(req.session.account_id, req.body.writeupName);
+      result = await db_mgmt.record_writeup_submission(req.session.account_id, req.body.writeupName, req.body.writeupDescription);
     } catch (error) {
       return next(error);
     }
@@ -32,7 +32,7 @@ routes.post('/upload/writeup', async (req, res, next) => {
   } else {
     try {
       await db_mgmt.update_writeup_submission(req.session.account_id, req.body.writeupName,
-                                              req.body.writeupId);
+                                              req.body.writeupDescription, req.body.writeupId);
     } catch (error) {
       return next(error);
     }

@@ -25,3 +25,7 @@ ngb-tabset{
 #fileBank {
   display: contents;
 }
+
+.red {
+  color: red;
+}

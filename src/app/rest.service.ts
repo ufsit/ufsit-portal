@@ -19,6 +19,11 @@ export class RestService {
         return this.http.get(this.baseUrl + relativeUrl, { params: params });
     }
 
+    // basic get request
+    private delete(relativeUrl: string, params?: HttpParams): Observable<any> {
+        return this.http.delete(this.baseUrl + relativeUrl, { params: params });
+    }
+
     // basic post request
     private post(relativeUrl: string, data: any = '', options: any = {}) {
         const headers = new HttpHeaders()
@@ -123,11 +128,12 @@ export class RestService {
     }
 
     // api call to upload a writeup
-    public uploadWriteup(data: string, writeupName: string, writeupId: number) {
+    public uploadWriteup(data: string, writeupName: string, writeupDescription: string, writeupId: number) {
         return this.post('/upload/writeup',
             {
                 data: data,
                 writeupName: writeupName,
+                writeupDescription: writeupDescription,
                 writeupId: writeupId
             }
         );
@@ -148,6 +154,11 @@ export class RestService {
         return this.get('/writeups/get/' + id);
     }
 
+    // api call to delete a writeup
+    public deleteWriteup(id: number) {
+        return this.delete('/writeups/get/' + id);
+    }
+
     // api call to upload a file directly
     public uploadFile(file: File, url: string) {
         const formData = new FormData();
@@ -163,6 +174,11 @@ export class RestService {
     // api call to get a list of submitted writeups
     public getUploadedFiles() {
         return this.get('/writeups/files/uploaded');
+    }
+
+    // api call to delete a file
+    public deleteFile(fileName: string) {
+        return this.delete('/writeups/files/' + fileName);
     }
 
     // api call to get the user's resume link
