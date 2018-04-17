@@ -267,4 +267,10 @@ export class AdminComponent implements OnInit {
       }
     );
   }
+
+  // Checks that there currently is an election
+  public getElection() {
+    return this.sessionService.getElection();
+  }
+
 }

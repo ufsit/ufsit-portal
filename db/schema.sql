@@ -108,46 +108,146 @@ CREATE TABLE `candidates` (
 	`secr` bit NOT NULL
 );
 
-CREATE TABLE `pres` (
-	`first` varchar(255),
-	`second` varchar(255),
-	`third` varchar(255),
-	`fourth` varchar(255),
-	`fifth` varchar(255)
+create table `president` (
+	`1th` varchar(255),
+	`2th` varchar(255),
+	`3th` varchar(255),
+	`4th` varchar(255),
+	`5th` varchar(255),
+	`6th` varchar(255),
+	`7th` varchar(255),
+	`8th` varchar(255),
+	`9th` varchar(255),
+	`10th` varchar(255),
+	`11th` varchar(255),
+	`12th` varchar(255),
+	`13th` varchar(255),
+	`14th` varchar(255),
+	`15th` varchar(255),
+	`16th` varchar(255),
+	`17th` varchar(255),
+	`18th` varchar(255),
+	`19th` varchar(255),
+	`20th` varchar(255),
+	`21th` varchar(255),
+	`22th` varchar(255),
+	`23th` varchar(255),
+	`24th` varchar(255),
+	`25th` varchar(255),
+	`26th` varchar(255),
+	`27th` varchar(255),
+	`28th` varchar(255),
+	`29th` varchar(255),
+	`30th` varchar(255)
 );
 
-CREATE TABLE `vp` (
-	`first` varchar(255),
-	`second` varchar(255),
-	`third` varchar(255),
-	`fourth` varchar(255),
-	`fifth` varchar(255)
+create table `vp` (
+	`1th` varchar(255),
+	`2th` varchar(255),
+	`3th` varchar(255),
+	`4th` varchar(255),
+	`5th` varchar(255),
+	`6th` varchar(255),
+	`7th` varchar(255),
+	`8th` varchar(255),
+	`9th` varchar(255),
+	`10th` varchar(255),
+	`11th` varchar(255),
+	`12th` varchar(255),
+	`13th` varchar(255),
+	`14th` varchar(255),
+	`15th` varchar(255),
+	`16th` varchar(255),
+	`17th` varchar(255),
+	`18th` varchar(255),
+	`19th` varchar(255),
+	`20th` varchar(255),
+	`21th` varchar(255),
+	`22th` varchar(255),
+	`23th` varchar(255),
+	`24th` varchar(255),
+	`25th` varchar(255),
+	`26th` varchar(255),
+	`27th` varchar(255),
+	`28th` varchar(255),
+	`29th` varchar(255),
+	`30th` varchar(255)
 );
 
-CREATE TABLE `treas` (
-	`first` varchar(255),
-	`second` varchar(255),
-	`third` varchar(255),
-	`fourth` varchar(255),
-	`fifth` varchar(255)
+CREATE TABLE `treasurer` (
+	`1th` varchar(255),
+	`2th` varchar(255),
+	`3th` varchar(255),
+	`4th` varchar(255),
+	`5th` varchar(255),
+	`6th` varchar(255),
+	`7th` varchar(255),
+	`8th` varchar(255),
+	`9th` varchar(255),
+	`10th` varchar(255),
+	`11th` varchar(255),
+	`12th` varchar(255),
+	`13th` varchar(255),
+	`14th` varchar(255),
+	`15th` varchar(255),
+	`16th` varchar(255),
+	`17th` varchar(255),
+	`18th` varchar(255),
+	`19th` varchar(255),
+	`20th` varchar(255),
+	`21th` varchar(255),
+	`22th` varchar(255),
+	`23th` varchar(255),
+	`24th` varchar(255),
+	`25th` varchar(255),
+	`26th` varchar(255),
+	`27th` varchar(255),
+	`28th` varchar(255),
+	`29th` varchar(255),
+	`30th` varchar(255)
 );
 
-CREATE TABLE `secr` (
-	`first` varchar(255),
-	`second` varchar(255),
-	`third` varchar(255),
-	`fourth` varchar(255),
-	`fifth` varchar(255)
+CREATE TABLE `secretary` (
+	`1th` varchar(255),
+	`2th` varchar(255),
+	`3th` varchar(255),
+	`4th` varchar(255),
+	`5th` varchar(255),
+	`6th` varchar(255),
+	`7th` varchar(255),
+	`8th` varchar(255),
+	`9th` varchar(255),
+	`10th` varchar(255),
+	`11th` varchar(255),
+	`12th` varchar(255),
+	`13th` varchar(255),
+	`14th` varchar(255),
+	`15th` varchar(255),
+	`16th` varchar(255),
+	`17th` varchar(255),
+	`18th` varchar(255),
+	`19th` varchar(255),
+	`20th` varchar(255),
+	`21th` varchar(255),
+	`22th` varchar(255),
+	`23th` varchar(255),
+	`24th` varchar(255),
+	`25th` varchar(255),
+	`26th` varchar(255),
+	`27th` varchar(255),
+	`28th` varchar(255),
+	`29th` varchar(255),
+	`30th` varchar(255)
 );
 
 CREATE TABLE `voters` (
 	`person` INT NOT NULL
 );
 
-CREATE TABLE `results` {
-	`position`varchar(255),
+CREATE TABLE `results` (
+	`position` varchar(255),
 	`json` varchar(255)
-}
+);
 
 ALTER TABLE `account` ADD CONSTRAINT `account_fk0` FOREIGN KEY (`rank`) REFERENCES `account_rank`(`id`);
 
