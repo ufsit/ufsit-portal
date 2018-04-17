@@ -5,6 +5,12 @@ const db_mgmt = require('./db/db_mgmt.js');
 const util = require.main.require('./util');
 const aws = require('aws-sdk');
 const aws_credentials = util.load_aws();
+const REALM = process.env.NODE_ENV || 'development';
+
+let keyPrefix = '';
+if (REALM === 'development') {
+  keyPrefix = 'dev/';
+}
 
 // returns a list of writeups the user has submitted
 routes.get('/writeups/submitted', async (req, res, next) => {
@@ -41,7 +47,7 @@ routes.get('/writeups/get/:id', async (req, res) => {
   // configure the parameters
   const params = {
     Bucket: aws_credentials.s3Bucket,
-    Key: 'writeups/' + req.params.id + '.md',
+    Key: keyPrefix + 'writeups/' + req.params.id + '.md',
   };
 
   // get the writeup
@@ -95,7 +101,7 @@ routes.delete('/writeups/get/:id', async (req, res, next) => {
     // configure the parameters
     const params = {
       Bucket: aws_credentials.s3Bucket,
-      Key: 'writeups/' + req.params.id + '.md',
+      Key: keyPrefix + 'writeups/' + req.params.id + '.md',
     };
   
     // get the writeup
@@ -141,7 +147,7 @@ routes.get('/writeups/files/:fileName', async (req, res) => {
     // configure the parameters
     const params = {
         Bucket: aws_credentials.s3Bucket,
-        Key: 'writeups/files/' + req.params.fileName,
+        Key: keyPrefix + 'writeups/files/' + req.params.fileName,
     };
 
     // pipe the file back
@@ -175,7 +181,7 @@ routes.delete('/writeups/files/:fileName', async (req, res, next) => {
     // configure the parameters
     const params = {
       Bucket: aws_credentials.s3Bucket,
-      Key: 'writeups/files/' + req.params.fileName,
+      Key: keyPrefix + 'writeups/files/' + req.params.fileName,
     };
   
     // get the writeup
