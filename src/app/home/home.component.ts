@@ -72,7 +72,10 @@ export class HomeComponent implements OnInit {
   }
 
   public getBadge() {
-    let rank = this.sessionService.getProfile().rank;
+    let rank = 0;
+    if (this.sessionService.getProfile() != null) {
+        rank = this.sessionService.getProfile().rank;
+    }
     if (rank <= 0) {
       return '';
     } else if (rank < 3) {
