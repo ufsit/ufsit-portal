@@ -12,7 +12,6 @@ let mysql_iso_time = function(date) {
 
 // A nasty hack until we have a better and unified permissions system
 let account_has_admin = function(account) {
-	return true;
 	if (!account.permissions) {
 		return false;
 	}
