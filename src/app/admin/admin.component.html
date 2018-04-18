@@ -80,7 +80,7 @@
       <br/>
 
       <h5 class="mb-3">Elections</h5>
-      <button class="btn btn-md btn-success" (click)="open(content)">Create new Poll</button>
+      <button *ngIf="!notifications.electionResults" class="btn btn-md btn-success" (click)="open(content)">Create new Poll</button>
       <button *ngIf="notifications.electionResults" class="btn btn-md btn-success" (click)="open(content2)">View Results of election</button>
 
       <!-- Warning before submitting poll -->

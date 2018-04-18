@@ -527,7 +527,36 @@ let db_mgmt_module = function () {
 
     /* Get a specific writeup, given its id */
     async function get_writeup(id) {
-        return await queryAsync('SELECT `name`,`full_name` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id AND `writeup_submissions`.id = ?', id);
+        return await queryAsync('SELECT `name`,`full_name`,`description` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id AND `writeup_submissions`.id = ?',
+            id);
+    }
+
+    /* Deletes a specific writeup, given its id */
+    async function delete_writeup(id, account_id, isAdmin) {
+        let result = await queryAsync('SELECT * FROM `writeup_submissions` WHERE account_id = ? AND id = ?',
+        [account_id, id]);
+
+        if(result.length === 0 && !isAdmin) {
+            throw new createError.BadRequest('You do not own this writeup.');
+        }
+
+        await queryAsync('DELETE FROM `writeup_clicks` WHERE writeup_id = ?',
+            id);
+        return await queryAsync('DELETE FROM `writeup_submissions` WHERE account_id = ? AND id = ?',
+            [account_id, id]);
+    }
+
+    /* Deletes a specific file, given its id */
+    async function delete_file(id, account_id, isAdmin) {
+        let result = await queryAsync('SELECT * FROM `file_uploads` WHERE account_id = ? AND id = ?',
+        [account_id, id]);
+
+        if(result.length === 0 && !isAdmin) {
+            throw new createError.BadRequest('You do not own this file.');
+        }
+
+        return await queryAsync('DELETE FROM `file_uploads` WHERE account_id = ? AND id = ?',
+            [account_id, id]);
     }
 
     /* Get a list of the user's writeup submissions */
@@ -537,10 +566,11 @@ let db_mgmt_module = function () {
     }
 
     /* Records a writeup submission */
-    async function record_writeup_submission(account_id, name) {
+    async function record_writeup_submission(account_id, name, description) {
         const values = {
             account_id: account_id,
             name: name,
+            description: description,
             time_created: new Date(),
             time_updated: new Date(),
         };
@@ -548,15 +578,15 @@ let db_mgmt_module = function () {
     }
 
     /* Records a writeup submission */
-    async function update_writeup_submission(account_id, name, id) {
+    async function update_writeup_submission(account_id, name, description, id) {
         let results = await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `id` = ?',
             [account_id, id]);
         if (results.length === 0) {
             throw new createError.BadRequest('Cannot update a different user\'s writeup');
         }
 
-        return await queryAsync('UPDATE `writeup_submissions` SET `name` = ?, `time_updated` = ? WHERE `account_id` = ? AND `id` = ?',
-            [name, new Date(), account_id, id]);
+        return await queryAsync('UPDATE `writeup_submissions` SET `name` = ?, `time_updated` = ?, `description`=? WHERE `account_id` = ? AND `id` = ?',
+                                [name, new Date(), description, account_id, id]);
     }
 
     /* Records a file upload */
@@ -640,7 +670,7 @@ let db_mgmt_module = function () {
         get_resume_key: get_resume_key,
         record_resume_upload: record_resume_upload,
         get_resume_questions: get_resume_questions,
-        set_resume_questions: set_resume_questions
+        set_resume_questions: set_resume_questions,
         create_poll: create_poll,
         current_election: current_election,
         get_candidates: get_candidates,
@@ -656,7 +686,9 @@ let db_mgmt_module = function () {
         total_user_writeup_clicks: total_user_writeup_clicks,
         unique_user_writeup_clicks: unique_user_writeup_clicks,
         total_writeup_clicks: total_writeup_clicks,
-        unique_writeup_clicks: unique_writeup_clicks
+        unique_writeup_clicks: unique_writeup_clicks,
+        delete_writeup: delete_writeup,
+        delete_file: delete_file
     });
 };
 
