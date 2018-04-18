@@ -101,7 +101,12 @@ export class CTFBoardComponent implements OnInit {
     public ctfDelete() {
         if (this.ctfIDToDelete !== undefined && this.ctfIndToDelete !== undefined) {
             // delete call to backend
-            this.ctfCards.splice(this.ctfIndToDelete, 1);
+            this.restService.deleteWriteup(this.ctfIDToDelete).subscribe(
+                res => {
+                    this.ctfCards.splice(this.ctfIndToDelete, 1);
+                },
+                err => {}
+            );
         }
     }
 

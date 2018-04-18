@@ -67,7 +67,7 @@
             <h4>This action cannot be undone.</h4>
         </div>
         <div class="modal-footer center text-center">
-            <button [disabled]='true' class="btn btn-sm btn-danger col-3" (click)="ctfDelete()">Delete</button>
+            <button class="btn btn-sm btn-danger col-3" (click)="ctfDelete(); d('Cross click')">Delete</button>
             <button class="btn btn-sm btn-secondary col-3" (click)="d('Cross click')">Cancel</button>
         </div>
     </div>
