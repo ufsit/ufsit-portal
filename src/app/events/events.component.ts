@@ -97,12 +97,9 @@ export class EventsComponent implements OnInit{
               ) {}
 
   ngOnInit() {
-    console.log("Success in oninit method");
     this.requests.getEvents().subscribe(
       success => { console.log(success)
         for (let x of success) { 
-          console.log("XXXXX")
-          console.log(x)
           this.events.push({
             title : x.summary,
             start : new Date(JSON.parse(JSON.stringify(x.start.dateTime))),
