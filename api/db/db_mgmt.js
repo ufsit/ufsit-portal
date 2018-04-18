@@ -332,7 +332,7 @@ let db_mgmt_module = function () {
 	}
 
 	// Returns true if a person is elibible to vote
-	async function is_eligible() {
+	async function is_eligible(id) {
 		return true;
 		// TODO: ACTUAL CHECK OF THE DATABASE FOR ELIGIBILITY
 	}
