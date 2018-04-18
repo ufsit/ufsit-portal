@@ -180,8 +180,16 @@ let db_mgmt_module = function () {
         return await queryAsync('UPDATE `writeup_submissions` SET `hidden` = ? WHERE `id` = ?', [!(status), id]);
     }
 
-    async function writeup_difficulty(id, diff) {
-        return await queryAsync('UPDATE `writeup_submissions` SET `difficulty` = ? WHERE `id` = ?', [diff, id]);
+    async function writeup_difficulty(writeup_id, new_difficulty) {
+        const res1 = await queryAsync('SELECT `difficulty`, `account_id` FROM `writeup_submissions` WHERE `id` = ?', writeup_id);
+        let account_id = res1[0].account_id; let old_difficulty = res1[0].difficulty;
+        const res2 = await queryAsync('SELECT `rank` FROM `account` WHERE `id` = ?', account_id);
+        let rank = res2[0].rank;
+        let new_rank = rank-Math.ceil(old_difficulty/25)+Math.ceil(new_difficulty/25);
+        console.log('(',rank,') - ceil(',old_difficulty,'/25) + ceil(',new_difficulty,'/25) = ',new_rank);
+        console.log(rank,' - ', Math.ceil(old_difficulty/25),' + ', Math.ceil(new_difficulty/25),' = ',new_rank);
+        await queryAsync('UPDATE `account` SET `rank` = ? WHERE `id` = ?', [new_rank, account_id]);
+        await queryAsync('UPDATE `writeup_submissions` SET `difficulty` = ? WHERE `id` = ?', [new_difficulty, writeup_id]);
     }
 
     async function list_users() {
@@ -598,8 +606,27 @@ let db_mgmt_module = function () {
 
     /* Records a resume upload */
     async function record_resume_upload(account_id, key) {
-        return await queryAsync('UPDATE `account` SET `resume`=? WHERE `id`=?',
-            [key, account_id]);
+        return await queryAsync('UPDATE `account` SET `resume`=? WHERE `id`=?', [key, account_id]);
+    }
+
+    /* Get total writeup clicks for a user */
+    async function total_user_writeup_clicks(account_id) {
+        return await queryAsync('SELECT COUNT(*) FROM `writeup_clicks` WHERE `account_id`=?', account_id);
+    }
+
+    /* Get unique writeup clicks for a user */
+    async function unique_user_writeup_clicks(account_id) {
+        return await queryAsync('SELECT COUNT(DISTINCT `writeup_id`) FROM `writeup_clicks` WHERE `account_id`=?', account_id);
+    }
+
+    /* Get total clicks on a writeup for all users */
+    async function total_writeup_clicks(writeup_id) {
+        return await queryAsync('SELECT COUNT(*) FROM `writeup_clicks` WHERE `writeup_id`=?', writeup_id);
+    }
+
+    /* Get unique clicks on a writeup for all users */
+    async function unique_writeup_clicks(writeup_id) {
+        return await queryAsync('SELECT COUNT(DISTINCT `user_id`) FROM `writeup_clicks` WHERE `writeup_id`=?', writeup_id);
     }
 
     /* Returns a user's resume questions */
@@ -656,6 +683,10 @@ let db_mgmt_module = function () {
         there_are_results: there_are_results,
         get_election_results: get_election_results,
         clear_database: clear_database,
+        total_user_writeup_clicks: total_user_writeup_clicks,
+        unique_user_writeup_clicks: unique_user_writeup_clicks,
+        total_writeup_clicks: total_writeup_clicks,
+        unique_writeup_clicks: unique_writeup_clicks,
         delete_writeup: delete_writeup,
         delete_file: delete_file
     });
