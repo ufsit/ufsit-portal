@@ -363,8 +363,8 @@ let db_mgmt_module = function () {
 
 	// Returns true if a person is elibible to vote
 	async function is_eligible(id) {
-		return true;
-		// TODO: ACTUAL CHECK OF THE DATABASE FOR ELIGIBILITY
+		let results = await queryAsync('SELECT * FROM eligible_voters WHERE id = ?', id);
+		return results.length > 0;
 	}
 
 	// Validates and records a user's vote
@@ -519,6 +519,9 @@ let db_mgmt_module = function () {
 					if (err) { throw delete_error; }
 				});
 				connection.query('DELETE FROM `results`', function(err, result) {
+					if (err) {throw delete_error;}
+				});
+				connection.query('DELETE FROM `eligible_voters`', function(err, result) {
 					if (err) {throw delete_error;}
 				});
 

@@ -40,6 +40,10 @@ CREATE TABLE `content_tags` (
 	PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `eligible_voters` (
+	`id` INT NOT NULL
+);
+
 CREATE TABLE `event` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`type` INT NOT NULL,
