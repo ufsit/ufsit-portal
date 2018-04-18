@@ -338,15 +338,32 @@ let db_mgmt_module = function () {
 	}
 
 	// Validates and records a user's vote
-	// TODO: CATCH NULL VOTE
 	async function record_vote(vote, user_id) {
 		if (await verify_valid_vote()) {
 			try {
-				if (vote.president.length) await insert_votes('president', vote.president);
-				if (vote.vp.length) await insert_votes('vp', vote.vp);
-				if (vote.treasurer.length) await insert_votes('treasurer', vote.treasurer);
-				if (vote.secretary.length) await insert_votes('secretary', vote.secretary);
-				return await record_that_user_voted();
+				sql_pool.getConnection(function(err, connection) {
+					if (err) { throw err; }
+
+					connection.beginTransaction(function(err) {
+						if(err) { throw err; }
+
+						// Every function called below is executed inside of the connection query
+						// thus, everything between here and commit will be rolled back in case of an error
+						record_that_user_voted(connection);
+						if (vote.president.length) { insert_votes('`president`', vote.president, connection); }
+						if (vote.vp.length) { insert_votes('`vp`', vote.vp, connection); }
+						if (vote.treasurer.length) { insert_votes('`treasurer`', vote.treasurer, connection); }
+						if (vote.secretary.length) { insert_votes('`secretary`', vote.secretary, connection); }
+
+						connection.commit(function(err) {
+							if (err) {
+								connection.rollback(function() {
+									throw err;
+								});
+							}
+						});
+					});
+				});
 			} catch (error) {
 				throw new createError.BadRequest('There seems to be a problem with the db.  Please contact the developers');
 			}
@@ -356,8 +373,10 @@ let db_mgmt_module = function () {
 		}
 
 		// Adds a users email to the voters table so that they cannot vote again
-		async function record_that_user_voted() {
-			return await queryAsync('INSERT INTO `voters` SET ?', { person: user_id });
+		function record_that_user_voted(connection) {
+			connection.query('INSERT INTO `voters` SET ?', {person: user_id}, function(err) {
+				if (err) { throw err; }
+			});
 		}
 
 		// Verifies that a vote is valid
@@ -395,12 +414,14 @@ let db_mgmt_module = function () {
 		}
 
 		// Records a users vote after it has been thoroughly validated
-		async function insert_votes(position, candidate_array) {
+		function insert_votes(position, candidate_array, connection) {
 			let values = {}
 			for (const [index, value] of candidate_array.entries()) {
 				values[(index + 1).toString() + 'th'] = value;
 			}
-			await queryAsync('INSERT INTO `' + position + '` SET ?', values);
+			connection.query('INSERT INTO ' + position + ' SET ?', values, function (error) {
+				if (error) { throw error; }
+			});
 		}
 	}
 
@@ -443,16 +464,45 @@ let db_mgmt_module = function () {
 
 	// Deletes everything having to do with voting (except candidates running because that was already deleted)
 	async function clear_database() {
-		try {
-			await queryAsync('DELETE FROM `president`');
-			await queryAsync('DELETE FROM `vp`');
-			await queryAsync('DELETE FROM `treasurer`');
-			await queryAsync('DELETE FROM `secretary`');
-			await queryAsync('DELETE FROM `results`');
-			await queryAsync('DELETE FROM `voters`');
-		} catch (error) {
-			throw new createError.BadRequest('There was an error deleting data from the database');
-		}
+		let delete_error = new createError.BadRequest('There was an error trying to delete the results of the election');
+
+		sql_pool.getConnection(function(err, connection) {
+			if (err) { throw delete_error; }
+
+			connection.beginTransaction(function(err) {
+				if (err) { throw delete_error; }
+
+				// Either delete from president or role back any changes that had been made
+				connection.query('DELETE FROM `president`', function (err, result) {
+					if (err) { throw delete_error; }
+				});
+				connection.query('DELETE FROM `vp`', function(err, result) {
+					if (err) { throw delete_error;}
+				});
+				connection.query('DELETE FROM `treasurer`', function (err, result) {
+					if (err) { throw delete_error; }
+				});
+				connection.query('DELETE FROM `secretary`', function(err, result) {
+					if (err) {throw delete_error;}
+				});
+				connection.query('DELETE FROM `voters`', function (err, result) {
+					if (err) { throw delete_error; }
+				});
+				connection.query('DELETE FROM `results`', function(err, result) {
+					if (err) {throw delete_error;}
+				});
+
+				connection.commit(function(err) {
+					if (err) { 
+				 	  connection.rollback(function() {
+				 		throw delete_error;
+					  });
+					}
+				});
+
+			});
+			connection.release();
+		});
 	}
 
 	async function get_election_results() {
