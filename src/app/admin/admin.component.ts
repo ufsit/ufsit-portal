@@ -272,4 +272,5 @@ export class AdminComponent implements OnInit {
   public getElection() {
     return this.sessionService.getElection();
   }
+
 }

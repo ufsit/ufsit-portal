@@ -41,7 +41,7 @@
     <div class="row m-1 p-1">
       <div class="col center text-center">
         <h1 class="green_header">Voting</h1>
-        <p>Rank Candidates in the order for which you want them to win a position</p>
+        <p>Rank candidates in the order for which you want them to win a position (drag and drop)</p>
       </div>
     </div>
   
@@ -52,9 +52,10 @@
           <div class="card-header text-center border-secondary" style="background-color:#D0D0D0">
             <h4 class="mb-0" style="color:#303030">Presidential Candidates</h4>
           </div>
-          <div [sortablejs]="this.presidents" class="col-md-5">
+          <div [sortablejs]="this.presidents">
             <div *ngFor="let pres of presidents; let i = index">
-              {{pres.person}}
+              {{i + 1}}.  {{pres.person}} <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              <br><br>
             </div>
           </div>
         </div>
@@ -65,9 +66,10 @@
           <div class="card-header text-center border-secondary" style="background-color:#D0D0D0">
             <h4 class="mb-0" style="color:#303030">Vice Presidential Candidates</h4>
           </div>
-          <div [sortablejs]="this.vp" class="col-md-5">
-            <div *ngFor="let vp of this.vp">
-              {{vp.person}}
+          <div [sortablejs]="this.vp">
+            <div *ngFor="let vp of this.vp; let i = index">
+              {{i + 1}}. {{vp.person}}
+              <br><br>
             </div>
           </div>
         </div>
@@ -78,9 +80,10 @@
           <div class="card-header text-center border-secondary" style="background-color:#D0D0D0">
             <h4 class="mb-0" style="color:#303030">Treasurer Candidates</h4>
           </div>
-          <div [sortablejs]="this.treasurers" class="col-md-5">
-            <div *ngFor="let treas of this.treasurers">
-              {{treas.person}}
+          <div [sortablejs]="this.treasurers">
+            <div *ngFor="let treas of this.treasurers; let i = index">
+              {{i + 1}}. {{treas.person}}
+              <br><br>
             </div>
           </div>
         </div>
@@ -91,9 +94,10 @@
           <div class="card-header text-center border-secondary" style="background-color:#D0D0D0">
               <h4 class="mb-0" style="color:#303030">Secretary Candidates</h4>
           </div>
-          <div [sortablejs]="this.secretaries" class="col-md-5">
-            <div *ngFor="let secr of this.secretaries">
-              {{secr.person}}
+          <div [sortablejs]="this.secretaries">
+            <div *ngFor="let secr of this.secretaries; let i = index">
+              {{i + 1}}. {{secr.person}}
+              <br><br>
             </div>
           </div>
         </div>

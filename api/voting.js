@@ -8,7 +8,7 @@ const util = require.main.require('./util');
 routes.get('/voting/get_candidates', async (req, res) => {
     if (await db_mgmt.current_election()) {     // Check for current election
         if (await db_mgmt.have_not_voted(req.session.account_id)) {      // Check that a users has not voted yet
-            if (await db_mgmt.is_eligible()) {      // Check that a user is eligible to vote
+            if (await db_mgmt.is_eligible(req.session.account_id)) {      // Check that a user is eligible to vote
                 res.status(200).json(await db_mgmt.get_candidates());
             }
             else {
@@ -28,7 +28,7 @@ routes.get('/voting/get_candidates', async (req, res) => {
 routes.post('/voting/send_vote', async (req, res) => {
     if (await db_mgmt.current_election()) {
         if (await db_mgmt.have_not_voted(req.session.account_id)) {
-            if (await db_mgmt.is_eligible()) {
+            if (await db_mgmt.is_eligible(req.session.account_id)) {
                 let candidates = {
                     president: [],
                     vp: [],
