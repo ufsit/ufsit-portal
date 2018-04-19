@@ -40,9 +40,11 @@ export class RegisterComponent implements OnInit {
         Validators.required
       ]],
       email: ['', [
-        Validators.required,
         // tslint:disable-next-line:max-line-length
         Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
+      ufl_email: ['', [
+        // tslint:disable-next-line:max-line-length
+        Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@ufl.edu/)]],
       password: ['', [
         Validators.required
       ]],
@@ -59,8 +61,7 @@ export class RegisterComponent implements OnInit {
   signWaiver(event) {
     if (event.target.checked) {
       this.checkedWaiver = true;
-    }
-    else {
+    } else {
       this.checkedWaiver = false;
     }
   }
@@ -80,9 +81,7 @@ export class RegisterComponent implements OnInit {
         this.formData.value.password !== this.formData.value.confirm_password ||
         this.formData.value.grad_date === 'Select a semester' ||
         this.formData.value.email === this.formData.value.ufl_email ||
-        (this.formData.value.email === '' && this.formData.value.ufl_email === '') ||
-        (this.formData.value.email === 'left_blank@ufl.edu' || this.formData.value.ufl_email === 'left_blank@ufl.edu')) 
-        {
+        (this.formData.value.email === 'left_blank@ufl.edu' && this.formData.value.ufl_email === 'left_blank@ufl.edu')) {
       this.notifications.invalid_credentials = true;
       return;
     }
@@ -93,8 +92,7 @@ export class RegisterComponent implements OnInit {
     }
 
     // otherwise, submit the form data to create a new account
-    this.sessionService.register(this.formData.value)
-    .subscribe(
+    this.sessionService.register(this.formData.value).subscribe(
       res => {
         // if the account was created successfully, notify user and
         // navigate to the login page
@@ -109,30 +107,11 @@ export class RegisterComponent implements OnInit {
         } else {
           this.notifications.generic_error = true;
         }
-      });
-
-        // otherwise, submit the form data to create a new account
-        this.sessionService.register(this.formData.value)
-            .subscribe(
-                res => {
-                    // if the account was created successfully, notify user and
-                    // navigate to the login page
-                    if (res === 'Success') {
-                        alert('Success! Your account has been created. You may now log in');
-                        this.router.navigate(['/login']);
-                        // depending on the error code, display the appropriate notification
-                    } else if (res.status === 409) {
-                        this.notifications.email_conflict = true;
-                    } else if (res.status === 400) {
-                        this.notifications.bad_request = true;
-                    } else {
-                        this.notifications.generic_error = true;
-                    }
-                },
-                // called if there was an error while creatign the account
-                err => {
-                    this.notifications.bad_request = true;
-                }
-            );
-    }
+      },
+      // called if there was an error while creatign the account
+      err => {
+        this.notifications.bad_request = true;
+      }
+    );
+  }
 }
