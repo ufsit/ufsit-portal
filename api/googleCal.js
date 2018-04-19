@@ -1,16 +1,18 @@
 'use strict';
 
+const fs = require('fs');  // For filesystem I/O
 const routes = require('express').Router(); // eslint-disable-line new-cap
 let google = require('googleapis');
 let auth = require('google-auth-library');
 
-let privatekey = require("../googleCalPrivateKey.json");
+const GOOGLECAL = process.env.GOOGLECAL || 'googleCal.json';
+const googleCal = JSON.parse(fs.readFileSync(GOOGLECAL, 'utf8'));
 
 // configure a JWT auth client
 let jwtClient = new google.google.auth.JWT(
-       privatekey.client_email,
+       googleCal.client_email,
        null,
-       privatekey.private_key,
+       googleCal.private_key,
        ['https://www.googleapis.com/auth/calendar']);
 //authenticate request
 jwtClient.authorize(function (err, tokens) {
