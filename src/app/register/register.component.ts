@@ -66,6 +66,11 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  // used in unit testing
+  checkWaiver() {
+    this.checkedWaiver = true;
+  }
+
   // function is called when the user clicks the submit button
   submitRegistration() {
     // if the form is invalid, the password and confirm password don't match,
