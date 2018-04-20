@@ -392,6 +392,8 @@ let db_mgmt_module = function () {
 								});
 							}
 						});
+
+						connection.release();
 					});
 				});
 			} catch (error) {
