@@ -98,7 +98,7 @@ export class EventsComponent implements OnInit{
 
   ngOnInit() {
     this.requests.getEvents().subscribe(
-      success => { console.log(success)
+      success => {
         for (let x of success) { 
           this.events.push({
             title : x.summary,
