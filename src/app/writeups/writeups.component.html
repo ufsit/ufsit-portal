@@ -28,6 +28,14 @@
            Please save your work and contact the developers.</span>
       </div>
 
+      <div *ngIf="notifications.writeup_delete_error" id="writeupDeleteErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.writeup_delete_error = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> There was an error while deleting your writeup.</span>
+      </div>
+
       <div *ngIf="notifications.form_invalid" id="formInvalidAlert" class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" (click)="notifications.writeup_submit_error = false">
           <span aria-hidden="true">&times;</span>
@@ -51,6 +59,14 @@
         <span class="notification_panel">
           <strong>Error</strong> There was an error while uploading your file.
            Please save your work and contact the developers.</span>
+      </div>
+
+      <div *ngIf="notifications.file_delete_error" id="fileDeleteErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" (click)="notifications.file_delete_error = false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class="notification_panel">
+          <strong>Error</strong> There was an error while deleting your file.</span>
       </div>
 
       <div *ngIf="notifications.writeup_list_error" id="writeupListErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
@@ -106,6 +122,11 @@
           <label class="input-label">Writeup Name</label>
           <input type="name" class="form-control" placeholder="Name" formControlName="writeupName">
         </div>
+        <div class="form-group col-md-12">
+          <input type="name" class="form-control" placeholder="Description (max 255 characters)" formControlName="writeupDescription">
+          <p *ngIf="getDescriptionCharactersRemaining() >= 0">{{getDescriptionCharactersRemaining()}} characters remaining</p>
+          <p *ngIf="getDescriptionCharactersRemaining() < 0" class="red">{{getDescriptionCharactersOver()}} characters over</p>
+        </div>
       </div>
 
       <div class="row">
@@ -147,6 +168,8 @@
             <div *ngFor="let file of files">
               <img *ngIf="isImage(file)" src={{file}} class="thumbnail img-thumbnail">
               <a href={{file}}>{{file}}</a>
+              <td><button type="button" class="btn btn-outline-danger" 
+                (click)="deleteFile(file)">Delete</button></td>
             </div>
             <br>
           </div>
@@ -158,6 +181,7 @@
              <tr>
               <td>Writeup Name</td>
               <td></td>
+              <td></td>
              </tr>
             </thead>
             <tbody class="fullWidth">
@@ -165,6 +189,8 @@
               <td>{{entry.writeupName}}</td>
               <td><button type="button" class="btn btn-outline-primary" 
                 (click)="load(entry.id)">Load</button></td>
+              <td><button type="button" class="btn btn-outline-danger" 
+                (click)="delete(entry.id)">Delete</button></td>
              </tr>
             </tbody>
           </table>

@@ -95,22 +95,36 @@
                                     <option value="2022 (Spring)">2022 (Spring)</option>
                                 </select>
                             </div>
-
-
                         </div>
 
-                        <div class="checkbox">
-                            <label class="input-label">
-                                <input type="checkbox" formControlName="subscribe"> Subscribe to SIT email updates
-                            </label>
-                        </div>
-                        <button [disabled]="!this.formData.valid" class="btn btn-success">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-5 hidden-xs">
-            <img src="assets/sit.png" alt="" style="width:100%">
-        </div>
-    </div>
-</div>
+							<div class="checkbox">
+								<label class="input-label">
+									<input type="checkbox" formControlName="subscribe"> Subscribe to SIT email updates
+								</label>
+							</div>
+							<div class="checkbox">
+								<label class="input-label">
+									<input type="checkbox" id="waiverCheckbox" class="nav-item nav-item nav-link" (change)="signWaiver($event)"> I have read and agree to the terms and conditions listed below.
+								</label>
+							</div>
+							<button [disabled]="!this.formData.valid" class="btn btn-success">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5 hidden-xs">
+				<img src="assets/sit.png" alt="" style="width:100%">
+			</div>
+		</div>
+		<div id="waiverText">
+			<h2>SIT Ethics Agreement/Liability Waiver</h2>
+            <p>By registering for this site, or using any resources provided directly or indirectly by UFSIT(UF Student Infosec Team), you therefore agree to forfeit any and all liability SIT may otherwise incur from your use of those resources AND agree to uphold UFSIT’s ethical code (described below).</p>
+            <h2>SIT Code of Ethics</h2>
+            <p>While we realize that students in this program are not Information Security Professionals, we do suggest that you read, understand, and agree to the (ISC)² Code of Ethics as it is a good model of the type of responsibility and behavior we expect from students participating. You must also agree to the following additional requirements:
+			You must request permission in writing to engage in any penetration testing against on-campus resources from the appropriate authorities (UF ISM, department ISM, local admin, etc).
+			You may never use the on-campus resources provided for SIT training to test off-campus resources.
+			You agree to abide by the campus AUP (which you agree to every time you renew your Gatorlink account).
+			You will not tolerate any illegal or explicitly forbidden activities in your presence during SIT activities and will report them to an appropriate authority.
+			You understand that violating these terms may result in either administrative sanctions as decided by the Student Judicial services, or potential legal sanctions as well.</p>
+		</div>
+	</div>

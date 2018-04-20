@@ -5,10 +5,16 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TimeAgoPipe } from '../time-ago.pipe';
 import { RestService } from '../rest.service';
 import { Observable } from 'rxjs/Observable';
-import { HttpResponse, HttpClient } from '@angular/common/http';
+import { HttpResponse, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs/observable/of';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgForm, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { SessionService } from '../session.service';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectSettings, IMultiSelectTexts } from 'angular-2-dropdown-multiselect';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 class MockRestService {
 
@@ -44,12 +50,24 @@ class MockRestService {
 
     public deleteTile(id, index) { return true; }
 
+    public deleteElectionResults() { return true; }
+
+    public getElectionResults() { return true; }
+
+    public endElection() { return true; }
+
 }
+
+class MockSessionService {
+    getElection() {return true;}
+    createPoll() {return true;}  
+ }
 
 describe('AdminComponent', () => {
     let component: AdminComponent;
     let fixture: ComponentFixture<AdminComponent>;
     let restService: RestService;
+    let sessionService: SessionService;
     let element;
 
     beforeEach(async(() => {
@@ -59,10 +77,13 @@ describe('AdminComponent', () => {
                 AdminComponent],
             imports: [
                 RouterTestingModule,
-                ReactiveFormsModule
+                ReactiveFormsModule,
+                MultiselectDropdownModule,
+                NgbModule.forRoot()
             ],
             providers: [
-                { provide: RestService, useClass: MockRestService }
+                { provide: RestService, useClass: MockRestService },
+                { provide: SessionService, useClass: MockSessionService}
             ]
         }).compileComponents();
     }));
@@ -141,10 +162,10 @@ describe('AdminComponent', () => {
 
 });
 
-function testAddTile (component: AdminComponent,
+function testAddTile(component: AdminComponent,
     fixture: ComponentFixture<AdminComponent>, element,
     name: string, description: string, link: string
-    ) {
+) {
     component.formData.setValue({
         name: name,
         description: description,

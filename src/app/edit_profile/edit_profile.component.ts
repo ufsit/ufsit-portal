@@ -23,7 +23,7 @@ export class EditProfileComponent implements OnInit {
     private error_text: String;
     private success_items: {};
 
-    // A notification is displayed when it's falue is switched to true
+    // A notification is displayed when it's value is switched to true
     notifications = {
         invalid_credentials: false,
         generic_error: false,
@@ -51,7 +51,7 @@ export class EditProfileComponent implements OnInit {
 
         // if there is no id (the user is looking at their own profile)
         // set the title and editLink accordingly
-        if (id === undefined) {
+        if (id == undefined) {
             this.title = 'Your Profile';
             // otherwise, the user is an admin looking at another user's profile
             // set the title and edit link accordingly

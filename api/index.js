@@ -76,8 +76,10 @@ routes.use(require('./event.js'));
 routes.use(require('./admin.js'));
 routes.use(require('./upload.js'));
 routes.use(require('./writeups.js'));
+routes.use(require('./voting.js'));
 routes.use(require('./resume.js'));
 routes.use(require('./app.js'));
+routes.use(require('./googleCal.js'));
 routes.use(function (req, res, next) {
     res.status(404).json({ message: 'Unknown REST URL: /api' + req.url });
 });
