@@ -54,9 +54,11 @@ export class WriteupsComponent implements OnInit {
   notifications = {
     writeup_submit_successful: false,
     writeup_submit_error: false,
+    writeup_delete_error: false,
     form_invalid: false,
     file_upload_successful: false,
     file_upload_error: false,
+    file_delete_error: false,
     writeup_list_error: false,
     writeup_load_error: false,
     writeup_load_successful: false,
@@ -73,6 +75,9 @@ export class WriteupsComponent implements OnInit {
     this.formData = fb.group({
       writeupName: ['', [
         Validators.required
+      ]],
+      writeupDescription: ['', [
+        Validators.required, Validators.maxLength(255)
       ]],
       markdownInput: ['', [
         Validators.required
@@ -128,6 +133,7 @@ export class WriteupsComponent implements OnInit {
     }
     this.externalFileService.uploadWriteup(this.formData.value.markdownInput,
                                           this.formData.value.writeupName,
+                                          this.formData.value.writeupDescription,
                                           this.formData.value.writeupId)
       .subscribe(
         res => {
@@ -152,12 +158,8 @@ export class WriteupsComponent implements OnInit {
         this.submittedWriteups = [];
         // iterate over each writeup entry
         for (const entry of res) {
-          // let pieces = entry.key.split('/');
           // add the information from each entry to the list
           this.submittedWriteups.push({
-            // ctfName: pieces[1],
-            // challengeName: pieces[2],
-            // fileName: pieces[3]
             writeupName: entry.name,
             id: entry.id
           });
@@ -178,6 +180,7 @@ export class WriteupsComponent implements OnInit {
         // update the form with the writeup information
         this.formData.patchValue({
           writeupName: res.name,
+          writeupDescription: res.description,
           markdownInput: res.text,
           writeupId: id
         });
@@ -186,6 +189,35 @@ export class WriteupsComponent implements OnInit {
       },
       err => {
         this.notifications.writeup_load_error = true;
+        console.log(err);
+      }
+    );
+  }
+
+  public delete(id: number) {
+    this.restService.deleteWriteup(id).subscribe(
+      res => {
+        this.submittedWriteups = this.submittedWriteups.filter(entry => {
+          return entry.id !== id;
+        });
+      },
+      err => {
+        this.notifications.writeup_delete_error = true;
+        console.log(err);
+      }
+    );
+  }
+
+  public deleteFile(url: string) {
+    const fileName = url.split('/').pop();
+    this.restService.deleteFile(fileName).subscribe(
+      res => {
+        this.files = this.files.filter(entry => {
+          return entry !== url;
+        });
+      },
+      err => {
+        this.notifications.file_delete_error = true;
         console.log(err);
       }
     );
@@ -249,6 +281,14 @@ export class WriteupsComponent implements OnInit {
         return true;
     }
     return false;
+  }
+
+  public getDescriptionCharactersRemaining() {
+    return 255 - this.formData.value.writeupDescription.length;
+  }
+
+  public getDescriptionCharactersOver() {
+    return -this.getDescriptionCharactersRemaining();
   }
 
 }

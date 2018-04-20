@@ -70,7 +70,7 @@ CREATE TABLE `file_uploads` (
 	`account_id` INT NOT NULL,
 	`time_created` DATETIME NOT NULL,
 	`name` varchar(255) NOT NULL DEFAULT '',
-	PRIMARY KEY (`id`);
+	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `president` (
@@ -271,7 +271,12 @@ CREATE TABLE `writeup_submissions` (
 	`difficulty` INT NOT NULL DEFAULT '0';
 	`description` varchar(255) NOT NULL DEFAULT '';
 	`hidden` BOOLEAN NOT NULL DEFAULT TRUE;
-	PRIMARY KEY (`id`);
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `results` (
+	`position` varchar(255),
+	`json` varchar(255)
 );
 
 CREATE TABLE `event_sign_ins_old` (

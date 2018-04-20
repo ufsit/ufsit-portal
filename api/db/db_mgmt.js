@@ -622,11 +622,6 @@ let db_mgmt_module = function () {
 		return await queryAsync('INSERT INTO `file_uploads` SET ?', values);
 	}
 
-	/* Records a file upload */
-	async function get_resume_key(account_id) {
-		return await queryAsync('SELECT `resume` FROM `account` WHERE `id`=?', account_id);
-	}
-
 	/* Records a resume upload */
 	async function record_resume_upload(account_id, key) {
 		return await queryAsync('UPDATE `account` SET `resume`=? WHERE `id`=?',
@@ -637,54 +632,174 @@ let db_mgmt_module = function () {
 	async function get_resume_questions(account_id) {
     	return await queryAsync('SELECT `research`,`internship`,`major`,`grad_date`,`gpa` FROM `account` WHERE `id`=?',
             account_id);
-	}
-	
-	/* Returns a user's resume questions */
-	async function set_resume_questions(account_id, new_data) {
-		return await queryAsync('UPDATE `account` SET `research`=?,`internship`=?,`major`=?,`grad_date`=?,`gpa`=? WHERE `id`=?',
-			[new_data.research, new_data.internship, new_data.major, new_data.grad_date, new_data.gpa, account_id]);
-	}
+  }
 
-	// Revealing module
-	return ({
-		create_account: create_account,
-		update_account: update_account,
-		retrieve: retrieve,
-		retrieve_by_id: retrieve_by_id,
-		create_session: create_session,
-		get_session: get_session,
-		remove_session: remove_session,
-		sign_in: sign_in,
-		get_sign_ins: get_sign_ins,
-		list_users: list_users,
-		get_user_writeup_submissions: get_user_writeup_submissions,
-		get_all_writeup_submissions: get_all_writeup_submissions,
-		get_writeup: get_writeup,
-		record_writeup_submission: record_writeup_submission,
-		update_writeup_submission: update_writeup_submission,
-		record_file_upload: record_file_upload,
-		get_file_uploads: get_file_uploads,
-		add_tile: add_tile,
-		delete_tile: delete_tile,
-		custom_tiles: custom_tiles,
-		tile_click: tile_click,
-		get_resume_key: get_resume_key,
-		record_resume_upload: record_resume_upload,
-		create_poll: create_poll,
-		current_election: current_election,
-		get_candidates: get_candidates,
-		have_not_voted: have_not_voted,
-		is_eligible: is_eligible,
-		record_vote: record_vote,
-		end_election: end_election,
-		get_votes: get_votes,
-		store_results: store_results,
-		there_are_results: there_are_results,
-		get_election_results: get_election_results,
-		clear_database: clear_database,
-		get_resume_questions: get_resume_questions,
-		set_resume_questions: set_resume_questions
-	});
+    /* Get all writeup submissions */
+    async function get_all_writeup_submissions() {
+        const attributes = '`writeup_submissions`.id,`name`,`time_updated`,`full_name`,`hidden`,`difficulty`,`description`';
+        return await queryAsync('SELECT ' + attributes + ' FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id');
+    }
+
+    /* Get a specific writeup, given its id */
+    async function get_writeup(id) {
+        return await queryAsync('SELECT `name`,`full_name`,`description` FROM `writeup_submissions`,`account` WHERE `writeup_submissions`.account_id = `account`.id AND `writeup_submissions`.id = ?',
+            id);
+    }
+
+    /* Deletes a specific writeup, given its id */
+    async function delete_writeup(id, account_id, isAdmin) {
+        let result = await queryAsync('SELECT * FROM `writeup_submissions` WHERE account_id = ? AND id = ?',
+        [account_id, id]);
+
+        if(result.length === 0 && !isAdmin) {
+            throw new createError.BadRequest('You do not own this writeup.');
+        }
+
+        await queryAsync('DELETE FROM `writeup_clicks` WHERE writeup_id = ?',
+            id);
+        return await queryAsync('DELETE FROM `writeup_submissions` WHERE account_id = ? AND id = ?',
+            [account_id, id]);
+    }
+
+    /* Deletes a specific file, given its id */
+    async function delete_file(id, account_id, isAdmin) {
+        let result = await queryAsync('SELECT * FROM `file_uploads` WHERE account_id = ? AND id = ?',
+        [account_id, id]);
+
+        if(result.length === 0 && !isAdmin) {
+            throw new createError.BadRequest('You do not own this file.');
+        }
+
+        return await queryAsync('DELETE FROM `file_uploads` WHERE account_id = ? AND id = ?',
+            [account_id, id]);
+    }
+
+    /* Get a list of the user's writeup submissions */
+    async function get_file_uploads(account_id) {
+        return await queryAsync('SELECT `id`,`name` FROM `file_uploads` WHERE `account_id` = ?',
+            account_id);
+    }
+
+    /* Records a writeup submission */
+    async function record_writeup_submission(account_id, name, description) {
+        const values = {
+            account_id: account_id,
+            name: name,
+            description: description,
+            time_created: new Date(),
+            time_updated: new Date(),
+        };
+        return await queryAsync('INSERT INTO `writeup_submissions` SET ?', values);
+    }
+
+    /* Records a writeup submission */
+    async function update_writeup_submission(account_id, name, description, id) {
+        let results = await queryAsync('SELECT * FROM `writeup_submissions` WHERE `account_id` = ? AND `id` = ?',
+            [account_id, id]);
+        if (results.length === 0) {
+            throw new createError.BadRequest('Cannot update a different user\'s writeup');
+        }
+
+        return await queryAsync('UPDATE `writeup_submissions` SET `name` = ?, `time_updated` = ?, `description`=? WHERE `account_id` = ? AND `id` = ?',
+                                [name, new Date(), description, account_id, id]);
+    }
+
+    /* Records a file upload */
+    async function record_file_upload(account_id, name) {
+        const values = {
+            account_id: account_id,
+            time_created: new Date(),
+            name: name,
+        };
+        return await queryAsync('INSERT INTO `file_uploads` SET ?', values);
+    }
+
+    /* Records a resume upload */
+    async function record_resume_upload(account_id, key) {
+        return await queryAsync('UPDATE `account` SET `resume`=? WHERE `id`=?', [key, account_id]);
+    }
+
+    /* Get total writeup clicks for a user */
+    async function total_user_writeup_clicks(account_id) {
+        return await queryAsync('SELECT COUNT(*) FROM `writeup_clicks` WHERE `account_id`=?', account_id);
+    }
+
+    /* Get unique writeup clicks for a user */
+    async function unique_user_writeup_clicks(account_id) {
+        return await queryAsync('SELECT COUNT(DISTINCT `writeup_id`) FROM `writeup_clicks` WHERE `account_id`=?', account_id);
+    }
+
+    /* Get total clicks on a writeup for all users */
+    async function total_writeup_clicks(writeup_id) {
+        return await queryAsync('SELECT COUNT(*) FROM `writeup_clicks` WHERE `writeup_id`=?', writeup_id);
+    }
+
+    /* Get unique clicks on a writeup for all users */
+    async function unique_writeup_clicks(writeup_id) {
+        return await queryAsync('SELECT COUNT(DISTINCT `user_id`) FROM `writeup_clicks` WHERE `writeup_id`=?', writeup_id);
+    }
+
+    /* Returns a user's resume questions */
+    async function get_resume_questions(account_id) {
+        return await queryAsync('SELECT `research`,`internship`,`major`,`grad_date`,`gpa` FROM `account` WHERE `id`=?',
+                                account_id);
+    }
+
+    /* Returns a user's resume questions */
+    async function set_resume_questions(account_id, new_data) {
+        return await queryAsync('UPDATE `account` SET `research`=?,`internship`=?,`major`=?,`grad_date`=?,`gpa`=? WHERE `id`=?',
+                                [new_data.research, new_data.internship, new_data.major, new_data.grad_date, new_data.gpa, account_id]);
+    }
+
+    // Revealing module
+    return ({
+        create_account: create_account,
+        update_account: update_account,
+        retrieve: retrieve,
+        retrieve_by_id: retrieve_by_id,
+        create_session: create_session,
+        get_session: get_session,
+        remove_session: remove_session,
+        sign_in: sign_in,
+        get_sign_ins: get_sign_ins,
+        list_users: list_users,
+        get_user_writeup_submissions: get_user_writeup_submissions,
+        get_all_writeup_submissions: get_all_writeup_submissions,
+        get_writeup: get_writeup,
+        record_writeup_submission: record_writeup_submission,
+        update_writeup_submission: update_writeup_submission,
+        record_file_upload: record_file_upload,
+        get_file_uploads: get_file_uploads,
+        writeup_click: writeup_click,
+        writeup_show_hide: writeup_show_hide,
+        writeup_difficulty: writeup_difficulty,
+        add_tile: add_tile,
+        delete_tile: delete_tile,
+        custom_tiles: custom_tiles,
+        tile_click: tile_click,
+        get_resume_key: get_resume_key,
+        record_resume_upload: record_resume_upload,
+        get_resume_questions: get_resume_questions,
+        set_resume_questions: set_resume_questions,
+        create_poll: create_poll,
+        current_election: current_election,
+        get_candidates: get_candidates,
+        have_not_voted: have_not_voted,
+        is_eligible: is_eligible,
+        record_vote: record_vote,
+        end_election: end_election,
+        get_votes: get_votes,
+        store_results: store_results,
+        there_are_results: there_are_results,
+        get_election_results: get_election_results,
+        clear_database: clear_database,
+        total_user_writeup_clicks: total_user_writeup_clicks,
+        unique_user_writeup_clicks: unique_user_writeup_clicks,
+        total_writeup_clicks: total_writeup_clicks,
+        unique_writeup_clicks: unique_writeup_clicks,
+        delete_writeup: delete_writeup,
+        delete_file: delete_file
+    });
 };
 
 /* Export the module by calling the db_mgmt_module() function, which returns an object

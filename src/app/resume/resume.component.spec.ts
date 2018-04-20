@@ -4,6 +4,7 @@ import { ResumeComponent } from './resume.component';
 import { ExternalFileService } from '../external-file.service';
 import { RestService } from '../rest.service';
 import { of } from 'rxjs/observable/of';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 class MockExternalFileService {
   resumeLink = '';
@@ -16,7 +17,15 @@ class MockExternalFileService {
 }
 
 class MockRestService {
-
+  public getResumeQuestions() {
+    return of({
+      research: true,
+      internship: true,
+      major: '',
+      grad_date: 'Already Graduated',
+      gpa: 0
+    });
+  }
 }
 
 describe('ResumeComponent', () => {
@@ -26,6 +35,10 @@ describe('ResumeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ResumeComponent ],
+      imports: [
+        FormsModule,
+        ReactiveFormsModule
+    ],
       providers: [
         {provide: ExternalFileService, useClass: MockExternalFileService},
         {provide: RestService, useClass: MockRestService},

@@ -71,4 +71,30 @@ export class HomeComponent implements OnInit {
     return this.sessionService.getElection();
   }
 
+  public getBadge() {
+    let rank = 0;
+    if (this.sessionService.getProfile() != null) {
+        rank = this.sessionService.getProfile().rank;
+    }
+    if (rank <= 0) {
+      return '';
+    } else if (rank < 3) {
+        return 'assets/images/ranks/white.png';
+    } else if (rank < 5) {
+        return 'assets/images/ranks/yellow.png';
+    } else if (rank < 10) {
+        return 'assets/images/ranks/green.png';
+    } else if (rank < 20) {
+        return 'assets/images/ranks/blue.png';
+    } else if (rank < 40) {
+        return 'assets/images/ranks/purple.png';
+    } else if (rank < 65) {
+        return 'assets/images/ranks/red.png';
+    } else if (rank < 100) {
+        return 'assets/images/ranks/brown.png';
+    } else {
+        return 'assets/images/ranks/black.png';
+    }
+  }
+
 }

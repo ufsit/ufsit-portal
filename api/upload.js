@@ -7,6 +7,13 @@ const aws_credentials = util.load_aws();
 
 const db_mgmt = require('./db/db_mgmt.js');
 
+const REALM = process.env.NODE_ENV || 'development';
+
+let keyPrefix = '';
+if (REALM === 'development') {
+  keyPrefix = 'dev/';
+}
+
 // upload a writeup
 routes.post('/upload/writeup', async (req, res, next) => {
   // configure s3
@@ -23,7 +30,7 @@ routes.post('/upload/writeup', async (req, res, next) => {
   if (req.body.writeupId == 0) {
     let result = '';
     try {
-      result = await db_mgmt.record_writeup_submission(req.session.account_id, req.body.writeupName);
+      result = await db_mgmt.record_writeup_submission(req.session.account_id, req.body.writeupName, req.body.writeupDescription);
     } catch (error) {
       return next(error);
     }
@@ -32,7 +39,7 @@ routes.post('/upload/writeup', async (req, res, next) => {
   } else {
     try {
       await db_mgmt.update_writeup_submission(req.session.account_id, req.body.writeupName,
-                                              req.body.writeupId);
+                                              req.body.writeupDescription, req.body.writeupId);
     } catch (error) {
       return next(error);
     }
@@ -44,7 +51,7 @@ routes.post('/upload/writeup', async (req, res, next) => {
   // configure the parameters
   const params = {
     Bucket: aws_credentials.s3Bucket,
-    Key: 'writeups/' + fileName + '.md',
+    Key: keyPrefix + 'writeups/' + fileName + '.md',
   };
 
   // check if the user is updating an old submission
@@ -95,7 +102,7 @@ routes.get('/upload/file', async (req, res, next) => {
 
   let id = result.insertId;
 
-  let url = getSignedUrl(prefix + id + fileExt, fileType);
+  let url = getSignedUrl(keyPrefix + prefix + id + fileExt, fileType);
   res.status(200).json({url: url, key: prefix + id + fileExt});
   // wait until we find an unused file name
   // await getUnusedName(req, res, s3, prefix, name, fileType, fileExt);
@@ -116,7 +123,7 @@ routes.get('/upload/resume', async (req, res, next) => {
   let prefix = 'resumes/';
   // hash the name
   // let name = util.md5(fileName);
-  let key = prefix + req.session.account_id + fileExt;
+  let key = keyPrefix + prefix + req.session.account_id + fileExt;
   try {
     await db_mgmt.record_resume_upload(req.session.account_id, key);
   } catch (error) {

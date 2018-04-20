@@ -3,6 +3,8 @@
 
 # Potentially Sensitive
 credentials.json
+aws.json
+googleCal.json
 
 # Vim
 *.swp
@@ -13,6 +15,3 @@ node_modules/
 
 # angular optimized build
 static/
-
-# Misc
-aws.json

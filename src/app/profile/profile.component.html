@@ -32,7 +32,10 @@
 
           <label class='input-label'>Registered:</label>
           <p title="Registered on {{this.getProfile().registration_date | date : 'medium'}}">{{ this.getProfile().registration_date | timeAgo }}</p>
+          <br>
 
+          <label class='input-label'>Points:</label>
+          <p>{{ this.getProfile().rank }}</p>
           <br>
 
           <a id="updateProfileButton" routerLink="{{ this.getEditLink() }}" class="btn btn-info" role="button">Update Profile</a>

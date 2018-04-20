@@ -42,6 +42,9 @@ import { LimitToPipe } from './limit-to.pipe';
 import { Routes } from '@angular/router';
 import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CalendarModule } from 'angular-calendar';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -74,7 +77,9 @@ import { ActivatedRouteSnapshot } from '@angular/router/src/router_state';
     ShowdownModule,
     RouterModule,
     SortablejsModule.forRoot({animation: 150}),
-    MultiselectDropdownModule
+    MultiselectDropdownModule,
+    BrowserAnimationsModule,
+    CalendarModule.forRoot()
   ],
   providers: [
     AuthGuardService,

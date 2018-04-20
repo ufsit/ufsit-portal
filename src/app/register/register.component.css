@@ -13,3 +13,12 @@ form .form-hint-error {
 	margin-top: 5px;
 	padding-left: 5px;
 }
+
+#waiverLink {
+	color: blue;
+	text-decoration: underline;
+}
+
+#waiverLink:hover {
+	background-color: yellow;
+}
