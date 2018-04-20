@@ -82,9 +82,6 @@ let account_mgmt_module = (function () {
             if(email === 'left_blank@ufl.edu')
                 email = login_data.ufl_email;
             
-            console.log('f8u13');
-            console.log(email);
-            
             const result = await db_mgmt.retrieve(email);
             
             /* If there was no error, verify the given credentials against those retrieved from the database */
