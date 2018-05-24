@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const crypto = require('crypto');
+let cached_credentials = {};
 
 let mysql_iso_time = function(date) {
 	let dateString = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()
@@ -31,11 +32,15 @@ let account_has_admin = function(account) {
 
 let md5 = function(data) {
 	return crypto.createHash('md5').update(data).digest('hex');
-}
+};
 
 let load_aws = function() {
 	const filename = process.env.AWS || 'aws.json';
 	let aws_credentials = null;
+
+	if (cached_credentials.aws) {
+		return cached_credentials.aws;
+	}
 
 	try {
 		aws_credentials = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -64,7 +69,25 @@ let load_aws = function() {
 	console.log('[INFO] Associated with AWS [' + aws_credentials.region +
 		' ' + aws_credentials.s3Bucket + ']');
 
+	cached_credentials.aws = aws_credentials;
 	return aws_credentials;
+};
+
+let load_googlecal = function() {
+	const filename = process.env.GOOGLECAL || 'googleCal.json';
+	let google_credentials = null;
+
+	try {
+		google_credentials = JSON.parse(fs.readFileSync(filename, 'utf8'));
+	} catch (err) {
+		console.log('GoogleCal credentials not found. Falling back to environment variable');
+
+		google_credentials = JSON.parse(process.env.GOOGLECAL);
+	}
+
+	console.log('[INFO] Associated with GoogleCal for ' + google_credentials.client_email);
+
+	return google_credentials;
 };
 
 module.exports = {
@@ -72,4 +95,5 @@ module.exports = {
 	account_has_admin: account_has_admin,
 	md5: md5,
 	load_aws: load_aws,
+	load_googlecal: load_googlecal,
 };
