@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "npm run build && node app.js",
+    "build": "ng build",
     "dev": "concurrently --kill-others \"npm run node-monitor\" \"npm run angular-monitor\"",
     "node-monitor": "nodemon app.js --ignore angular/*",
     "angular-monitor": "ng serve --proxy proxy.conf.json",
@@ -13,8 +14,8 @@
     "test-back": "mocha || true",
     "test": "mocha || true && ng test",
     "lint": "eslint",
-    "build": "ng build --aot --prod",
-    "postinstall": "npm run build"
+    "heroku-postbuild": "npm run prod-build",
+    "prod-build": "ng build --aot --prod"
   },
   "author": "Elan Rasabi",
   "license": "ISC",
