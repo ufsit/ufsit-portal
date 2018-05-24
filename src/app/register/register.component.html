@@ -1,0 +1,130 @@
+<div class="container container-fluid full-height">
+    <div class="row">
+        <div class="col-md-5 col-md-offset-1 p-3">
+            <div class="main_header">Register</div>
+            <br>
+            <!-- Notification panels -->
+            <div class="row">
+                <div class="col-xs-12">
+
+                    <div *ngIf="notifications.email_conflict" class="alert alert-danger alert-dismissible" id="emailConflictAlert" role="alert">
+                        <button type="button" class="close" (click)="notifications.email_conflict = false">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span class="notification_panel">
+                            <strong>Error</strong> An account already exists for that email address. Please contact the developers
+                            or attempt to login.</span>
+                    </div>
+
+                    <div *ngIf="notifications.generic_error" class="alert alert-danger alert-dismissible" id="genericErrorAlert" role="alert">
+                        <button type="button" class="close" (click)="notifications.generic_error = false">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span class="notification_panel">
+                            <strong>Error</strong> Something went wrong on our end. Please contact the developers.</span>
+                    </div>
+
+                    <div *ngIf="notifications.bad_request" class="alert alert-danger alert-dismissible" id="badRequestAlert" role="alert">
+                        <button type="button" class="close" (click)="notifications.bad_request = false">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span class="notification_panel">
+                            <strong>Error</strong> It looks like you're trying to do something sketchy. Remember that "unauthorized
+                            penetration tests" are illegal :P. If you believe this is a mistake, please contact the developers.</span>
+                    </div>
+
+                    <div *ngIf="notifications.invalid_credentials" class="alert alert-danger alert-dismissible" id="invalidCredentialsAlert"
+                        role="alert">
+                        <button type="button" class="close" (click)="notifications.invalid_credentials = false">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span class="notification_panel">
+                            <strong>Error</strong> At least one field of the form is invalid.</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <form (ngSubmit)="submitRegistration()" [formGroup]="formData">
+                        <div class="form-group">
+                            <label class="input-label">Name</label>
+                            <input type="name" class="form-control" placeholder="Full Name" formControlName="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="input-label">E-mail address</label>
+                            <input type="email" class="form-control" placeholder="Email" formControlName="email">
+                        </div>
+                        <div class="form-group">
+                            <label class="input-label">UFL E-mail address</label>
+                            <input type="email" class="form-control" placeholder="UFL Email" formControlName="ufl_email">
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="input-label">Password</label>
+                                <input type="password" class="form-control" placeholder="Password" formControlName="password">
+                                <p class="form-hint">Do
+                                    <b>not</b> use your Gatorlink or an existing password! Passwords must be atleast 8 characters.</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="input-label">Confirm password</label>
+                                <input type="password" class="form-control" placeholder="Password" formControlName="confirm_password">
+                                <p class="form-hint-error" *ngIf="formData.value.password !== formData.value.confirm_password">Your passwords need to match.</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="input-label">Graduation Semester</label>
+                                <select required aria-required="true" class="form-control" formControlName="grad_date">
+                                    <option value="Already Graduated">Already Graduated</option>
+                                    <option value="2018 (Spring)">2018 (Spring)</option>
+                                    <option value="2018 (Summer)">2018 (Summer)</option>
+                                    <option value="2018 (Fall)">2018 (Fall)</option>
+                                    <option value="2019 (Spring)">2019 (Spring)</option>
+                                    <option value="2019 (Summer)">2019 (Summer)</option>
+                                    <option value="2019 (Fall)">2019 (Fall)</option>
+                                    <option value="2020 (Spring)">2020 (Spring)</option>
+                                    <option value="2020 (Summer)">2020 (Summer)</option>
+                                    <option value="2020 (Fall)">2020 (Fall)</option>
+                                    <option value="2021 (Spring)">2021 (Spring)</option>
+                                    <option value="2021 (Summer)">2021 (Summer)</option>
+                                    <option value="2021 (Fall)">2021 (Fall)</option>
+                                    <option value="2022 (Spring)">2022 (Spring)</option>
+                                </select>
+                            </div>
+                        </div>
+
+							<div class="checkbox">
+								<label class="input-label">
+									<input type="checkbox" formControlName="subscribe"> Subscribe to SIT email updates
+								</label>
+							</div>
+							<div class="checkbox">
+								<label class="input-label">
+									<input type="checkbox" id="waiverCheckbox" class="nav-item nav-item nav-link" (change)="signWaiver($event)"> I have read and agree to the terms and conditions listed below.
+								</label>
+							</div>
+							<button [disabled]="!this.formData.valid" class="btn btn-success">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5 hidden-xs">
+				<img src="assets/sit.png" alt="" style="width:100%">
+			</div>
+		</div>
+		<div id="waiverText">
+			<h2>SIT Ethics Agreement/Liability Waiver</h2>
+            <p>By registering for this site, or using any resources provided directly or indirectly by UFSIT(UF Student Infosec Team), you therefore agree to forfeit any and all liability SIT may otherwise incur from your use of those resources AND agree to uphold UFSIT’s ethical code (described below).</p>
+            <h2>SIT Code of Ethics</h2>
+            <p>While we realize that students in this program are not Information Security Professionals, we do suggest that you read, understand, and agree to the (ISC)² Code of Ethics as it is a good model of the type of responsibility and behavior we expect from students participating. You must also agree to the following additional requirements:
+			You must request permission in writing to engage in any penetration testing against on-campus resources from the appropriate authorities (UF ISM, department ISM, local admin, etc).
+			You may never use the on-campus resources provided for SIT training to test off-campus resources.
+			You agree to abide by the campus AUP (which you agree to every time you renew your Gatorlink account).
+			You will not tolerate any illegal or explicitly forbidden activities in your presence during SIT activities and will report them to an appropriate authority.
+			You understand that violating these terms may result in either administrative sanctions as decided by the Student Judicial services, or potential legal sanctions as well.</p>
+		</div>
+	</div>

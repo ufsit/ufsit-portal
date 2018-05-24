@@ -1,0 +1,24 @@
+.notification_panel{
+	font-size: 14px;
+	font-family: 'Share Tech Mono', monospace;
+}
+
+form .form-hint {
+	margin-top: 5px;
+	padding-left: 5px;
+}
+
+form .form-hint-error {
+	color: red;
+	margin-top: 5px;
+	padding-left: 5px;
+}
+
+#waiverLink {
+	color: blue;
+	text-decoration: underline;
+}
+
+#waiverLink:hover {
+	background-color: yellow;
+}
