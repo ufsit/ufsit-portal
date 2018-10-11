@@ -10,6 +10,9 @@ googleCal.json
 *.swp
 *.swo
 
+# Mac
+.DS_Store
+
 # Bulky. Prefer dynamic resolution
 node_modules/
 

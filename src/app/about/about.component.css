@@ -8,6 +8,7 @@
 
 .headshot {
     max-height: 175px;
+    width: 175px;
     border: 2px solid grey;
 }
 
