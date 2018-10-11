@@ -7,10 +7,12 @@
 }
 
 .headshot {
-    max-width: 175px;
     max-height: 175px;
-    width: 175px;
-    height: 175px;
+    border: 2px solid grey;
+}
+
+#persons .row {
+  margin-bottom: 10px;
 }
 
 @media (max-width: 425px) {
