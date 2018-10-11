@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         // tslint:disable-next-line:max-line-length
-        this.lecturePath = 'https://uflorida-my.sharepoint.com/personal/elan22_ufl_edu/_layouts/15/guestaccess.aspx?folderid=0d67d1c9bc1be4aa68ea7bd61d21b612a&authkey=AbD-gTKCDdCIpE8vtELGWzw';
+        this.lecturePath = 'https://uflorida-my.sharepoint.com/:f:/g/personal/achabab97_ufl_edu/EoJJUGW74odKkCyhlrQhUU0B59WGtho75gekYaKB3pykgA';
         this.resumePath = 'https://docs.google.com/forms/d/e/1FAIpQLScP-7T3VGFAcgVOcr12ErLfM0qIh4P9YjaxvCE8dqxIQ2sxVQ/viewform';
 
         this.requests.customTiles().subscribe(
