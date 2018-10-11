@@ -44,7 +44,7 @@
     "express": "^4.16.2",
     "express-sanitize-escape": "^1.1.0",
     "fs": "0.0.2",
-    "googleapis": "^28.1.0",
+    "googleapis": "^34.0.0",
     "http": "0.0.0",
     "http-errors": "^1.6.2",
     "json-sql": "^0.3.11",
