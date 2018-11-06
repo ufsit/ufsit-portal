@@ -16,14 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `ypsz5z6b0h2nvijw`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `ypsz5z6b0h2nvijw` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
-
-USE `ypsz5z6b0h2nvijw`;
-
---
 -- Table structure for table `account`
 --
 
