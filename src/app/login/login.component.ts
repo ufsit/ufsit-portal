@@ -17,10 +17,13 @@ export class LoginComponent implements OnInit {
   // flags which control which notifications are displayed
   // a notification is displayed when its flag is set to true
   notifications = {
-    invalid_credentials: false,
+    invalid_form: false,
+    authentication_failure: false,
     generic_error: false,
     bad_request: false
   };
+
+  shake = false;
 
   // import the SessionService and router so we can use them later
   // in other functions
@@ -45,7 +48,7 @@ export class LoginComponent implements OnInit {
   submitLogin() {
     // make sure the form is valid
     if (!this.formData.valid) {
-      this.notifications.invalid_credentials = true;
+      this.notifications.invalid_form = true;
       return;
     }
 
@@ -64,7 +67,7 @@ export class LoginComponent implements OnInit {
 
         // invalid credentials
         } else if (res.status < 500) {
-          this.notifications.invalid_credentials = true;
+          this.notifications.authentication_failure = true;
         // other error
         } else {
           this.notifications.generic_error = true;
@@ -75,6 +78,21 @@ export class LoginComponent implements OnInit {
         this.notifications.bad_request = true;
       }
     );
+  }
+
+  // Shakes the notification bar if there was an error. Called when user clicks submit
+  notificationShake() {
+    if (!this.shake) {
+      for (const err in this.notifications) {
+        if (err) {
+          this.shake = true;
+          setTimeout(() => {
+            this.shake = false;
+          }, 820);
+          return;
+        }
+      }
+    }
   }
 
 }
