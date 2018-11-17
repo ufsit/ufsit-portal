@@ -14,13 +14,23 @@ export class LoginComponent implements OnInit {
   // the html form will be bound to these class attributes
   formData: FormGroup;
 
-  // flags which control which notifications are displayed
-  // a notification is displayed when its flag is set to true
+  // stores the current error
+  error = {};
+  // a notification is displayed when set to the error object defined here
   notifications = {
-    invalid_form: false,
-    authentication_failure: false,
-    generic_error: false,
-    bad_request: false
+    invalid_form: {
+      errorMsg: 'Please enter valid credentials.'
+    },
+    authentication_failure: {
+      errorMsg: 'Could not authenticate your credentials. Please try again, or make sure that you\'re registered.'
+    },
+    generic_error: {
+      errorMsg: 'Something went wrong on our end. Please contact the developers.'
+    },
+    bad_request: {
+      errorMsg: 'It looks like you\'re trying to do something sketchy. Remember that "unauthorized penetration tests"' +
+        ' are illegal :P. If you believe this is a mistake, please contact the developers.'
+    }
   };
 
   shake = false;
@@ -48,7 +58,7 @@ export class LoginComponent implements OnInit {
   submitLogin() {
     // make sure the form is valid
     if (!this.formData.valid) {
-      this.notifications.invalid_form = true;
+      this.error = this.notifications.invalid_form;
       return;
     }
 
@@ -67,15 +77,15 @@ export class LoginComponent implements OnInit {
 
         // invalid credentials
         } else if (res.status < 500) {
-          this.notifications.authentication_failure = true;
+          this.error = this.notifications.authentication_failure;
         // other error
         } else {
-          this.notifications.generic_error = true;
+          this.error = this.notifications.generic_error;
         }
       },
       // called if there was an error while logging in
       err => {
-        this.notifications.bad_request = true;
+        this.error = this.notifications.bad_request;
       }
     );
   }
