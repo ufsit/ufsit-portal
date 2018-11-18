@@ -5,31 +5,11 @@
 
       <!-- Notification panels -->
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12" id="notificationContainer" [ngClass]="{'notification-shake':shake}">
 
-          <div *ngIf="notifications.invalid_credentials" id="invalidCredentialsAlert" class="alert alert-danger alert-dismissible" role="alert">
-            <button type="button" class="close" (click)="notifications.invalid_credentials = false">
-              <span aria-hidden="true">&times;</span>
-            </button>
+          <div *ngIf="error.errorMsg" id="errorAlert" class="alert alert-danger alert-dismissible" role="alert">
             <span class="notification_panel">
-              <strong>Error:</strong> Could not authenticate your credentials. Please try again, or make sure that you're registered.</span>
-          </div>
-
-          <div *ngIf="notifications.generic_error" id="genericErrorAlert" class="alert alert-danger alert-dismissible" role="alert">
-            <button type="button" class="close" (click)="notifications.generic_error = false">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <span class="notification_panel">
-              <strong>Error</strong> Something went wrong on our end. Please contact the developers.</span>
-          </div>
-
-          <div *ngIf="notifications.bad_request" id="badRequestAlert" class="alert alert-danger alert-dismissible" role="alert">
-            <button type="button" class="close" (click)="notifications.bad_request = false">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <span class="notification_panel">
-              <strong>Error</strong> It looks like you're trying to do something sketchy. Remember that "unauthorized penetration
-              tests" are illegal :P. If you believe this is a mistake, please contact the developers.</span>
+              <strong>Error:</strong> {{error.errorMsg}}</span>
           </div>
 
         </div>
@@ -37,7 +17,7 @@
 
       <div class="row p-3">
         <div class="col-md-10 col-md-offset-1 pt-2">
-          <form (ngSubmit)="submitLogin()" [formGroup]="formData">
+          <form (ngSubmit)="submitLogin(); notificationShake()" [formGroup]="formData">
             <div class="form-group">
               <label class="input-label">Email</label>
               <input type="email" class="form-control" placeholder="Email" formControlName="email">
