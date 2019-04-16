@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   formData: FormGroup;
 
   // stores the current error
-  error = {};
+  error = { errorMsg: null };
   // a notification is displayed when set to the error object defined here
   notifications = {
     invalid_form: {
