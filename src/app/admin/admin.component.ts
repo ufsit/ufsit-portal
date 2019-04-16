@@ -15,7 +15,7 @@ export class AdminComponent implements OnInit {
   private results;
   private users;
   public orderForm: FormGroup;
-  private cands = ['President', 'VP', 'Secretary', 'Treasurer'];
+  private cands = ['President', 'VP', 'Secretary', 'Treasurer', 'Competition & Development'];
   private myOptions: IMultiSelectOption[];
   private optionsModel: number[];
   formData: FormGroup;
@@ -44,7 +44,7 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     this.myOptions = [{ id: 'President', name: 'President' }, { id: 'VP', name: 'VP' },
-    { id: 'Treasurer', name: 'Treasurer' }, { id: 'Secretary', name: "Secretary" }];
+    { id: 'Treasurer', name: 'Treasurer' }, { id: 'Secretary', name: "Secretary" }, { id: 'Competition & Development', name: "Competition & Development" }];
 
     this.formData = this.formBuilder.group({ name: [], description: [], link: [] });
 
@@ -249,6 +249,12 @@ export class AdminComponent implements OnInit {
   public getSecretaryResults() {
     let arr = [];
     for (let item in this.results.secretary) { arr.push(item); }
+    return arr;
+  }
+
+  public getDevelopResults() {
+    let arr = [];
+    for (let item in this.results.development) { arr.push(item); }
     return arr;
   }
 

@@ -33,13 +33,15 @@ routes.post('/voting/send_vote', async (req, res) => {
                     president: [],
                     vp: [],
                     treasurer: [],
-                    secretary: []
+                    secretary: [],
+                    development: []
                 }
                 // Add each person from each candidate type to their respective arrays
                 arrayify(candidates.president, req.body.presidents);
                 arrayify(candidates.vp, req.body.vp);
                 arrayify(candidates.treasurer, req.body.treasurer);
                 arrayify(candidates.secretary, req.body.secretaries);
+                arrayify(candidates.development, req.body.development);
                 try {
                     await db_mgmt.record_vote(candidates, req.session.account_id);
                     return res.status(200).end();
@@ -93,16 +95,17 @@ async function store_results() {
         let vp_array = await map_to_array(results.vp);
         let treasurer_array = await map_to_array(results.treasurer);
         let secretary_array = await map_to_array(results.secretary);
+        let development_array = await map_to_array(results.development);
         let winners = {
             president: await runoff(president_array, {}),
             vp: await runoff(vp_array, {}),
             treasurer: await runoff(treasurer_array, {}),
-            secretary: await runoff(secretary_array, {})
+            secretary: await runoff(secretary_array, {}),
+            development: await runoff(development_array, {})
         }
         await db_mgmt.store_results(winners);
     } catch(error) {
-        res.status(400).send('There was an error querying the database.  Contact the developers immediately\
-        because you have likely destroyed your database');
+        res.status(400).send('There was an error querying the database.');
     }
 }
 

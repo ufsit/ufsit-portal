@@ -12,6 +12,7 @@ export class VotingComponent implements OnInit {
   private vp;
   private treasurers;
   private secretaries;
+  private development;
 
   notifications = {
     endOfElection: false,
@@ -33,6 +34,7 @@ export class VotingComponent implements OnInit {
         this.vp = res.vp;
         this.treasurers = res.treasurer;
         this.secretaries = res.secretary;
+        this.development = res.development;
       },
       err => {
         if (err.status === 405) {
@@ -59,7 +61,8 @@ export class VotingComponent implements OnInit {
       presidents: this.presidents,
       vp: this.vp,
       treasurer: this.treasurers,
-      secretaries: this.secretaries
+      secretaries: this.secretaries,
+      development: this.development
     }).subscribe(            //handles what is returned from the backend
       res => {
         window.location.reload();

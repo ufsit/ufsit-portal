@@ -11,7 +11,8 @@ class MockRestService {
       president: [''],
       vp: [''],
       treasurer: [''],
-      secretary: ['']
+      secretary: [''],
+      development: ['']
     });
   }
 

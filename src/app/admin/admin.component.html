@@ -1,10 +1,7 @@
 <div class="container container-fluid full-height">
-
-  <br/>
-
   <div class="row m-1 center">
 
-    <div class="col m-0 p-0">
+    <div class="col-12 m-0 p-3">
       <h3>Custom Tiles</h3>
       <table id="tile-list" class="table table-striped center">
         <thead>
@@ -24,39 +21,9 @@
           </tr>
         </tbody>
       </table>
-
-      <br/>
-
-      <div class="col m-0 p-0">
-        <h3>Users</h3>
-        <table id="account-list" class="table table-striped">
-          <thead>
-            <tr>
-              <td>Full Name</td>
-              <td>Email</td>
-              <td>Graduation Year</td>
-              <td>Mailing List?</td>
-              <td>Registration Date</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let u of this.getUsers()">
-              <td>
-                <a routerLink="/profile/{{u.id}}">{{u.full_name}}</a>
-              </td>
-              <td>{{u.email}}</td>
-              <td>{{u.grad_date}}</td>
-              <td>{{u.mass_mail_optin}}</td>
-              <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
 
-    <div class="col-md-1 m-0 p-0"></div>
-
-    <div class="col-md-4 m-0 p-0">
+    <div class="col-6 m-0 p-3">
       <form (ngSubmit)="addTile(formData)" [formGroup]="formData">
         <h5>Create New Tile</h5>
         <div class="form-group">
@@ -77,9 +44,9 @@
           </div>
         </div>
       </form>
+    </div>
 
-      <br/>
-
+    <div class="col-6 m-0 p-3">
       <h5 class="mb-3">Elections</h5>
       <button *ngIf="!notifications.electionResults" class="btn btn-md btn-success" (click)="open(content)">Create new Poll</button>
       <button *ngIf="notifications.electionResults" class="btn btn-md btn-success" (click)="open(content2)">View Results of election</button>
@@ -93,12 +60,36 @@
           <br>
       </div>
       <button *ngIf="this.getElection()" class="btn btn-md btn-success" (click)="endElection()">End Election</button>
+    </div>
 
+    <div class="col m-0 p-3">
+      <h3>Users</h3>
+      <table id="account-list" class="table table-striped">
+        <thead>
+          <tr>
+            <td>Full Name</td>
+            <td>Email</td>
+            <td>Graduation Year</td>
+            <td>Mailing List?</td>
+            <td>Registration Date</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of this.getUsers()">
+            <td>
+              <a routerLink="/profile/{{u.id}}">{{u.full_name}}</a>
+            </td>
+            <td>{{u.email}}</td>
+            <td>{{u.grad_date}}</td>
+            <td>{{u.mass_mail_optin}}</td>
+            <td title="Registered on {{u.registration_date | date : 'medium'}}">{{u.registration_date | timeAgo}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </div>
-
-</div>
+</div> <!-- container -->
 
 <!-- Election modal (popup) -->
 <ng-template #content let-c="close" let-d="dismiss">
@@ -193,6 +184,11 @@
           <td>Secretary</td>
           <td>{{item}}</td>
           <td>{{results.secretary[item]}}</td>
+        </tr>
+        <tr class="table-info" *ngFor="let item of getDevelopResults()">
+          <td>Competition &amp; Development</td>
+          <td>{{item}}</td>
+          <td>{{results.development[item]}}</td>
         </tr>
       </tbody>
       <br>

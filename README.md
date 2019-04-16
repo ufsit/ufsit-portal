@@ -42,6 +42,13 @@ If you have just installed a blank database, you will need to populate it with t
 or with an existing database dump. For now, the only supported method of running the site is with
 a production database dump. If you need access to this, message one of the admins on the UFCISE slack.
 
+TODO: commands to import
+
+TODO: add as admin
+```
+update account set permissions = '{ "admin" : true }'
+```
+
 ### Booting the webapp
 
 Assuming an installed and working database, we must create a credentials file to tell the webapp how
@@ -62,7 +69,7 @@ Create this file in the same directory as `app.js` and name it `credentials.json
 Note that this provided file assumes you are using the default `root` user without a password and with a database
 name of `ufsit_portal`. This may be different depending on your MySQL setup.
 
-We must also create a file to store the Amazon S3 credentials to tell the webapp how to communicate with AWS. Here is an example file
+We must also create the `aws.json` file to store the Amazon S3 credentials to tell the webapp how to communicate with AWS. Here are the blank credentials for now, but you will need a set of working credentials for testing purposes.
 
 ```json
 {
@@ -72,6 +79,9 @@ We must also create a file to store the Amazon S3 credentials to tell the webapp
     "s3Bucket":""
 }
 ```
+
+For tracking SIT events, we integrate with the Google Calendar API. These have their own set of credentials and must be placed in a file named `googleCal.json`.
+Request access to these credentials.
 
 With this file, you can start the server with:
 

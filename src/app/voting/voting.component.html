@@ -102,6 +102,20 @@
           </div>
         </div>
       </div>
+
+      <div class=col-md-4>
+        <div class="card tile border-secondary mt-3 mb-3">
+          <div class="card-header text-center border-secondary" style="background-color:#D0D0D0">
+              <h4 class="mb-0" style="color:#303030">Competition & Development Candidates</h4>
+          </div>
+          <div [sortablejs]="this.development">
+            <div *ngFor="let devel of this.development; let i = index">
+              {{i + 1}}. {{devel.person}}
+              <br><br>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div *ngIf="notifications.submittingVote" class="alert alert-danger alert-dismissible" role="alert">
