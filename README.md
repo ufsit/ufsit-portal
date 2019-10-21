@@ -19,8 +19,8 @@ The following steps assume you are a member of the UFSIT organization.
 First clone the repository and install the dependencies with NPM:
 
 ```
-$ git clone https://github.com/ufsit/ufInfoSec_webapp.git
-$ cd ufInfoSec_webapp/
+$ git clone https://github.com/ufsit/ufsit-portal.git
+$ cd ufsit-portal/
 $ npm install
 ```
 
@@ -39,14 +39,13 @@ No particular version of MySQL is required (in fact we are actually using MariaD
 ### Importing the database
 
 If you have just installed a blank database, you will need to populate it with the latest site schema
-or with an existing database dump. For now, the only supported method of running the site is with
-a production database dump. If you need access to this, message one of the admins on the UFCISE slack.
+or with an existing database dump. The `schema.sql` file should already be in the repo under the `db/` folder
 
 TODO: commands to import
 
-TODO: add as admin
+To set yourself as admin in MySQL, run this.
 ```
-update account set permissions = '{ "admin" : true }'
+update account set permissions = '{ "admin" : true }' where id=XX;
 ```
 
 ### Booting the webapp
