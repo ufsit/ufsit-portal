@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.7.19, for osx10.11 (x86_64)
 --
--- Host: er7lx9km02rjyf3n.cbetxkdyhwsb.us-east-1.rds.amazonaws.com    Database: ypsz5z6b0h2nvijw
+-- Host: localhost    Database: ypsz5z6b0h2nvijw
 -- ------------------------------------------------------
--- Server version	5.5.5-10.0.24-MariaDB
+-- Server version	5.7.19
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -49,7 +49,7 @@ CREATE TABLE `account` (
   `ufl_email` varchar(254) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `account_fk0` (`rank`)
-) ENGINE=InnoDB AUTO_INCREMENT=487 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=560 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +81,8 @@ CREATE TABLE `candidates` (
   `pres` bit(1) NOT NULL,
   `vp` bit(1) NOT NULL,
   `treas` bit(1) NOT NULL,
-  `secr` bit(1) NOT NULL
+  `secr` bit(1) NOT NULL,
+  `develop` bit(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -96,6 +97,47 @@ CREATE TABLE `content_tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `development`
+--
+
+DROP TABLE IF EXISTS `development`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `development` (
+  `1th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `2th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `3th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `4th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `5th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `6th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `7th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `8th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `9th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `10th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `11th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `12th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `13th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `14th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `15th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `16th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `17th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `18th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `19th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `20th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `21th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `22th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `23th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `24th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `25th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `26th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `27th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `28th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `29th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `30th` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -183,7 +225,7 @@ CREATE TABLE `file_uploads` (
   PRIMARY KEY (`id`),
   KEY `file_uploads_fk0` (`account_id`),
   CONSTRAINT `file_uploads_fk0` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -365,7 +407,7 @@ CREATE TABLE `tiles` (
   `link` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -512,4 +554,4 @@ CREATE TABLE `writeup_submissions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-06 16:25:06
+-- Dump completed on 2019-10-16 14:00:31
