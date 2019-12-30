@@ -206,7 +206,7 @@ For the front end, the `src/` directory has all of the Angular-based code. Withi
 ### Relevant Documentation
 * AngularJS 5.x - https://angular.io/docs/
 * Node.js Express - https://expressjs.com/en/4x/api.html
-* Node.sj 9.3.x - https://nodejs.org/dist/latest-v9.x/docs/api/
+* Node.js 9.3.x - https://nodejs.org/dist/latest-v9.x/docs/api/
 * MySQL for Node.js - https://www.npmjs.com/package/mysql
 
 ### Development Guidelines
