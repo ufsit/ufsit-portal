@@ -547,9 +547,11 @@ let db_mgmt_module = function () {
 				connection.query('DELETE FROM `results`', function(err, result) {
 					if (err) {throw delete_error;}
 				});
-				connection.query('DELETE FROM `eligible_voters`', function(err, result) {
-					if (err) {throw delete_error;}
-				});
+
+				// TODO: make sure this list is cleared from year to year
+				//connection.query('DELETE FROM `eligible_voters`', function(err, result) {
+				//	if (err) {throw delete_error;}
+				//});
 
 				connection.commit(function(err) {
 					if (err) {
