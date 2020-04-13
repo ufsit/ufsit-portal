@@ -85,7 +85,7 @@ Request access to these credentials.
 With this file, you can start the server with:
 
 ```
-node run dev
+npm run dev
 ```
 Note: This will run both the nodeJS server and the angular server. Both will automatically reload when any of their files are modified.
 
