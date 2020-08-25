@@ -1,9 +1,9 @@
-'use strict';
-
 const routes = require('express').Router(); // eslint-disable-line new-cap
-const util = require.main.require('./util');
+
+const utils = require.main.require('./utils');
 const aws = require('aws-sdk');
-const aws_credentials = util.load_aws();
+
+const aws_credentials = utils.load_aws();
 
 const db_mgmt = require('./db/db_mgmt.js');
 
@@ -27,10 +27,11 @@ routes.post('/upload/writeup', async (req, res, next) => {
   let fileName = 0;
 
   // user uploaded a new writeup
-  if (req.body.writeupId == 0) {
+  if (req.body.writeupId === 0) {
     let result = '';
     try {
-      result = await db_mgmt.record_writeup_submission(req.session.account_id, req.body.writeupName, req.body.writeupDescription);
+      result = await db_mgmt.record_writeup_submission(req.session.account_id,
+        req.body.writeupName, req.body.writeupDescription);
     } catch (error) {
       return next(error);
     }
@@ -39,7 +40,7 @@ routes.post('/upload/writeup', async (req, res, next) => {
   } else {
     try {
       await db_mgmt.update_writeup_submission(req.session.account_id, req.body.writeupName,
-                                              req.body.writeupDescription, req.body.writeupId);
+        req.body.writeupDescription, req.body.writeupId);
     } catch (error) {
       return next(error);
     }
@@ -47,11 +48,11 @@ routes.post('/upload/writeup', async (req, res, next) => {
     fileName = req.body.writeupId;
   }
 
-  // const fileName = util.md5(req.body.writeupName) + '_' + req.session.account_id;
+  // const fileName = utils.md5(req.body.writeupName) + '_' + req.session.account_id;
   // configure the parameters
   const params = {
     Bucket: aws_credentials.s3Bucket,
-    Key: keyPrefix + 'writeups/' + fileName + '.md',
+    Key: `${keyPrefix}writeups/${fileName}.md`,
   };
 
   // check if the user is updating an old submission
@@ -67,19 +68,19 @@ routes.post('/upload/writeup', async (req, res, next) => {
       } else {
         res.status(err.statusCode).send(err);
       }
-    }*/
+    } */
 
-    // add the file data to the params
-    params.Body = req.body.data;
+  // add the file data to the params
+  params.Body = req.body.data;
 
-    // store the file in S3
-    s3.putObject(params, (err, data) => {
-      if (err) {
-        // if an error occurred, return the error
-        res.status(err.statusCode).send(err);
-      }
-      res.status(200).json({writeupId: fileName});
-    });
+  // store the file in S3
+  s3.putObject(params, (err) => {
+    if (err) {
+      // if an error occurred, return the error
+      res.status(err.statusCode).send(err);
+    }
+    res.status(200).json({ writeupId: fileName });
+  });
   // });
 });
 
@@ -88,11 +89,11 @@ routes.get('/upload/file', async (req, res, next) => {
   // get the file name, type, and extension
   const fileName = req.query['file-name'];
   const fileType = req.query['file-type'];
-  const fileExt = '.' + fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
+  const fileExt = `.${fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2)}`;
 
-  let prefix = 'writeups/files/';
+  const prefix = 'writeups/files/';
   // hash the name
-  // let name = util.md5(fileName);
+  // let name = utils.md5(fileName);
   let result = '';
   try {
     result = await db_mgmt.record_file_upload(req.session.account_id, fileName);
@@ -100,10 +101,10 @@ routes.get('/upload/file', async (req, res, next) => {
     return next(error);
   }
 
-  let id = result.insertId;
+  const id = result.insertId;
 
-  let url = getSignedUrl(keyPrefix + prefix + id + fileExt, fileType);
-  res.status(200).json({url: url, key: prefix + id + fileExt});
+  const url = getSignedUrl(keyPrefix + prefix + id + fileExt, fileType);
+  res.status(200).json({ url, key: prefix + id + fileExt });
   // wait until we find an unused file name
   // await getUnusedName(req, res, s3, prefix, name, fileType, fileExt);
 });
@@ -113,49 +114,49 @@ routes.get('/upload/resume', async (req, res, next) => {
   // get the file name, type, and extension
   const fileName = req.query['file-name'];
   const fileType = req.query['file-type'];
-  const fileExt = '.' + fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
+  const fileExt = `.${fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2)}`;
 
   if (fileType.toLowerCase() !== 'application/pdf') {
     res.status(415).send('Only PDFs are supported.');
     return;
   }
 
-  let prefix = 'resumes/';
+  const prefix = 'resumes/';
   // hash the name
-  // let name = util.md5(fileName);
-  let key = keyPrefix + prefix + req.session.account_id + fileExt;
+  // let name = utils.md5(fileName);
+  const key = keyPrefix + prefix + req.session.account_id + fileExt;
   try {
     await db_mgmt.record_resume_upload(req.session.account_id, key);
   } catch (error) {
     return next(error);
   }
 
-  let url = getSignedUrl(key, fileType);
-  res.status(200).json({url: url, key: key});
+  const url = getSignedUrl(key, fileType);
+  res.status(200).json({ url, key });
 });
 
 // finds an unused file name and returns a signed url to upload to a file
 async function getUnusedName(req, res, next, s3, prefix, name, fileType, fileExt) {
-  let key = prefix + name + fileExt;
+  const key = prefix + name + fileExt;
   // check if the file name is already used
-  s3.headObject({Bucket: aws_credentials.s3Bucket, Key: key}, async (err, data) => {
+  s3.headObject({ Bucket: aws_credentials.s3Bucket, Key: key }, async (err, data) => {
     if (err) {
       // if it is not, get a signed url and record the file upload
       if (err.code === 'NotFound') {
-        let url = getSignedUrl(key, fileType);
+        const url = getSignedUrl(key, fileType);
         try {
           await db_mgmt.record_file_upload(req.session.account_id, key);
         } catch (error) {
           return next(error);
         }
-        res.status(200).json({url: url, key: key});
+        res.status(200).json({ url, key });
       // if some other error occurred, return the error
       } else {
         res.status(500).send(err);
       }
     // if the name is already being used, rehash the name for a new name and repeat
     } else {
-      name = util.md5(name);
+      name = utils.md5(name);
       getUnusedName(req, res, s3, prefix, name, fileType, fileExt);
     }
   });
@@ -184,6 +185,5 @@ function getSignedUrl(key, fileType) {
   // return the signed url
   return s3.getSignedUrl('putObject', params);
 }
-
 
 module.exports = routes;

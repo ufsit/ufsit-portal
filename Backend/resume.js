@@ -1,9 +1,9 @@
-'use strict';
-
 const routes = require('express').Router(); // eslint-disable-line new-cap
 const db_mgmt = require('./db/db_mgmt.js');
+
 const util = require.main.require('./util');
 const aws = require('aws-sdk');
+
 const aws_credentials = util.load_aws();
 
 // returns a user's resume link
@@ -16,7 +16,7 @@ routes.get('/resume/link', async (req, res, next) => {
   }
 
   if (result.length > 0 && result[0].resume !== '') {
-    let key = result[0];
+    const key = result[0];
     res.status(200).json(key);
   } else {
     res.status(404).send('You have not uploaded a resume.');
@@ -35,7 +35,7 @@ routes.get('/resume', async (req, res, next) => {
 
   let result = '';
   try {
-  result = await db_mgmt.get_resume_key(req.session.account_id);
+    result = await db_mgmt.get_resume_key(req.session.account_id);
   } catch (error) {
     return next(error);
   }
@@ -64,8 +64,8 @@ routes.get('/resume', async (req, res, next) => {
 // returns a user's resume questions
 routes.get('/resume/questions', async (req, res, next) => {
   try {
-    let result = await db_mgmt.get_resume_questions(req.session.account_id);
-    if(result.length == 0) {
+    const result = await db_mgmt.get_resume_questions(req.session.account_id);
+    if (result.length === 0) {
       res.status(500).send('User not found, please contact the developers.');
     } else {
       res.status(200).send(result[0]);
@@ -80,7 +80,7 @@ routes.post('/resume/questions', async (req, res, next) => {
   try {
     await db_mgmt.set_resume_questions(req.session.account_id, req.body);
     res.status(200).send('success');
-  } catch(error) {
+  } catch (error) {
     next(error);
   }
 });
