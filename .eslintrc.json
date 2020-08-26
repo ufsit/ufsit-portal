@@ -16,11 +16,11 @@
         "ecmaVersion": 11
     },
     "plugins": [
-        "react"
+        //"react"
     ],
     "rules": {
         "camelcase":"off",
         "no-console":"off",
-        "no-restricted-syntax":"off"
+        "no-restricted-syntax":"off",
     }
 }
