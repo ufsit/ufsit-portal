@@ -2,12 +2,18 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-//import Navbar from './components/navbar.component';
-//import Signin from './components/signin.component';
+import Sidebar from './components/sidebar.component';
+import Login from './components/login.component';
 
 function App() {
   return (
-    <h1>Hello UFSIT</h1>
+    <Router>
+      <div className="App">
+        <Route exact path="/" component={Login} />
+        {/* <Route exact path="/register" component={Register} />
+        <Route exact path="/login" component={Login} />*/}
+      </div>
+    </Router>
   );
 }
 
