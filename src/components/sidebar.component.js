@@ -4,6 +4,13 @@ import { Link } from 'react-router-dom';
 import '../App.css'
 
 export default class Sidebar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isAdmin: false,
+    };
+  }
+
   render() {
     return (
       <ul className="nav flex-column nav-tabs">
