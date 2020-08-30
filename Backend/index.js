@@ -10,7 +10,7 @@ routes.use(bodyParser.json());
 /* For parsing application/x-www-form-urlencoded */
 routes.use(bodyParser.urlencoded({ extended: true }));
 /* For parsing cookies */
-routes.use(cookieParser('This secret is used for signing cookies. Here\'s some extra entropy: 4c5ee6dc5ee1f723c3ce1efcf78c8dd0c0a55badbae4f4da5172d17a8cae07ef7e21b60a009c45b7567874c98bf79040d54475261')); // eslint-disable-line max-len
+routes.use(cookieParser('This secret is used for signing cookies. Here\'s some extra entropy: 4c5ee6dc5ee1f723c3ce1efcf78c8dd0c0a55badbae4f4da5172d17a8cae07ef7e21b60a009c45b7567874c98bf79040d54475261'));
 
 async function requireLogin(req, res, next) {
   /* The following variable certifies that the cookie is at least signed by us */

@@ -1,5 +1,4 @@
 const routes = require('express').Router();
-// eslint-disable-line new-cap
 const utils = require.main.require('./utils');
 
 /* App-specific module imports */
@@ -24,8 +23,6 @@ routes.get('/user/profile/:user_id', async (req, res, next) => {
 
   try {
     const account = await account_mgmt.get_account_by_id(req.params.user_id);
-
-    // XXX: HACK
     const first_name = account.full_name.split(' ')[0];
     res.status(200).json(Object.assign(account, { profile_name: `${first_name}'s Profile` }));
   } catch (error) {
@@ -86,14 +83,11 @@ async function update_user_profile(account_id, req, res, next) {
       res.status(400).send('New password does not match');
       return;
     }
-
-    /*
     if (req.body.old_password === req.body.confirm_password) {
       console.log('Old password cannot equal the new password');
       res.status(400).send('Old password cannot equal the new password');
       return;
     }
-*/
 
     // if it is correct, change it to the new one
     updated_items.push(['Password', 'password', 'new_password']);

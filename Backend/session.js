@@ -1,5 +1,5 @@
 const routes = require('express').Router();
-// eslint-disable-line new-cap
+
 const util = require.main.require('./util');
 const db_mgmt = require('./db/db_mgmt.js');
 
