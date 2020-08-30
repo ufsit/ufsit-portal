@@ -1,20 +1,22 @@
-# Sensitive
-.env
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-# Potentially Sensitive
-credentials.json
-aws.json
-googleCal.json
+# testing
+/coverage
 
-# Vim
-*.swp
-*.swo
+# production
+/build
 
-# Mac
+# misc
 .DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Bulky. Prefer dynamic resolution
-node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# angular optimized build
-static/
