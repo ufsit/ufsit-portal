@@ -1,7 +1,7 @@
 const routes = require('express').Router();
 const db_mgmt = require('./db/db_mgmt.js');
 
-const util = require.main.require('./util');
+const util = require.main.require('./utils');
 
 // returns a user's resume link
 routes.get('/resume/link', async (req, res, next) => {

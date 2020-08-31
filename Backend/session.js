@@ -1,6 +1,6 @@
 const routes = require('express').Router();
 
-const util = require.main.require('./util');
+const util = require.main.require('./utils');
 const db_mgmt = require('./db/db_mgmt.js');
 
 routes.get('/session/validate', async (req, res) => {

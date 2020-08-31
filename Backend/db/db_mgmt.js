@@ -2,46 +2,22 @@
 
 const fs = require('fs');  // For filesystem I/O
 const mysql = require('mysql');  // For mySQL interaction
-const util = require.main.require('./util');
+const util = require('../utils');
 const createError = require('http-errors');
-const CREDENTIALS = process.env.CREDENTIALS || 'credentials.json';
 
-let sql_pool = null;
+/* Create a connection pool for mysql queries */
+let sql_pool = mysql.createPool({
+	connectionLimit: 15,	// This max is dictated by our Heroku JawsDB plan lol
+	host: process.env.DB_HOST,	// Use the credentials from the credentials.json file
+	port: process.env.DB_PORT,
+	user: process.env.DB_USERNAME,
+	password: process.env.DB_PASSWORD,
+	database: process.env.DB_DATABASE,
+});
 
-try {
-	/* Grab the database credentials from the JSON file */
-	const credentials = JSON.parse(fs.readFileSync(CREDENTIALS, 'utf8'));
+console.log(`[INFO] Booted MySQL pool @ ${process.env.HOST} with credentials from file `);
 
-	/* Create a connection pool for mysql queries */
-	sql_pool = mysql.createPool({
-		connectionLimit: 15,	// This max is dictated by our Heroku JawsDB plan lol
-		host: credentials.db.host,	// Use the credentials from the credentials.json file
-		port: credentials.db.port,
-		user: credentials.db.username,
-		password: credentials.db.password,
-		database: credentials.db.database,
-	});
-
-	console.log('[INFO] Booted MySQL pool @ \''
-		+ credentials.db.host + '\' with credentials from file \''
-		+ CREDENTIALS + '\'');
-} catch (err) {
-	console.log('Failed to read credentials. Checking for available environment variable...');
-	let url = process.env.JAWSDB_MARIA_URL;
-
-	if (url == undefined || url == null) {
-		console.log('[ERROR] Unable to load database credentials from \'' + CREDENTIALS +
-			'\' OR from the JAWSDB_MARIA_URL environment.\n' +
-			'Ensure that you have this file available in your current directory.');
-		process.exit(1);
-		return;
-	}
-
-	sql_pool = mysql.createPool(url);
-}
-
-/* Check if the SQL server credentials are actually valid instead of waiting for the first
-   query */
+/* Check if the SQL server credentials are actually valid instead of waiting for the first query */
 sql_pool.getConnection((error, connection) => {
 	if (error) {
 		console.log('[ERROR] Could not connect to the database:', error.message);

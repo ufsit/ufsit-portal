@@ -1,7 +1,7 @@
 const routes = require('express').Router(); // eslint-disable-line new-cap
 const adminMgmt = require('./db/admin_mgmt.js');
 // App-specific module imports
-const util = require.main.require('./util');
+const util = require.main.require('./utils');
 const dbMgmt = require('./db/db_mgmt.js');
 
 routes.get('/admin/list_users', async (req, res) => {
