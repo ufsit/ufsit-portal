@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  server:
+    env_file: ./Backend/.env
+    image: ufsit/api_server
+    build: ./Backend
+    expose: 
+      - "${PORT}"
+    command: node server.js
+    restart: always
+
+  db:
+    env_file: .env
+    container_name: ufsit-portal-db
+    image: mysql:latest
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    expose: 
+      - "${DB_PORT}"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: passwd
+      MYSQL_USERNAME: ufsit
+      MYSQL_PASSWORD: passwd
+    volumes:
+      - /home/scott/ufsit_db:/var/lib/mysql
+
+#  client:
+#    image: ufsit/web_app
+#    build: ./client
+#    expose:
+#      - 80
+#    links:
+#      - server
+#    restart: always
+
