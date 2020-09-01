@@ -8,14 +8,15 @@ const createError = require('http-errors');
 /* Create a connection pool for mysql queries */
 let sql_pool = mysql.createPool({
 	connectionLimit: 15,	// This max is dictated by our Heroku JawsDB plan lol
-	host: process.env.DB_HOST,	// Use the credentials from the credentials.json file
+	host: process.env.DB_HOST,	// Use the credentials from the .env file
 	port: process.env.DB_PORT,
 	user: process.env.DB_USERNAME,
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_DATABASE,
+	insecureAuth: true,
 });
 
-console.log(`[INFO] Booted MySQL pool @ ${process.env.HOST} with credentials from file `);
+console.log(`[INFO] Booted MySQL pool @ ${process.env.DB_HOST} with credentials from file `);
 
 /* Check if the SQL server credentials are actually valid instead of waiting for the first query */
 sql_pool.getConnection((error, connection) => {
@@ -104,7 +105,7 @@ let db_mgmt_module = function () {
 				registration_ip: new_account.registration_ip,
 				registration_date: util.mysql_iso_time(new Date(Date.now())),
 				grad_date: new_account.grad_date,
-				mass_mail_optin: new_account.in_mailing_list,
+//				mass_mail_optin: new_account.in_mailing_list,
 			};
 
 			return await queryAsync('INSERT INTO `account` SET ?', values);

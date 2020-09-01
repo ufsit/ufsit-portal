@@ -20,5 +20,5 @@ app.use('/', router);
 
 // Tells the terminal the node has been created at a given port number
 app.listen(process.env.PORT, function() {
-	console.log('UFSIT Portal now accepting requests at https://portal.ufsit.club/');
+	console.log(`API Server now live on port ${process.env.PORT}`);
 });

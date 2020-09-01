@@ -47,8 +47,7 @@ async function loadAccount(req, res, next) {
 
 routes.get('/', (req, res) => {
   res.status(200).json({
-    message: 'You\'ve reached the root directory of the REST API.'
-            + 'Try something more interesting next time :)',
+    message: 'You\'ve reached the root directory of the REST API. Try something more interesting next time :)',
   });
 });
 
