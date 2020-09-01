@@ -10,7 +10,7 @@ routes.use(bodyParser.json());
 /* For parsing application/x-www-form-urlencoded */
 routes.use(bodyParser.urlencoded({ extended: true }));
 /* For parsing cookies */
-routes.use(cookieParser('This secret is used for signing cookies. Here\'s some extra entropy: 4c5ee6dc5ee1f723c3ce1efcf78c8dd0c0a55badbae4f4da5172d17a8cae07ef7e21b60a009c45b7567874c98bf79040d54475261')); // eslint-disable-line max-len
+routes.use(cookieParser('This secret is used for signing cookies. Here\'s some extra entropy: 4c5ee6dc5ee1f723c3ce1efcf78c8dd0c0a55badbae4f4da5172d17a8cae07ef7e21b60a009c45b7567874c98bf79040d54475261'));
 
 async function requireLogin(req, res, next) {
   /* The following variable certifies that the cookie is at least signed by us */
@@ -47,8 +47,7 @@ async function loadAccount(req, res, next) {
 
 routes.get('/', (req, res) => {
   res.status(200).json({
-    message: 'You\'ve reached the root directory of the REST API.'
-            + 'Try something more interesting next time :)',
+    message: 'You\'ve reached the root directory of the REST API. Try something more interesting next time :)',
   });
 });
 
@@ -71,12 +70,9 @@ routes.use(require('./user.js'));
 routes.use(require('./session.js'));
 routes.use(require('./event.js'));
 routes.use(require('./admin.js'));
-routes.use(require('./upload.js'));
-routes.use(require('./writeups.js'));
 routes.use(require('./voting.js'));
 routes.use(require('./resume.js'));
 routes.use(require('./app.js'));
-routes.use(require('./googleCal.js'));
 
 routes.use((req, res) => {
   res.status(404).json({ message: `Unknown REST URL: /api${req.url}` });

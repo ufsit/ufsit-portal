@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  api-server:
+    container_name: ufsit-portal-api-server
+    image: ufsit/api_server
+    build: ./Backend
+    ports:
+      - 1337:1337
+    command: node server.js
+    restart: always
+
+  db:
+    env_file: ./Backend/.env
+    container_name: ufsit-portal-db
+    image: mariadb:latest
+    ports: 
+      - 3306:3306
+    restart: always
+    volumes: # causes issues need to investigate
+      - /home/scott/ufsit_db:/var/lib/mysql
