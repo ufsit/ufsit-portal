@@ -1,36 +1,21 @@
 version: '3.8'
 
 services:
-  server:
-    env_file: ./Backend/.env
+  api-server:
     container_name: ufsit-portal-api-server
     image: ufsit/api_server
     build: ./Backend
-    expose: 
-      - "${PORT}"
+    ports:
+      - 1337:1337
     command: node server.js
     restart: always
 
   db:
-    env_file: .env
+    env_file: ./Backend/.env
     container_name: ufsit-portal-db
-    image: mysql:latest
-    expose: 
-      - "${DB_PORT}"
+    image: mariadb:latest
+    ports: 
+      - 3306:3306
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: passwd
-      MYSQL_USERNAME: ufsit
-      MYSQL_PASSWORD: passwd
-    volumes:
-      - /home/scott/ufsit_db:/var/lib/mysql
-
-#  client:
-#    image: ufsit/web_app
-#    build: ./client
-#    expose:
-#      - 80
-#    links:
-#      - server
-#    restart: always
-
+#    volumes: - causes issues need to investigate
+#      - /home/scott/ufsit_db:/var/lib/mysql
