@@ -1,12 +1,12 @@
 FROM node:alpine
 
-RUN mkdir -p /app/server
-WORKDIR /app/server
+RUN mkdir -p /server
+WORKDIR /server
 
-COPY package*.json /app/server/
+COPY package*.json /server/
 
 RUN npm install
-COPY . /app/server/
+COPY . /server/
 
 EXPOSE 1337
 

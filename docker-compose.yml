@@ -3,6 +3,7 @@ version: '3.8'
 services:
   server:
     env_file: ./Backend/.env
+    container_name: ufsit-portal-api-server
     image: ufsit/api_server
     build: ./Backend
     expose: 
@@ -14,8 +15,6 @@ services:
     env_file: .env
     container_name: ufsit-portal-db
     image: mysql:latest
-    ports:
-      - ${DB_PORT}:${DB_PORT}
     expose: 
       - "${DB_PORT}"
     restart: always
