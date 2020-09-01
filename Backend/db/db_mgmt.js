@@ -103,6 +103,7 @@ let db_mgmt_module = function () {
 				registration_date: util.mysql_iso_time(new Date(Date.now())),
 				grad_date: new_account.grad_date,
 //				mass_mail_optin: new_account.in_mailing_list,
+
 			};
 
 			return await queryAsync('INSERT INTO `account` SET ?', values);
@@ -137,7 +138,7 @@ let db_mgmt_module = function () {
 		return await queryAsync('SELECT ?? FROM `account`',
 			[['id', 'email', 'full_name', 'mass_mail_optin', 'grad_date', 'registration_date']]);
 	}
-
+  
 	/* Retrieve an account with the given email address */
 	async function retrieve(email_addr) {
 		/* Form a query to the 'accounts' table for entries with the given email */

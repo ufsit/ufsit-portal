@@ -3,7 +3,6 @@
 /Backend/node_modules
 /.pnp
 .pnp.js
-
 Backend/.env
 
 # testing

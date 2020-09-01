@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-
 const mysql_iso_time = (date) => {
   const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
   return dateString;

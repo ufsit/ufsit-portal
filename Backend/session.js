@@ -1,5 +1,4 @@
 const routes = require('express').Router();
-
 const util = require.main.require('./utils');
 const db_mgmt = require('./db/db_mgmt.js');
 

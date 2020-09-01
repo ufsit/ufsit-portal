@@ -34,6 +34,7 @@ CREATE TABLE `account` (
   `last_visit` datetime DEFAULT NULL,
   `grad_date` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `rank` int(11) DEFAULT NULL,
+
   `social_slack` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
   `social_facebook` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
   `social_twitter` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -94,8 +95,6 @@ CREATE TABLE `content_tags` (
   `name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
