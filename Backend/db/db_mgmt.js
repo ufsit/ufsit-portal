@@ -1,6 +1,3 @@
-'use strict';
-
-const fs = require('fs');  // For filesystem I/O
 const mysql = require('mysql');  // For mySQL interaction
 const util = require('../utils');
 const createError = require('http-errors');
@@ -10,9 +7,9 @@ let sql_pool = mysql.createPool({
 	connectionLimit: 15,	// This max is dictated by our Heroku JawsDB plan lol
 	host: process.env.DB_HOST,	// Use the credentials from the .env file
 	port: process.env.DB_PORT,
-	user: process.env.DB_USERNAME,
-	password: process.env.DB_PASSWORD,
-	database: process.env.DB_DATABASE,
+	user: process.env.MYSQL_USER,
+	password: process.env.MYSQL_PASSWORD,
+	database: process.env.MYSQL_DATABASE,
 	insecureAuth: true, // Will change later
 });
 

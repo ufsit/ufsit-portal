@@ -19,6 +19,6 @@ const router = require('./index');
 app.use('/', router);
 
 // Tells the terminal the node has been created at a given port number
-app.listen(process.env.PORT, function() {
-	console.log(`API Server now live on port ${process.env.PORT}`);
+app.listen(process.env.API_PORT, function() {
+	console.log(`API Server now live on port ${process.env.API_PORT}`);
 });
