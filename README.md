@@ -1,3 +1,31 @@
+# UFSIT-Portal Web App
+Here is the official portal web app we use for attendace tracking, voting, and other things.
+
+## Tech Stack
+Our tech stack for this project is as follows:
+* Node.Js/Express.Js - API server that processes requests from our frontend.
+* React.Js - Frontend app that sends requests to our API server.
+* MariaDB - Database
+
+## Deployment
+We use docker and docker-compose to do development testing and eventual production deployment.
+
+Create a `.env` file in the `Backend` directory for the nodejs app to use. An example config is provided below:
+
+```
+API_PORT=1337
+DB_HOST=database
+DB_PORT=3306
+
+MYSQL_ROOT_PASSWORD=my-secret-passwd
+MYSQL_USER=ufsit
+MYSQL_PASSWORD=PASSWORD
+MYSQL_DATABASE=PORTAL_DB
+```
+Be sure to reflect any changes in the `docker-compose.yml` file.
+
+
+# Create-React-App Info
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

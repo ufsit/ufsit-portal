@@ -17,5 +17,5 @@ services:
     ports: 
       - 3306:3306
     restart: always
-#    volumes: - causes issues need to investigate
-#      - /home/scott/ufsit_db:/var/lib/mysql
+    volumes: # causes issues need to investigate
+      - /home/scott/ufsit_db:/var/lib/mysql
