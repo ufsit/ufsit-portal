@@ -1,0 +1,54 @@
+.Portal-App {
+  min-width: 100%;
+  height: 100vh;
+}
+
+.Portal-header {
+  display: flex;
+  flex-direction: row;
+  height: 100px;
+  width: 100%;
+  border-bottom: 1px solid black;
+}
+
+.Portal-main {
+  display: flex;
+  flex-direction: row;
+  height: calc(100% - 101px);
+  width: 100%;
+}
+
+.Portal-header-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+}
+
+.Portal-title {
+  margin-left: 50px;
+  font-size: 2.5rem;
+}
+
+.Portal-logo {
+  height: 100%;
+}
+
+.Portal-user-portrait-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0px 0px 0px auto;
+  height: 100%;
+}
+
+.Portal-user-icon {
+  height: 80%;
+  width: auto;
+}
+
+.Portal-username {
+  font-size: 1.3rem;
+  margin: 0px;
+  margin-top: -10px;
+}

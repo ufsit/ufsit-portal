@@ -1,0 +1,45 @@
+.Portal-nav-container {
+  --nav-width: 250px;
+  --nav-button-height: 50px;
+  height: 100%;
+  width: var(--nav-width);
+  border-right: 1px solid black;
+  position: relative;
+}
+
+.Portal-nav {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - var(--nav-button-height));
+  overflow-y: auto;
+}
+
+.Portal-panel-button {
+  width: 100%;
+  height: var(--nav-button-height);
+  min-height: var(--nav-button-height);
+  font-size: 1.8rem;
+  border-bottom: 1px solid black;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.Portal-panel-button:hover {
+  cursor: pointer;
+  background-color: rgb(240, 239, 239);
+}
+
+.Portal-settings-button {
+  width: var(--nav-width);
+  position: fixed;
+  border-top: 1px solid black;
+  bottom: 0;
+}
+
+.selected-panel-button {
+  background-color: rgb(235, 235, 235);
+}
